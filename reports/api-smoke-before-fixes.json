@@ -1,0 +1,3466 @@
+{
+  "generatedAt": "2026-09-27T17:18:16.048013+00:00",
+  "baseUrl": "http://127.0.0.1:18080",
+  "database": "ehs_db (MySQL)",
+  "recordPrefix": "EHS-SMOKE-11548e2c",
+  "note": "Test records are retained. Authentication headers and passwords are omitted.",
+  "requestCount": 34,
+  "failedChecks": 5,
+  "calls": [
+    {
+      "case": "Create organization",
+      "method": "POST",
+      "path": "/api/OrganizationUnit",
+      "request": {
+        "id": 0,
+        "name": "EHS-SMOKE-11548e2c",
+        "description": "Live HTTP verification",
+        "tenantId": 1,
+        "parentId": null,
+        "status": 1,
+        "line1": "Test address",
+        "line2": "",
+        "city": 57933,
+        "state": 4026,
+        "country": 101,
+        "countryCode": "91",
+        "currency": "INR",
+        "symbol": "₹",
+        "timeZone": "UTC+05:30",
+        "keyContactName": "Smoke Test",
+        "phoneNumber": "9000000000",
+        "emailAddress": "smoke@example.com",
+        "isAnonymous": true,
+        "isObservationProofRequired": true,
+        "languageID": 1,
+        "timeZoneID": 1,
+        "attachments": null,
+        "shifts": []
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 924,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": "Organization Unit created successfully."
+      }
+    },
+    {
+      "case": "List organizations",
+      "method": "GET",
+      "path": "/api/OrganizationUnit/GetAllOrganizations",
+      "request": null,
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 444,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": [
+          {
+            "id": 2,
+            "createdBy": null,
+            "createdDate": "2026-09-27T22:48:09.17609",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "name": "EHS-SMOKE-11548e2c",
+            "description": "Live HTTP verification",
+            "tenantId": 1,
+            "parentId": null,
+            "status": 1,
+            "currency": "INR",
+            "line1": "Test address",
+            "line2": "",
+            "city": 57933,
+            "state": 4026,
+            "country": 101,
+            "countryCode": "91",
+            "symbol": "₹",
+            "timeZone": "UTC+05:30",
+            "timeZoneId": 1,
+            "languageId": 1,
+            "keyContactName": "Smoke Test",
+            "phoneNumber": "9000000000",
+            "emailAddress": "smoke@example.com",
+            "isAnonymous": true,
+            "isObservationProofRequired": true,
+            "attachments": null,
+            "shifts": [],
+            "buImage": null,
+            "cityName": null,
+            "stateName": null,
+            "countryName": null,
+            "timeZoneName": null,
+            "languageName": null,
+            "shiftMaster": null,
+            "children": []
+          }
+        ]
+      }
+    },
+    {
+      "case": "Create department",
+      "method": "POST",
+      "path": "/api/Department/Create",
+      "request": {
+        "id": 0,
+        "name": "EHS-SMOKE-11548e2c-Department",
+        "businessUnitId": 2,
+        "description": "Operations",
+        "status": 1,
+        "translations": [
+          {
+            "languageId": 1,
+            "name": "Operations",
+            "description": "Operations"
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 248,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "id": 1
+        }
+      }
+    },
+    {
+      "case": "Create designation",
+      "method": "POST",
+      "path": "/api/Designation/Create",
+      "request": {
+        "id": 0,
+        "name": "EHS-SMOKE-11548e2c-Designation",
+        "businessUnitId": 2,
+        "description": "Manager",
+        "status": 1,
+        "translations": [
+          {
+            "languageId": 1,
+            "name": "Manager",
+            "description": "Manager"
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 142,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "id": 1
+        }
+      }
+    },
+    {
+      "case": "Create role",
+      "method": "POST",
+      "path": "/api/Role/CreateRole",
+      "request": {
+        "id": 0,
+        "name": "EHS-SMOKE-11548e2c-Role",
+        "roleDescription": "Verification observer",
+        "displayName": "Observer",
+        "landingPageId": 1,
+        "roleType": "Observer",
+        "status": 1,
+        "permissionLookupHierarchyDto": [
+          {
+            "id": 1024,
+            "name": "Observation",
+            "displayName": "Observation",
+            "isGranted": false,
+            "parentId": 1024,
+            "status": 1,
+            "children": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 207,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "id": 1,
+          "message": "Role created successfully."
+        }
+      }
+    },
+    {
+      "case": "Create employee",
+      "method": "POST",
+      "path": "/api/User/CreateEmployee",
+      "request": {
+        "id": 0,
+        "firstName": "EHS-SMOKE-11548e2c",
+        "middleName": "API",
+        "lastName": "Tester",
+        "dateOfBirth": "1994-04-03",
+        "age": "32",
+        "alias": "smoke",
+        "country": 101,
+        "contractorId": 0,
+        "dateOfJoining": null,
+        "department": 1,
+        "designation": 1,
+        "emailAddress": "smoke@example.com",
+        "hasAccess": true,
+        "isMobileUser": false,
+        "gender": 1,
+        "phoneNumber": "9000000000",
+        "status": 1,
+        "userNumber": "EHS-SMOKE-11548e2c",
+        "userType": 1,
+        "organizationUnitId": 2,
+        "profilePictureId": 0,
+        "languageID": 1,
+        "userRoleIds": [
+          1
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 837,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": 1
+      }
+    },
+    {
+      "case": "Create location",
+      "method": "POST",
+      "path": "/api/Location/add",
+      "request": {
+        "name": "EHS-SMOKE-11548e2c-Location",
+        "locationSupervisor": "",
+        "locationDescription": "Live verification",
+        "organizationUnitId": 2,
+        "status": 1,
+        "createdBy": 1,
+        "supervisorIds": [
+          1
+        ],
+        "subLocationNames": "Zone A, Zone B",
+        "newSublocations": [
+          {
+            "name": "Zone A",
+            "description": "First area",
+            "status": 1
+          },
+          {
+            "name": "Zone B",
+            "description": "",
+            "status": 1
+          }
+        ],
+        "subLocations": [],
+        "subLocationIds": [],
+        "translations": [
+          {
+            "languageId": 1,
+            "name": "Factory",
+            "description": "Live verification",
+            "subLocations": [
+              {
+                "name": "Zone A",
+                "description": "First area"
+              }
+            ]
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 146,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": 2
+      }
+    },
+    {
+      "case": "Create operation activity",
+      "method": "POST",
+      "path": "/api/OperationActivity",
+      "request": {
+        "id": 0,
+        "activityName": "EHS-SMOKE-11548e2c-Activity",
+        "businessUnitId": 2,
+        "categoryId": 1,
+        "description": "Forklift operations",
+        "status": 1,
+        "createdBy": 1,
+        "translations": [
+          {
+            "languageId": 1,
+            "activityName": "Forklift operations",
+            "description": "Routine"
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 152,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "id": 1
+        }
+      }
+    },
+    {
+      "case": "Create observation type",
+      "method": "POST",
+      "path": "/api/ObservationType/Create",
+      "request": {
+        "observationCategoryId": 4,
+        "typeDescription": "EHS-SMOKE-11548e2c-Observation",
+        "businessUnitId": 2,
+        "observationSubTypes": [
+          {
+            "subTypeDescription": "PPE",
+            "status": 1
+          },
+          {
+            "subTypeDescription": "Housekeeping",
+            "status": 1
+          }
+        ],
+        "enableSvt": false,
+        "status": 1,
+        "modifiedBy": 1,
+        "translations": [
+          {
+            "languageId": 1,
+            "typeDescription": "Safe behavior",
+            "businessUnitId": 2,
+            "observationSubTypes": [
+              {
+                "subTypeDescription": "PPE"
+              },
+              {
+                "subTypeDescription": "Housekeeping"
+              }
+            ]
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 189,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "id": 1,
+          "createdBy": null,
+          "createdDate": "2026-09-27T22:48:11.6376058",
+          "modifiedBy": 1,
+          "modifiedDate": null,
+          "observationCategoryId": 4,
+          "typeDescription": "EHS-SMOKE-11548e2c-Observation",
+          "enableSvt": false,
+          "status": 1,
+          "businessUnitId": 2,
+          "isDefault": null,
+          "translations": [
+            {
+              "languageId": 1,
+              "typeDescription": "Safe behavior",
+              "businessUnitId": 2,
+              "observationSubTypes": [
+                {
+                  "languageId": 1,
+                  "observationSubTypeId": 1,
+                  "subTypeDescription": "PPE"
+                },
+                {
+                  "languageId": 1,
+                  "observationSubTypeId": 2,
+                  "subTypeDescription": "Housekeeping"
+                }
+              ]
+            }
+          ],
+          "observationCategoryName": "Safe Behavior",
+          "createdByName": "",
+          "observationSubTypeDescriptions": "PPE, Housekeeping",
+          "enableSvtDisplay": "false",
+          "statusDisplay": "Active",
+          "isEditDelete": true,
+          "observationSubTypes": [
+            {
+              "id": 1,
+              "observationTypeId": 1,
+              "subTypeDescription": "PPE",
+              "status": 1
+            },
+            {
+              "id": 2,
+              "observationTypeId": 1,
+              "subTypeDescription": "Housekeeping",
+              "status": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "Create equipment",
+      "method": "POST",
+      "path": "/api/Equipment/Add",
+      "request": {
+        "id": 0,
+        "equipmentCategoryId": 3,
+        "equipmentTypeId": 18,
+        "organizationUnitId": 2,
+        "uid": "EHS-SMOKE-11548e2c-Equipment",
+        "manufacturer": "Acme",
+        "modelNumber": "M-1",
+        "serialNumber": "EHS-SMOKE-11548e2c",
+        "yearofManufacture": "2022",
+        "status": 1,
+        "createdBy": 1
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 101,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": "Equipment added successfully."
+      }
+    },
+    {
+      "case": "List users",
+      "method": "POST",
+      "path": "/api/User/GetUsers",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 201,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:11.14498",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "firstName": "EHS-SMOKE-11548e2c",
+              "middleName": "API",
+              "lastName": "Tester",
+              "emailAddress": "smoke@example.com",
+              "phoneNumber": "9000000000",
+              "profilePictureId": 0,
+              "gender": 1,
+              "department": 1,
+              "dateOfJoining": null,
+              "contractorId": 0,
+              "accessFailedCount": null,
+              "designation": 1,
+              "userType": 1,
+              "status": 1,
+              "userNumber": "EHS-SMOKE-11548e2c",
+              "tenantID": null,
+              "languageID": 1,
+              "organizationUnitId": 2,
+              "hasAccess": true,
+              "isMobileUser": false,
+              "alias": "smoke",
+              "dateOfBirth": "1994-04-03",
+              "age": 32,
+              "country": 101,
+              "isSubscribed": false,
+              "userRoleIds": [
+                1
+              ],
+              "organizationUnitIds": [
+                2
+              ],
+              "organizationUnitIdsMapped": [
+                2
+              ],
+              "organizationUnitListIds": [
+                2
+              ],
+              "uploadedFiles": null,
+              "password": null,
+              "departmentName": "EHS-SMOKE-11548e2c-Department",
+              "designationName": "EHS-SMOKE-11548e2c-Designation",
+              "contractorName": null,
+              "organizationUnitNames": "EHS-SMOKE-11548e2c",
+              "workerTypeName": "Employee",
+              "userRoleNames": "EHS-SMOKE-11548e2c-Role",
+              "genderText": null,
+              "contractorNameText": null,
+              "fullName": "EHS-SMOKE-11548e2c API Tester (EHS-SMOKE-11548e2c)",
+              "organizationUnitName": "EHS-SMOKE-11548e2c",
+              "countryName": null,
+              "profilePictureUrl": null
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List employees",
+      "method": "POST",
+      "path": "/api/User/GetAllEmployees",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 121,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:11.14498",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "firstName": "EHS-SMOKE-11548e2c",
+              "middleName": "API",
+              "lastName": "Tester",
+              "emailAddress": "smoke@example.com",
+              "phoneNumber": "9000000000",
+              "profilePictureId": 0,
+              "gender": 1,
+              "department": 1,
+              "dateOfJoining": null,
+              "contractorId": 0,
+              "accessFailedCount": null,
+              "designation": 1,
+              "userType": 1,
+              "status": 1,
+              "userNumber": "EHS-SMOKE-11548e2c",
+              "tenantID": null,
+              "languageID": 1,
+              "organizationUnitId": 2,
+              "hasAccess": true,
+              "isMobileUser": false,
+              "alias": "smoke",
+              "dateOfBirth": "1994-04-03",
+              "age": 32,
+              "country": 101,
+              "isSubscribed": false,
+              "userRoleIds": [
+                1
+              ],
+              "organizationUnitIds": [
+                2
+              ],
+              "organizationUnitIdsMapped": [
+                2
+              ],
+              "organizationUnitListIds": [
+                2
+              ],
+              "uploadedFiles": null,
+              "password": null,
+              "departmentName": "EHS-SMOKE-11548e2c-Department",
+              "designationName": "EHS-SMOKE-11548e2c-Designation",
+              "contractorName": null,
+              "organizationUnitNames": "EHS-SMOKE-11548e2c",
+              "workerTypeName": "Employee",
+              "userRoleNames": "EHS-SMOKE-11548e2c-Role",
+              "genderText": null,
+              "contractorNameText": null,
+              "fullName": "EHS-SMOKE-11548e2c API Tester (EHS-SMOKE-11548e2c)",
+              "organizationUnitName": "EHS-SMOKE-11548e2c",
+              "countryName": null,
+              "profilePictureUrl": null
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List locations",
+      "method": "POST",
+      "path": "/api/Location/GetAllLocations",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 177,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 2,
+              "createdBy": 1,
+              "createdDate": "2026-09-27T22:48:11.297324",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "name": "EHS-SMOKE-11548e2c-Location",
+              "locationDescription": "Live verification",
+              "status": 1,
+              "organizationUnitId": 2,
+              "supervisorIds": [
+                1
+              ],
+              "translations": [
+                {
+                  "languageId": 1,
+                  "name": "Factory",
+                  "description": "Live verification",
+                  "subLocations": [
+                    {
+                      "subLocationId": 2,
+                      "name": "Zone A",
+                      "description": "First area"
+                    }
+                  ]
+                }
+              ],
+              "statusName": "Active",
+              "supervisorNames": "EHS-SMOKE-11548e2c API Tester (EHS-SMOKE-11548e2c)",
+              "subLocationNames": "Zone A, Zone B",
+              "organizationUnitName": "EHS-SMOKE-11548e2c",
+              "createByName": "EHS-SMOKE-11548e2c API Tester (EHS-SMOKE-11548e2c)",
+              "locationSupervisor": null,
+              "subLocationIds": [],
+              "newSublocations": null,
+              "subLocations": [
+                {
+                  "id": 2,
+                  "name": "Zone A",
+                  "description": "First area",
+                  "status": 1
+                },
+                {
+                  "id": 3,
+                  "name": "Zone B",
+                  "description": "",
+                  "status": 1
+                }
+              ]
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List roles",
+      "method": "GET",
+      "path": "/api/Role/GetAllRoles",
+      "request": null,
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 155,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": [
+          {
+            "id": 1,
+            "createdBy": null,
+            "createdDate": "2026-09-27T22:48:10.31008",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "name": "EHS-SMOKE-11548e2c-Role",
+            "displayName": "Observer",
+            "status": 1,
+            "roleDescription": "Verification observer",
+            "roleType": "Observer",
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 1024,
+                "name": "Observation",
+                "displayName": "Observation",
+                "isGranted": false,
+                "status": 1,
+                "parentId": 1024,
+                "children": [
+                  {
+                    "id": 2031,
+                    "name": "CreateObservation",
+                    "displayName": "Create Observation",
+                    "isGranted": true,
+                    "status": 1,
+                    "parentId": 1024,
+                    "children": []
+                  }
+                ]
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": null,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 1024,
+                "name": "Observation",
+                "displayName": "Observation",
+                "isGranted": false,
+                "status": 1,
+                "parentId": 1024,
+                "children": [
+                  {
+                    "id": 2031,
+                    "name": "CreateObservation",
+                    "displayName": "Create Observation",
+                    "isGranted": true,
+                    "status": 1,
+                    "parentId": 1024,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case": "List operation activities",
+      "method": "POST",
+      "path": "/api/OperationActivity/list",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 157,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": 1,
+              "createdDate": "2026-09-27T22:48:11.464988",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "activityName": "EHS-SMOKE-11548e2c-Activity",
+              "businessUnitId": 2,
+              "categoryId": 1,
+              "description": "Forklift operations",
+              "status": 1,
+              "translations": [
+                {
+                  "languageId": 1,
+                  "activityName": "Forklift operations",
+                  "description": "Routine"
+                }
+              ],
+              "category": "Routine",
+              "businessUnitName": "EHS-SMOKE-11548e2c"
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List observation types",
+      "method": "POST",
+      "path": "/api/ObservationType/GetAll",
+      "request": {
+        "sorting": "id",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 140,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:11.637606",
+              "modifiedBy": 1,
+              "modifiedDate": null,
+              "observationCategoryId": 4,
+              "typeDescription": "EHS-SMOKE-11548e2c-Observation",
+              "enableSvt": false,
+              "status": 1,
+              "businessUnitId": 2,
+              "isDefault": null,
+              "translations": [
+                {
+                  "languageId": 1,
+                  "typeDescription": "Safe behavior",
+                  "businessUnitId": 2,
+                  "observationSubTypes": [
+                    {
+                      "languageId": 1,
+                      "observationSubTypeId": 1,
+                      "subTypeDescription": "PPE"
+                    },
+                    {
+                      "languageId": 1,
+                      "observationSubTypeId": 2,
+                      "subTypeDescription": "Housekeeping"
+                    }
+                  ]
+                }
+              ],
+              "observationCategoryName": "Safe Behavior",
+              "createdByName": "",
+              "observationSubTypeDescriptions": "PPE, Housekeeping",
+              "enableSvtDisplay": "false",
+              "statusDisplay": "Active",
+              "isEditDelete": true,
+              "observationSubTypes": [
+                {
+                  "id": 1,
+                  "observationTypeId": 1,
+                  "subTypeDescription": "PPE",
+                  "status": 1
+                },
+                {
+                  "id": 2,
+                  "observationTypeId": 1,
+                  "subTypeDescription": "Housekeeping",
+                  "status": 1
+                }
+              ]
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List equipment",
+      "method": "POST",
+      "path": "/api/Equipment/List",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 140,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": 1,
+              "createdDate": "2026-09-27T22:48:11.767552",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "equipmentCategoryId": 3,
+              "equipmentTypeId": 18,
+              "organizationUnitId": 2,
+              "uid": "EHS-SMOKE-11548e2c-Equipment",
+              "manufacturer": "Acme",
+              "modelNumber": "M-1",
+              "serialNumber": "EHS-SMOKE-11548e2c",
+              "yearofManufacture": "2022",
+              "status": 1,
+              "equipmentCategoryName": null,
+              "equipmentTypeName": null,
+              "organizationUnitNames": "EHS-SMOKE-11548e2c",
+              "active": "Active"
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List designations",
+      "method": "POST",
+      "path": "/api/Designation/GetList",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 139,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:10.127536",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "name": "EHS-SMOKE-11548e2c-Designation",
+              "description": "Manager",
+              "status": 1,
+              "businessUnitId": 2,
+              "translations": [
+                {
+                  "languageId": 1,
+                  "name": "Manager",
+                  "description": "Manager"
+                }
+              ],
+              "statusDisplay": "Active"
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "List departments",
+      "method": "POST",
+      "path": "/api/Department/GetList",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 140,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:09.942238",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "name": "EHS-SMOKE-11548e2c-Department",
+              "description": "Operations",
+              "status": 1,
+              "businessUnitId": 2,
+              "translations": [
+                {
+                  "languageId": 1,
+                  "name": "Operations",
+                  "description": "Operations"
+                }
+              ],
+              "statusDisplay": "Active"
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "Filtering and descending sort",
+      "method": "POST",
+      "path": "/api/Department/GetList",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [
+          {
+            "field": "name",
+            "matchMode": "contains",
+            "value": "EHS-SMOKE-11548e2c"
+          }
+        ],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [
+          {
+            "field": "id",
+            "order": -1
+          }
+        ],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 103,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:09.942238",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "name": "EHS-SMOKE-11548e2c-Department",
+              "description": "Operations",
+              "status": 1,
+              "businessUnitId": 2,
+              "translations": [
+                {
+                  "languageId": 1,
+                  "name": "Operations",
+                  "description": "Operations"
+                }
+              ],
+              "statusDisplay": "Active"
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "Offset pagination",
+      "method": "POST",
+      "path": "/api/Department/GetList",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 1,
+        "skipCount": 1,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 93,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "Missing credentials",
+      "method": "GET",
+      "path": "/api/Role/GetAllRoles",
+      "request": null,
+      "expectedStatus": 401,
+      "httpStatus": 401,
+      "passed": true,
+      "elapsedMs": 26,
+      "response": {
+        "statusCode": 401,
+        "message": "Authentication required",
+        "results": null
+      }
+    },
+    {
+      "case": "Wrong credentials",
+      "method": "GET",
+      "path": "/api/Role/GetAllRoles",
+      "request": null,
+      "expectedStatus": 401,
+      "httpStatus": 401,
+      "passed": true,
+      "elapsedMs": 102,
+      "response": {
+        "statusCode": 401,
+        "message": "Authentication required",
+        "results": null
+      }
+    },
+    {
+      "case": "Missing required fields",
+      "method": "POST",
+      "path": "/api/Department/Create",
+      "request": {},
+      "expectedStatus": 400,
+      "httpStatus": 400,
+      "passed": true,
+      "elapsedMs": 101,
+      "response": {
+        "statusCode": 400,
+        "message": "businessUnitId: must not be null; name: must not be blank",
+        "results": null
+      }
+    },
+    {
+      "case": "Unknown organization",
+      "method": "POST",
+      "path": "/api/Department/Create",
+      "request": {
+        "name": "Missing organization",
+        "businessUnitId": 9223372036854775807
+      },
+      "expectedStatus": 404,
+      "httpStatus": 404,
+      "passed": true,
+      "elapsedMs": 142,
+      "response": {
+        "statusCode": 404,
+        "message": "Organization not found: 9223372036854775807",
+        "results": null
+      }
+    },
+    {
+      "case": "Duplicate equipment",
+      "method": "POST",
+      "path": "/api/Equipment/Add",
+      "request": {
+        "id": 0,
+        "equipmentCategoryId": 3,
+        "equipmentTypeId": 18,
+        "organizationUnitId": 2,
+        "uid": "EHS-SMOKE-11548e2c-Equipment",
+        "manufacturer": "Acme",
+        "modelNumber": "M-1",
+        "serialNumber": "EHS-SMOKE-11548e2c",
+        "yearofManufacture": "2022",
+        "status": 1,
+        "createdBy": 1
+      },
+      "expectedStatus": 409,
+      "httpStatus": 409,
+      "passed": true,
+      "elapsedMs": 184,
+      "response": {
+        "statusCode": 409,
+        "message": "A duplicate record or invalid reference was supplied",
+        "results": null
+      }
+    },
+    {
+      "case": "Null filter entry",
+      "method": "POST",
+      "path": "/api/Department/GetList",
+      "request": {
+        "filters": [
+          null
+        ]
+      },
+      "expectedStatus": 400,
+      "httpStatus": 500,
+      "passed": false,
+      "elapsedMs": 90,
+      "response": {
+        "statusCode": 500,
+        "message": "An unexpected error occurred",
+        "results": null
+      }
+    },
+    {
+      "case": "Null sort entry",
+      "method": "POST",
+      "path": "/api/Department/GetList",
+      "request": {
+        "multiSortMeta": [
+          null
+        ]
+      },
+      "expectedStatus": 400,
+      "httpStatus": 500,
+      "passed": false,
+      "elapsedMs": 75,
+      "response": {
+        "statusCode": 500,
+        "message": "An unexpected error occurred",
+        "results": null
+      }
+    },
+    {
+      "case": "Null nested location translation",
+      "method": "POST",
+      "path": "/api/Location/add",
+      "request": {
+        "name": "EHS-SMOKE-11548e2c-Invalid",
+        "locationSupervisor": "",
+        "locationDescription": "Live verification",
+        "organizationUnitId": 2,
+        "status": 1,
+        "createdBy": 1,
+        "supervisorIds": [
+          1
+        ],
+        "subLocationNames": "Zone A, Zone B",
+        "newSublocations": [],
+        "subLocations": [],
+        "subLocationIds": [],
+        "translations": [
+          {
+            "languageId": 1,
+            "name": "Invalid",
+            "subLocations": [
+              null
+            ]
+          }
+        ]
+      },
+      "expectedStatus": 400,
+      "httpStatus": 500,
+      "passed": false,
+      "elapsedMs": 115,
+      "response": {
+        "statusCode": 500,
+        "message": "An unexpected error occurred",
+        "results": null
+      }
+    },
+    {
+      "case": "Oversized sublocation",
+      "method": "POST",
+      "path": "/api/Location/add",
+      "request": {
+        "name": "EHS-SMOKE-11548e2c-Oversized",
+        "locationSupervisor": "",
+        "locationDescription": "Live verification",
+        "organizationUnitId": 2,
+        "status": 1,
+        "createdBy": 1,
+        "supervisorIds": [
+          1
+        ],
+        "subLocationNames": "Zone A, Zone B",
+        "newSublocations": [
+          {
+            "name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "status": 1
+          }
+        ],
+        "subLocations": [],
+        "subLocationIds": [],
+        "translations": []
+      },
+      "expectedStatus": 400,
+      "httpStatus": 409,
+      "passed": false,
+      "elapsedMs": 149,
+      "response": {
+        "statusCode": 409,
+        "message": "A duplicate record or invalid reference was supplied",
+        "results": null
+      }
+    },
+    {
+      "case": "Null nested observation translation",
+      "method": "POST",
+      "path": "/api/ObservationType/Create",
+      "request": {
+        "observationCategoryId": 4,
+        "typeDescription": "EHS-SMOKE-11548e2c-Invalid",
+        "businessUnitId": 2,
+        "observationSubTypes": [
+          {
+            "subTypeDescription": "PPE",
+            "status": 1
+          }
+        ],
+        "translations": [
+          {
+            "languageId": 1,
+            "observationSubTypes": [
+              null
+            ]
+          }
+        ]
+      },
+      "expectedStatus": 400,
+      "httpStatus": 500,
+      "passed": false,
+      "elapsedMs": 119,
+      "response": {
+        "statusCode": 500,
+        "message": "An unexpected error occurred",
+        "results": null
+      }
+    },
+    {
+      "case": "Failed location creates leave no records",
+      "method": "POST",
+      "path": "/api/Location/GetAllLocations",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 158,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 2,
+              "createdBy": 1,
+              "createdDate": "2026-09-27T22:48:11.297324",
+              "modifiedBy": null,
+              "modifiedDate": null,
+              "name": "EHS-SMOKE-11548e2c-Location",
+              "locationDescription": "Live verification",
+              "status": 1,
+              "organizationUnitId": 2,
+              "supervisorIds": [
+                1
+              ],
+              "translations": [
+                {
+                  "languageId": 1,
+                  "name": "Factory",
+                  "description": "Live verification",
+                  "subLocations": [
+                    {
+                      "subLocationId": 2,
+                      "name": "Zone A",
+                      "description": "First area"
+                    }
+                  ]
+                }
+              ],
+              "statusName": "Active",
+              "supervisorNames": "EHS-SMOKE-11548e2c API Tester (EHS-SMOKE-11548e2c)",
+              "subLocationNames": "Zone A, Zone B",
+              "organizationUnitName": "EHS-SMOKE-11548e2c",
+              "createByName": "EHS-SMOKE-11548e2c API Tester (EHS-SMOKE-11548e2c)",
+              "locationSupervisor": null,
+              "subLocationIds": [],
+              "newSublocations": null,
+              "subLocations": [
+                {
+                  "id": 2,
+                  "name": "Zone A",
+                  "description": "First area",
+                  "status": 1
+                },
+                {
+                  "id": 3,
+                  "name": "Zone B",
+                  "description": "",
+                  "status": 1
+                }
+              ]
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "Failed observation create leaves no records",
+      "method": "POST",
+      "path": "/api/ObservationType/GetAll",
+      "request": {
+        "sorting": "createdDate",
+        "sortingType": "desc",
+        "filter": "",
+        "filters": [],
+        "maxResultCount": 10,
+        "skipCount": 0,
+        "multiSortMeta": [],
+        "businessUnitIds": "2",
+        "userId": 0,
+        "isExportToExcel": false
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 117,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "items": [
+            {
+              "id": 1,
+              "createdBy": null,
+              "createdDate": "2026-09-27T22:48:11.637606",
+              "modifiedBy": 1,
+              "modifiedDate": null,
+              "observationCategoryId": 4,
+              "typeDescription": "EHS-SMOKE-11548e2c-Observation",
+              "enableSvt": false,
+              "status": 1,
+              "businessUnitId": 2,
+              "isDefault": null,
+              "translations": [
+                {
+                  "languageId": 1,
+                  "typeDescription": "Safe behavior",
+                  "businessUnitId": 2,
+                  "observationSubTypes": [
+                    {
+                      "languageId": 1,
+                      "observationSubTypeId": 1,
+                      "subTypeDescription": "PPE"
+                    },
+                    {
+                      "languageId": 1,
+                      "observationSubTypeId": 2,
+                      "subTypeDescription": "Housekeeping"
+                    }
+                  ]
+                }
+              ],
+              "observationCategoryName": "Safe Behavior",
+              "createdByName": "",
+              "observationSubTypeDescriptions": "PPE, Housekeeping",
+              "enableSvtDisplay": "false",
+              "statusDisplay": "Active",
+              "isEditDelete": true,
+              "observationSubTypes": [
+                {
+                  "id": 1,
+                  "observationTypeId": 1,
+                  "subTypeDescription": "PPE",
+                  "status": 1
+                },
+                {
+                  "id": 2,
+                  "observationTypeId": 1,
+                  "subTypeDescription": "Housekeeping",
+                  "status": 1
+                }
+              ]
+            }
+          ],
+          "totalCount": 1
+        }
+      }
+    },
+    {
+      "case": "OpenAPI endpoint coverage",
+      "method": "GET",
+      "path": "/v3/api-docs",
+      "request": null,
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 1325,
+      "response": {
+        "openapi": "3.0.1",
+        "info": {
+          "title": "OpenAPI definition",
+          "version": "v0"
+        },
+        "servers": [
+          {
+            "url": "http://127.0.0.1:18080",
+            "description": "Generated server url"
+          }
+        ],
+        "paths": {
+          "/api/User/GetUsers": {
+            "post": {
+              "tags": [
+                "user-controller"
+              ],
+              "operationId": "users",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/User/GetAllEmployees": {
+            "post": {
+              "tags": [
+                "user-controller"
+              ],
+              "operationId": "list",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/User/CreateEmployee": {
+            "post": {
+              "tags": [
+                "user-controller"
+              ],
+              "operationId": "create",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/EmployeeDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Role/CreateRole": {
+            "post": {
+              "tags": [
+                "role-controller"
+              ],
+              "operationId": "create_1",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/RoleDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/OrganizationUnit": {
+            "post": {
+              "tags": [
+                "organization-unit-controller"
+              ],
+              "operationId": "create_2",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/OrganizationUnitDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/OperationActivity": {
+            "post": {
+              "tags": [
+                "operation-activity-controller"
+              ],
+              "operationId": "create_3",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/OperationActivityDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/OperationActivity/list": {
+            "post": {
+              "tags": [
+                "operation-activity-controller"
+              ],
+              "operationId": "list_1",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/ObservationType/GetAll": {
+            "post": {
+              "tags": [
+                "observation-type-controller"
+              ],
+              "operationId": "list_2",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/ObservationType/Create": {
+            "post": {
+              "tags": [
+                "observation-type-controller"
+              ],
+              "operationId": "create_4",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ObservationTypeDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Location/add": {
+            "post": {
+              "tags": [
+                "location-controller"
+              ],
+              "operationId": "create_5",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/LocationDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Location/GetAllLocations": {
+            "post": {
+              "tags": [
+                "location-controller"
+              ],
+              "operationId": "list_3",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Equipment/List": {
+            "post": {
+              "tags": [
+                "equipment-controller"
+              ],
+              "operationId": "list_4",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Equipment/Add": {
+            "post": {
+              "tags": [
+                "equipment-controller"
+              ],
+              "operationId": "create_6",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/EquipmentDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Designation/GetList": {
+            "post": {
+              "tags": [
+                "designation-controller"
+              ],
+              "operationId": "list_5",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Designation/Create": {
+            "post": {
+              "tags": [
+                "designation-controller"
+              ],
+              "operationId": "create_7",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/DesignationDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Department/GetList": {
+            "post": {
+              "tags": [
+                "department-controller"
+              ],
+              "operationId": "list_6",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ListRequest"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Department/Create": {
+            "post": {
+              "tags": [
+                "department-controller"
+              ],
+              "operationId": "create_8",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/DepartmentDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Role/GetAllRoles": {
+            "get": {
+              "tags": [
+                "role-controller"
+              ],
+              "operationId": "list_7",
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/OrganizationUnit/GetAllOrganizations": {
+            "get": {
+              "tags": [
+                "organization-unit-controller"
+              ],
+              "operationId": "list_8",
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "components": {
+          "schemas": {
+            "ColumnFilter": {
+              "required": [
+                "field"
+              ],
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "value": {
+                  "$ref": "#/components/schemas/JsonNode"
+                },
+                "matchMode": {
+                  "type": "string"
+                }
+              }
+            },
+            "JsonNode": {
+              "type": "object"
+            },
+            "ListRequest": {
+              "type": "object",
+              "properties": {
+                "sorting": {
+                  "type": "string"
+                },
+                "sortingType": {
+                  "pattern": "(?i)asc|desc|^$",
+                  "type": "string"
+                },
+                "filter": {
+                  "type": "string"
+                },
+                "filters": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ColumnFilter"
+                  }
+                },
+                "maxResultCount": {
+                  "maximum": 1000,
+                  "minimum": 1,
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "skipCount": {
+                  "minimum": 0,
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "multiSortMeta": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SortField"
+                  }
+                },
+                "businessUnitIds": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "userId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "isExportToExcel": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "SortField": {
+              "required": [
+                "field"
+              ],
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "order": {
+                  "maximum": 1,
+                  "minimum": -1,
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "ApiResponseObject": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "results": {
+                  "type": "object"
+                }
+              }
+            },
+            "EmployeeDto": {
+              "required": [
+                "firstName",
+                "organizationUnitId",
+                "userNumber"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "firstName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "middleName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "lastName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "emailAddress": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "phoneNumber": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "profilePictureId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "gender": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "department": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "dateOfJoining": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "contractorId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "accessFailedCount": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "designation": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "userType": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "userNumber": {
+                  "maxLength": 100,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "tenantID": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "languageID": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "organizationUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "hasAccess": {
+                  "type": "boolean"
+                },
+                "isMobileUser": {
+                  "type": "boolean"
+                },
+                "alias": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "dateOfBirth": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "age": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "country": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "isSubscribed": {
+                  "type": "boolean"
+                },
+                "userRoleIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "organizationUnitIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "organizationUnitIdsMapped": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "organizationUnitListIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "uploadedFiles": {
+                  "$ref": "#/components/schemas/JsonNode"
+                },
+                "password": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "departmentName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "designationName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "contractorName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "organizationUnitNames": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "workerTypeName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "userRoleNames": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "genderText": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "contractorNameText": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "fullName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "organizationUnitName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "countryName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "profilePictureUrl": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
+            },
+            "PermissionNode": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "displayName": {
+                  "type": "string"
+                },
+                "isGranted": {
+                  "type": "boolean"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "parentId": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            },
+            "RoleDto": {
+              "required": [
+                "name"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "name": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "displayName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "roleDescription": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "roleType": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "landingPageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PermissionNode"
+                  }
+                },
+                "roleOrganizationUnits": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "userRoles": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "createBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "permissionLookupHierarchyDto": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PermissionNode"
+                  }
+                }
+              }
+            },
+            "OrganizationUnitDto": {
+              "required": [
+                "name"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "name": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "description": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "tenantId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "parentId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "currency": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "line1": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "line2": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "city": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "state": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "country": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "countryCode": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "symbol": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "timeZone": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "timeZoneId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "languageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "keyContactName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "phoneNumber": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "emailAddress": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "isAnonymous": {
+                  "type": "boolean"
+                },
+                "isObservationProofRequired": {
+                  "type": "boolean"
+                },
+                "attachments": {
+                  "$ref": "#/components/schemas/JsonNode"
+                },
+                "shifts": {
+                  "$ref": "#/components/schemas/JsonNode"
+                },
+                "buImage": {
+                  "$ref": "#/components/schemas/JsonNode"
+                },
+                "cityName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "stateName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "countryName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "timeZoneName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "languageName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "shiftMaster": {
+                  "$ref": "#/components/schemas/JsonNode"
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganizationUnitDto"
+                  }
+                }
+              }
+            },
+            "ActivityTranslation": {
+              "required": [
+                "languageId"
+              ],
+              "type": "object",
+              "properties": {
+                "languageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "activityName": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            },
+            "OperationActivityDto": {
+              "required": [
+                "activityName",
+                "businessUnitId",
+                "categoryId"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "activityName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "businessUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "categoryId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "description": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityTranslation"
+                  }
+                },
+                "category": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "businessUnitName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
+            },
+            "ObservationSubTypeDto": {
+              "required": [
+                "subTypeDescription"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "observationTypeId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "subTypeDescription": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "ObservationSubTypeTranslation": {
+              "type": "object",
+              "properties": {
+                "languageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "observationSubTypeId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "subTypeDescription": {
+                  "type": "string"
+                }
+              }
+            },
+            "ObservationTranslation": {
+              "required": [
+                "languageId"
+              ],
+              "type": "object",
+              "properties": {
+                "languageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "typeDescription": {
+                  "type": "string"
+                },
+                "businessUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "observationSubTypes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObservationSubTypeTranslation"
+                  }
+                }
+              }
+            },
+            "ObservationTypeDto": {
+              "required": [
+                "businessUnitId",
+                "observationCategoryId",
+                "typeDescription"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "observationCategoryId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "typeDescription": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "enableSvt": {
+                  "type": "boolean"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "businessUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "isDefault": {
+                  "type": "boolean"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObservationTranslation"
+                  }
+                },
+                "observationCategoryName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "createdByName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "observationSubTypeDescriptions": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "enableSvtDisplay": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "statusDisplay": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "isEditDelete": {
+                  "type": "boolean"
+                },
+                "observationSubTypes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObservationSubTypeDto"
+                  }
+                }
+              }
+            },
+            "LocationDto": {
+              "required": [
+                "name",
+                "organizationUnitId"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "name": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "locationDescription": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "organizationUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "supervisorIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocationTranslation"
+                  }
+                },
+                "statusName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "supervisorNames": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "subLocationNames": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "organizationUnitName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "createByName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "locationSupervisor": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "subLocationIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "newSublocations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubLocationDto"
+                  }
+                },
+                "subLocations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubLocationDto"
+                  }
+                }
+              }
+            },
+            "LocationTranslation": {
+              "required": [
+                "languageId"
+              ],
+              "type": "object",
+              "properties": {
+                "languageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "subLocations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubLocationTranslation"
+                  }
+                }
+              }
+            },
+            "SubLocationDto": {
+              "required": [
+                "name"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            },
+            "SubLocationTranslation": {
+              "type": "object",
+              "properties": {
+                "subLocationId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            },
+            "EquipmentDto": {
+              "required": [
+                "equipmentCategoryId",
+                "equipmentTypeId",
+                "organizationUnitId",
+                "uid"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "equipmentCategoryId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "equipmentTypeId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "organizationUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "uid": {
+                  "maxLength": 100,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "manufacturer": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "modelNumber": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "serialNumber": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "yearofManufacture": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "equipmentCategoryName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "equipmentTypeName": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "organizationUnitNames": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "active": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
+            },
+            "DesignationDto": {
+              "required": [
+                "businessUnitId",
+                "name"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "name": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "description": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "businessUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NameTranslation"
+                  }
+                },
+                "statusDisplay": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
+            },
+            "NameTranslation": {
+              "required": [
+                "languageId"
+              ],
+              "type": "object",
+              "properties": {
+                "languageId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            },
+            "DepartmentDto": {
+              "required": [
+                "businessUnitId",
+                "name"
+              ],
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "createdDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "modifiedBy": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "modifiedDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "name": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "description": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "status": {
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "businessUnitId": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "translations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NameTranslation"
+                  }
+                },
+                "statusDisplay": {
+                  "maxLength": 2000,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "checks": [
+    {
+      "check": "users persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "employees persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "locations persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "activities persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "observations persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "equipment persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "designations persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "departments persisted and business-unit filtered",
+      "passed": true
+    },
+    {
+      "check": "employee derived names",
+      "passed": true
+    },
+    {
+      "check": "employee password suppressed",
+      "passed": true
+    },
+    {
+      "check": "location generated child IDs",
+      "passed": true
+    },
+    {
+      "check": "location translation linked to child",
+      "passed": true
+    },
+    {
+      "check": "observation translation linked to child",
+      "passed": true
+    },
+    {
+      "check": "role grant persisted",
+      "passed": true
+    },
+    {
+      "check": "filtered totalCount",
+      "passed": true
+    },
+    {
+      "check": "offset preserves totalCount",
+      "passed": true
+    },
+    {
+      "check": "invalid location rollback",
+      "passed": true
+    },
+    {
+      "check": "invalid observation rollback",
+      "passed": true
+    },
+    {
+      "check": "all 19 documented endpoints called successfully",
+      "passed": true
+    }
+  ]
+}

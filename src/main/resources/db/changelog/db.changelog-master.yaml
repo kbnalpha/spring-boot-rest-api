@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - property:
+      name: largeTextType
+      value: LONGTEXT
+      dbms: mysql
+  - property:
+      name: largeTextType
+      value: CLOB
+      dbms: h2
+  - include:
+      file: changes/001-initial-schema.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/002-list-query-indexes.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/003-master-fields-rbac.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/004-permission-catalog.sql
+      relativeToChangelogFile: true

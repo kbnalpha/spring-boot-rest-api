@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/ehs_db?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_unicode_ci&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    user:
+      name: ${API_USERNAME:ehs-api}
+      password: ${API_PASSWORD:ehs-api-local}
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}

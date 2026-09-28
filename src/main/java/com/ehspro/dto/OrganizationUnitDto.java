@@ -1,0 +1,45 @@
+package com.ehspro.dto;
+import java.time.*;
+import java.util.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.ehspro.model.*;
+public class OrganizationUnitDto extends BaseDto {
+    @Size(max=2048) public String layoutImageUrl;
+    @DecimalMin("-90") @DecimalMax("90") public java.math.BigDecimal latitude;
+    @DecimalMin("-180") @DecimalMax("180") public java.math.BigDecimal longitude;
+    @NotBlank @Size(max = 50) public String name;
+    @Size(max = 2000) public String description;
+    @Positive public Long tenantId;
+    public Long parentId;
+    public Integer status;
+    @Size(max = 2000) public String currency;
+    @NotBlank @Size(max = 2000) public String line1;
+    @Size(max = 2000) public String line2;
+    @NotNull @Positive public Long city;
+    @NotNull @Positive public Long state;
+    @NotNull @Positive public Long country;
+    @Size(max = 2000) public String countryCode;
+    @Size(max = 2000) public String symbol;
+    @Size(max = 2000) public String timeZone;
+    @NotNull @Positive @JsonAlias("timeZoneID") public Long timeZoneId;
+    @NotNull @Positive @JsonAlias("languageID") public Long languageId;
+    @NotBlank @Size(max = 2000) public String keyContactName;
+    @NotBlank @Pattern(regexp = "[+0-9][0-9 ()-]{5,24}") public String phoneNumber;
+    @NotBlank @Size(max = 254) @Email public String emailAddress;
+    public Boolean isAnonymous = false;
+    public Boolean isObservationProofRequired = false;
+    public JsonNode attachments;
+    @Valid public List<@NotNull ShiftTiming> shifts = new ArrayList<>();
+    public JsonNode buImage;
+    @Size(max = 2000) public String cityName;
+    @Size(max = 2000) public String stateName;
+    @Size(max = 2000) public String countryName;
+    @Size(max = 2000) public String timeZoneName;
+    @Size(max = 2000) public String languageName;
+    public JsonNode shiftMaster;
+    @Valid public List<@NotNull OrganizationUnitDto> children = new ArrayList<>();
+}
+
