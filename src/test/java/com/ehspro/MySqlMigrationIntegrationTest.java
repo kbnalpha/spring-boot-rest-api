@@ -31,11 +31,11 @@ class MySqlMigrationIntegrationTest {
 
     @Test
     void mysqlSchemaValidatesAndMigrationsAreNotReapplied() throws Exception {
-        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM DATABASECHANGELOG", Integer.class)).isEqualTo(33);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM DATABASECHANGELOG", Integer.class)).isEqualTo(37);
         var before = jdbc.queryForList("SELECT ID, MD5SUM, DATEEXECUTED FROM DATABASECHANGELOG ORDER BY ORDEREXECUTED");
         liquibase.afterPropertiesSet();
         assertThat(jdbc.queryForList("SELECT ID, MD5SUM, DATEEXECUTED FROM DATABASECHANGELOG ORDER BY ORDEREXECUTED")).isEqualTo(before);
-        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE()", Integer.class)).isEqualTo(21);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE()", Integer.class)).isEqualTo(24);
     }
 
     @Test

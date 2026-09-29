@@ -38,7 +38,10 @@ public class AccountService {
         employees.save(employee);accounts.saveAndFlush(account);return response(account);
     }
     @Transactional public Map<String,Object> roles(Long id,AccountRequests.Roles dto) {
-        access.superAdmin();UserAccount account=account(id);assignRoles(account,dto.basicRoleId(),dto.additionalRoleIds());
+        access.require("ManageRoleUsers");UserAccount account=account(id);
+        access.tenant(account.tenantId);
+        access.organization(employees.findById(account.employeeId).orElseThrow().organizationUnitId);
+        assignRoles(account,dto.basicRoleId(),dto.additionalRoleIds());
         Employee employee=employees.findById(account.employeeId).orElseThrow();employee.userRoleIds=new ArrayList<>();employee.userRoleIds.add(account.basicRoleId);employee.userRoleIds.addAll(account.additionalRoleIds);
         return response(account);
     }

@@ -1,0 +1,1188 @@
+{
+  "permissionLookupHierarchyDto": [
+    {
+      "id": 1023,
+      "name": "Administration",
+      "displayName": "Administration",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3326,
+          "name": "CreateAnnouncement",
+          "displayName": "Create Announcement",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1023
+        },
+        {
+          "id": 3272,
+          "name": "ManageRoles",
+          "displayName": "Manage Roles",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1023
+        },
+        {
+          "id": 3274,
+          "name": "ManageRoleUsers",
+          "displayName": "Manage Role Users",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1023
+        },
+        {
+          "id": 3314,
+          "name": "ResetMobilePIN",
+          "displayName": "Reset Mobile PIN",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1023
+        },
+        {
+          "id": 3343,
+          "name": "TemplateSetup",
+          "displayName": "Template Setup",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1023
+        },
+        {
+          "id": 3327,
+          "name": "ViewAnnouncement",
+          "displayName": "View Announcement",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1023
+        }
+      ],
+      "status": 1,
+      "parentId": 1023
+    },
+    {
+      "id": 1024,
+      "name": "Observation",
+      "displayName": "Observation",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3040,
+          "name": "AssignReviewer",
+          "displayName": "Assign Reviewer",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1024
+        },
+        {
+          "id": 2031,
+          "name": "CreateObservation",
+          "displayName": "Create Observation",
+          "isGranted": true,
+          "children": [],
+          "status": 1,
+          "parentId": 1024
+        },
+        {
+          "id": 2032,
+          "name": "ReviewObservation",
+          "displayName": "Review Observation",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1024
+        },
+        {
+          "id": 3353,
+          "name": "UnarchiveObservation",
+          "displayName": "Unarchive Observation",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1024
+        },
+        {
+          "id": 2013,
+          "name": "ViewObservation",
+          "displayName": "View Observation",
+          "isGranted": true,
+          "children": [],
+          "status": 1,
+          "parentId": 1024
+        },
+        {
+          "id": 3292,
+          "name": "ViewSVT",
+          "displayName": "View SVT Listing",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 1024
+        }
+      ],
+      "status": 1,
+      "parentId": 1024
+    },
+    {
+      "id": 3032,
+      "name": "ActionManagement",
+      "displayName": "Action Management",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3041,
+          "name": "ApproveActions",
+          "displayName": "Approve Actions",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3032
+        },
+        {
+          "id": 3156,
+          "name": "CancelActions",
+          "displayName": "Cancel Actions",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3032
+        },
+        {
+          "id": 3154,
+          "name": "ChangeDueDate",
+          "displayName": "Change Due Date",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3032
+        },
+        {
+          "id": 3155,
+          "name": "ChangeOwner",
+          "displayName": "Change Owner",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3032
+        },
+        {
+          "id": 3033,
+          "name": "ViewAction",
+          "displayName": "View Action",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3032
+        }
+      ],
+      "status": 1,
+      "parentId": 3032
+    },
+    {
+      "id": 3044,
+      "name": "Incident",
+      "displayName": "Incident",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3212,
+          "name": "ApproveInvestigation",
+          "displayName": "Approve Investigation",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3044
+        },
+        {
+          "id": 3211,
+          "name": "ConductInvestigation",
+          "displayName": "Conduct Investigation",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3044
+        },
+        {
+          "id": 3210,
+          "name": "ReviewIncident",
+          "displayName": "Review Incident",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3044
+        },
+        {
+          "id": 3208,
+          "name": "SubmitIncident",
+          "displayName": "Submit Incident",
+          "isGranted": true,
+          "children": [],
+          "status": 1,
+          "parentId": 3044
+        },
+        {
+          "id": 3209,
+          "name": "ViewIncident",
+          "displayName": "View Incident",
+          "isGranted": true,
+          "children": [],
+          "status": 1,
+          "parentId": 3044
+        }
+      ],
+      "status": 1,
+      "parentId": 3044
+    },
+    {
+      "id": 3102,
+      "name": "PTW",
+      "displayName": "PTW",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3119,
+          "name": "Approve/ClosePermit",
+          "displayName": "Approve/Close Permit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3163,
+          "name": "ApproveSpecialPermit",
+          "displayName": "Approve Special Permit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3278,
+          "name": "CreatePTWChecklist",
+          "displayName": "Create PTW Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3164,
+          "name": "ManageApprovalMatrix",
+          "displayName": "Manage Approval Matrix",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3162,
+          "name": "ReviewPermit",
+          "displayName": "Review Permit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3158,
+          "name": "SubmitPermit",
+          "displayName": "Submit Permit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3283,
+          "name": "UnlockPTWChecklist",
+          "displayName": "Unlock PTW Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3104,
+          "name": "ViewPermit",
+          "displayName": "View Permit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        },
+        {
+          "id": 3277,
+          "name": "ViewPTWChecklist",
+          "displayName": "View PTW Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3102
+        }
+      ],
+      "status": 1,
+      "parentId": 3102
+    },
+    {
+      "id": 3170,
+      "name": "Dashboard",
+      "displayName": "Dashboard",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3174,
+          "name": "ActionDashboard",
+          "displayName": "Action Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3287,
+          "name": "AuditDashboard",
+          "displayName": "Audit Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3354,
+          "name": "GembaDashboard",
+          "displayName": "Gemba Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3171,
+          "name": "IncidentDashboard",
+          "displayName": "Incident Dashboard",
+          "isGranted": true,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3288,
+          "name": "InspectionDashboard",
+          "displayName": "Inspection Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3172,
+          "name": "ObservationDashboard",
+          "displayName": "Observation Dashboard",
+          "isGranted": true,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3175,
+          "name": "PTWDashboard",
+          "displayName": "PTW Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3173,
+          "name": "QuickLinks",
+          "displayName": "Quick Links",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3313,
+          "name": "ShiftLogDashboard",
+          "displayName": "Shift Log Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        },
+        {
+          "id": 3329,
+          "name": "VesselInspectionDashboard",
+          "displayName": "Vessel Inspection Dashboard",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3170
+        }
+      ],
+      "status": 1,
+      "parentId": 3170
+    },
+    {
+      "id": 3176,
+      "name": "BusinessUnit(BU)",
+      "displayName": "Setup",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3284,
+          "name": "ContractorMaster",
+          "displayName": "Contractor Master",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3177,
+          "name": "EditBusinessUnit",
+          "displayName": "Manage Business Units",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3196,
+          "name": "ManageContractEmployees",
+          "displayName": "Manage Contract Employees",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3195,
+          "name": "ManageEmployees",
+          "displayName": "Manage Employees",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3179,
+          "name": "ManageEquipment",
+          "displayName": "Manage Equipment",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3180,
+          "name": "ManageLocations",
+          "displayName": "Manage Locations",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3178,
+          "name": "ManageOperationalActivities",
+          "displayName": "Manage Operational Activities",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3291,
+          "name": "ManageTemporaryUsers",
+          "displayName": "Manage Temporary Users",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        },
+        {
+          "id": 3285,
+          "name": "ObservationTypes",
+          "displayName": "Observation Types",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3176
+        }
+      ],
+      "status": 1,
+      "parentId": 3176
+    },
+    {
+      "id": 3184,
+      "name": "Inspection",
+      "displayName": "Inspection",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3191,
+          "name": "ApproveInspection",
+          "displayName": "Approve Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3279,
+          "name": "CreateInspectionChecklist",
+          "displayName": "Create Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3189,
+          "name": "PerformInspection",
+          "displayName": "Perform Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3190,
+          "name": "ReviewInspection",
+          "displayName": "Review Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3188,
+          "name": "ScheduleInspection",
+          "displayName": "Schedule Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3282,
+          "name": "UnlockInspectionChecklist",
+          "displayName": "Unlock Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3192,
+          "name": "ViewInspection",
+          "displayName": "View Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        },
+        {
+          "id": 3276,
+          "name": "ViewInspectionChecklist",
+          "displayName": "View Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3184
+        }
+      ],
+      "status": 1,
+      "parentId": 3184
+    },
+    {
+      "id": 3214,
+      "name": "Audit",
+      "displayName": "Audit",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3221,
+          "name": "CreateActionPlan",
+          "displayName": "Create Action Plan",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3280,
+          "name": "CreateAuditChecklist",
+          "displayName": "Create Audit Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3220,
+          "name": "PerformAudit",
+          "displayName": "Perform Audit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3218,
+          "name": "ScheduleAudits",
+          "displayName": "Schedule Audits",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3219,
+          "name": "SubmitDataChecklist",
+          "displayName": "Submit Data Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3281,
+          "name": "UnlockAuditChecklist",
+          "displayName": "Unlock Audit Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3275,
+          "name": "ViewAuditChecklist",
+          "displayName": "View Audit Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        },
+        {
+          "id": 3222,
+          "name": "ViewAudits",
+          "displayName": "View Audits",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3214
+        }
+      ],
+      "status": 1,
+      "parentId": 3214
+    },
+    {
+      "id": 3286,
+      "name": "MyTasks",
+      "displayName": "My Tasks",
+      "isGranted": true,
+      "children": [],
+      "status": 1,
+      "parentId": 3286
+    },
+    {
+      "id": 3289,
+      "name": "ViewCalendar",
+      "displayName": "View Calendar",
+      "isGranted": false,
+      "children": [],
+      "status": 1,
+      "parentId": 3289
+    },
+    {
+      "id": 3290,
+      "name": "ViewMyCalendar",
+      "displayName": "View My Calendar",
+      "isGranted": false,
+      "children": [],
+      "status": 1,
+      "parentId": 3290
+    },
+    {
+      "id": 3293,
+      "name": "Report",
+      "displayName": "Report",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3297,
+          "name": "CreateReportSchedule",
+          "displayName": "Create Report Schedule",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3293
+        },
+        {
+          "id": 3296,
+          "name": "CreateSavedReport",
+          "displayName": "Create Saved Report",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3293
+        },
+        {
+          "id": 3294,
+          "name": "ViewBaseReports",
+          "displayName": "View Base Reports",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3293
+        },
+        {
+          "id": 3299,
+          "name": "ViewRunLogs",
+          "displayName": "View Run Logs",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3293
+        },
+        {
+          "id": 3295,
+          "name": "ViewSavedReports",
+          "displayName": "View Saved Reports",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3293
+        },
+        {
+          "id": 3298,
+          "name": "ViewScheduledReports",
+          "displayName": "View Scheduled Reports",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3293
+        }
+      ],
+      "status": 1,
+      "parentId": 3293
+    },
+    {
+      "id": 3300,
+      "name": "ShiftInspectionLog",
+      "displayName": "Shift Inspection Log",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3305,
+          "name": "ApproveShiftInspection",
+          "displayName": "Approve Shift Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3303,
+          "name": "CreateShiftInspectionChecklist",
+          "displayName": "Create Shift Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3307,
+          "name": "PerformShiftInspection",
+          "displayName": "Perform Shift Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3306,
+          "name": "ReviewShiftInspection",
+          "displayName": "Review Shift Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3308,
+          "name": "RoutineInspectionSetup",
+          "displayName": "Routine Inspection Setup",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3304,
+          "name": "UnlockShiftInspectionChecklist",
+          "displayName": "Unlock Shift Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3310,
+          "name": "ViewLiveFeed",
+          "displayName": "View Live Feed",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3309,
+          "name": "ViewShiftInspection",
+          "displayName": "View Shift Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        },
+        {
+          "id": 3301,
+          "name": "ViewShiftInspectionChecklist",
+          "displayName": "View Shift Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3300
+        }
+      ],
+      "status": 1,
+      "parentId": 3300
+    },
+    {
+      "id": 3325,
+      "name": "VesselInspection",
+      "displayName": "Vessel Inspection",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3315,
+          "name": "ApproveVesselInspection",
+          "displayName": "Approve Vessel Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3316,
+          "name": "CreateVesselInspectionChecklist",
+          "displayName": "Create Vessel Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3317,
+          "name": "PerformVesselInspection",
+          "displayName": "Perform Vessel Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3318,
+          "name": "ReviewVesselInspection",
+          "displayName": "Review Vessel Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3319,
+          "name": "ScheduleVesselInspection",
+          "displayName": "Schedule Vessel Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3320,
+          "name": "UnlockVesselInspectionChecklist",
+          "displayName": "Unlock Vessel Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3321,
+          "name": "VesselInspectionSetup",
+          "displayName": "Vessel Inspection Setup",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3322,
+          "name": "ViewVesselInspection",
+          "displayName": "View Vessel Inspection",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3323,
+          "name": "ViewVesselInspectionChecklist",
+          "displayName": "View Vessel Inspection Checklist",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        },
+        {
+          "id": 3324,
+          "name": "ViewVesselRegister",
+          "displayName": "View Vessel Register",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3325
+        }
+      ],
+      "status": 1,
+      "parentId": 3325
+    },
+    {
+      "id": 3328,
+      "name": "Home",
+      "displayName": "Home",
+      "isGranted": false,
+      "children": [],
+      "status": 1,
+      "parentId": 3328
+    },
+    {
+      "id": 3330,
+      "name": "BusinessUnit(BU)",
+      "displayName": "Business Unit (BU)",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3331,
+          "name": "ContractorMaster",
+          "displayName": "Contractor Master",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3332,
+          "name": "EditBusinessUnit",
+          "displayName": "Edit Business Unit",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3333,
+          "name": "ManageContractEmployees",
+          "displayName": "Manage Contract Employees",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3342,
+          "name": "ManageDepartment",
+          "displayName": "Manage Department",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3341,
+          "name": "ManageDesignation",
+          "displayName": "Manage Designation",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3334,
+          "name": "ManageEmployees",
+          "displayName": "Manage Employees",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3335,
+          "name": "ManageEquipment",
+          "displayName": "Manage Equipment",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3336,
+          "name": "ManageLocations",
+          "displayName": "Manage Locations",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3337,
+          "name": "ManageOperationalActivities",
+          "displayName": "Manage Operational Activities",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3340,
+          "name": "ManageTemporaryUsers",
+          "displayName": "Manage Temporary Users",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3338,
+          "name": "ObservationTypes",
+          "displayName": "Observation Types",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        },
+        {
+          "id": 3339,
+          "name": "ShiftMaster",
+          "displayName": "Shift Master",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3330
+        }
+      ],
+      "status": 1,
+      "parentId": 3330
+    },
+    {
+      "id": 3344,
+      "name": "GEMBAWalk",
+      "displayName": "GEMBA Walk",
+      "isGranted": false,
+      "children": [
+        {
+          "id": 3345,
+          "name": "ApproveGEMBAWalk",
+          "displayName": "Approve GEMBA Walk",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3346,
+          "name": "ConductGEMBAWalk",
+          "displayName": "Conduct GEMBA Walk",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3347,
+          "name": "EditGEMBATemplate",
+          "displayName": "Edit GEMBA Template",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3348,
+          "name": "ReviewGEMBAWalk",
+          "displayName": "Review GEMBA Walk",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3349,
+          "name": "ScheduleGEMBAWalk",
+          "displayName": "Schedule GEMBA Walk",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3350,
+          "name": "UnlockGEMBATemplate",
+          "displayName": "Unlock GEMBA Template",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3351,
+          "name": "ViewGEMBATemplate",
+          "displayName": "View GEMBA Template",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        },
+        {
+          "id": 3352,
+          "name": "ViewGEMBAWalk",
+          "displayName": "View GEMBA Walk",
+          "isGranted": false,
+          "children": [],
+          "status": 1,
+          "parentId": 3344
+        }
+      ],
+      "status": 1,
+      "parentId": 3344
+    }
+  ],
+  "id": 0,
+  "name": "test role",
+  "roleDescription": "t rol des",
+  "landingPageId": 1,
+  "displayName": "t rol des",
+  "roleType": "test role",
+  "status": 0,
+  "createdBy": 4,
+  "createdDate": "2026-09-25T17:48:17.071"
+}

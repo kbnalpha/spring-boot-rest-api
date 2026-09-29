@@ -1,6 +1,6 @@
 # Master fields and RBAC implementation
 
-Sources: `source/Master tables.xlsx` and `source/RBAC.docx`. Business Unit and Organizational Unit use the existing `organization_unit` entity and `/api/OrganizationUnit` APIs; there is no duplicate business-unit table.
+Sources: `source/Master tables.xlsx`, `source/RBAC.docx`, and `source/all master api with response.docx`. The subsequent user instruction allowing admin role creation/assignment overrides the source document's Super-Admin-only role-management restriction. Business Unit and Organizational Unit use the existing `organization_unit` entity and `/api/OrganizationUnit` APIs; there is no duplicate business-unit table.
 
 ## Workbook mapping
 
@@ -24,9 +24,9 @@ Every profile now requires authentication, including local H2. HTTP Basic uses B
 
 Customer roles contain predefined business permissions. A user's required basic role plus optional additional roles determine their available actions. Independently, `account_organization_scope` determines their allowed organizational units. Each scope can include descendants, and additional units can be assigned explicitly. Expansion stays within the user's instance. Disabling an account, disabling its employee, changing its roles, or changing its scope takes effect on the next authenticated request.
 
-`ManageRoles`, `ManageRoleUsers`, and `ManageBusinessUnits` are Super Admin-only and cannot be delegated to a customer role. Permission responses mark these as disabled for selection. Super Admin can perform their corresponding actions through its system authority.
+`ManageRoles` and `ManageRoleUsers` are selectable permissions for customer administrators. `ManageBusinessUnits` remains Super Admin-only and disabled for selection; the system Super Admin role is immutable and cannot be assigned through application APIs.
 
-The document's distinction between creation and management is implemented as follows: a customer admin with `CreateRole` can create a customer role; only Super Admin can edit existing roles, assign roles/scopes, or activate/deactivate system accounts. `ViewRoles` grants instance-limited role listing. No predefined customer role named Admin is required. There are no individual permission overrides; the document leaves those for later review, so additional access is granted through additional roles.
+A customer admin with `CreateRole` can create roles; `ManageRoles` allows editing roles in the same tenant, and `ManageRoleUsers` allows assigning roles to users in that tenant and within the admin's organizational scope. Only Super Admin can assign scopes or activate/deactivate system accounts. `ViewRoles` grants instance-limited role listing. No predefined customer role named Admin is required. There are no individual permission overrides; the document leaves those for later review, so additional access is granted through additional roles.
 
 Setup actions have business permissions such as `ManageDepartment`, `ManageEmployees`, and `ManageLocations`. Reads are scoped in the database before pagination/counting. Writes validate both the existing record's organization and the submitted organization. Existing master records cannot be moved into another organization through PUT. A request's `userId` or employee membership fields never establish security scope.
 
@@ -38,10 +38,11 @@ Applied migrations 001 and 002 remain unchanged. New migrations are:
 
 - `003-master-fields-rbac.sql`: layout/map fields, organization-name limit, employee country code, instance/system flags on roles, reference data, contractors, permission definitions, role permissions, system accounts, account roles, and account organization scopes.
 - `004-permission-catalog.sql`: predefined permissions and the immutable Super Admin role.
+- `005-complete-master-contract.sql`: selectable role-administration permissions, the temporary-user permission, contractor address/contact fields, and temporary-user/membership tables.
 
 Legacy JSON role and employee membership columns remain for compatibility. Authorization reads only the new validated relational grants and account scopes. Existing roles' unverified JSON permissions do not automatically become authorization grants; review/save those roles and explicitly activate accounts. Existing employee `hasAccess` alone does not create credentials or bypass activation.
 
-After these migrations there are 19 application tables and 2 Liquibase history/lock tables, with 33 recorded changesets.
+After these migrations there are 22 application tables and 2 Liquibase history/lock tables, with 37 recorded changesets.
 
 ## Reference dropdowns
 
@@ -100,8 +101,8 @@ Use the actual generated IDs. Passwords require 12–72 characters and at most 7
 | --- | --- |
 | `GET /api/Auth/Me` | Current user, roles/account details, permissions, and effective organization scope |
 | `GET /api/Permission/GetAll` | Predefined module/action catalog and selection flags |
-| `PUT /api/Role/{id}` | Super Admin edits a customer role |
-| `PUT /api/SystemUser/{id}/Roles` | Super Admin sets basic/additional roles |
+| `PUT /api/Role/{id}` | Admin with ManageRoles or Super Admin edits a customer role |
+| `PUT /api/SystemUser/{id}/Roles` | Admin with ManageRoleUsers or Super Admin sets basic/additional roles |
 | `PUT /api/SystemUser/{id}/Scope` | Super Admin replaces explicit organization scopes |
 | `PUT /api/SystemUser/{id}/Enabled` | Super Admin enables/disables an account |
 | `POST /api/ContractEmployee/Create` | Create an employee of type contract |
@@ -116,3 +117,7 @@ The existing 19 endpoint paths remain. PUT endpoints are also available at `/api
 ## Verification
 
 `mvn verify` exercises the API contracts and RBAC isolation against migrated H2. Set `MYSQL_MIGRATION_TEST=true` for actual MySQL migration and persistence checks. `python scripts/smoke_apis.py --base-url http://127.0.0.1:18080` executes real HTTP requests and writes complete response reports, omitting authentication headers and redacting passwords. Test records are named with `EHS-SMOKE-` and retained for inspection.
+
+The complete master API payloads and ordered executable test data are in [API test payloads](../docs/api-test-payloads.md) and [master-api-tests.http](../docs/master-api-tests.http). Temporary users are separate master records; their source `hasAccess` field does not create a login account.
+
+Permission catalogs expose `sourceAliases` for the document's IDs/names. Use returned canonical `id` values in `permissionIds`. Legacy `permissionLookupHierarchyDto` entries resolve using their source ID and name, because several source IDs collide with existing canonical IDs. Migration 006 retains both definitions without reinterpreting existing grants. All listed source business actions can be selected except reserved organization administration; definitions for modules without supplied workflow APIs do not invent those APIs.

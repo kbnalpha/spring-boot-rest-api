@@ -1,0 +1,816 @@
+# EHS master API executable examples
+# Start the application, then use Run All Requests in IntelliJ HTTP Client.
+# Requests run in order; response handlers capture generated IDs.
+# Synthetic data is retained. Change baseUrl/credentials if configured differently.
+@baseUrl = http://127.0.0.1:8080
+@username = ehs-api
+@password = ehs-api-local
+
+### Configure COUNTRY
+< {%
+    client.global.set("runName", "EHS-TEST-" + Date.now());
+%}
+PUT {{baseUrl}}/api/Lookup/COUNTRY/900001
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "Smoke Test Country",
+  "code": "99",
+  "currency": "TST",
+  "symbol": "T"
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Configure STATE
+PUT {{baseUrl}}/api/Lookup/STATE/900002
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "Smoke Test State",
+  "countryId": 900001
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Configure CITY
+PUT {{baseUrl}}/api/Lookup/CITY/900003
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "Smoke Test City",
+  "countryId": 900001,
+  "stateId": 900002
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Configure LANGUAGE
+PUT {{baseUrl}}/api/Lookup/LANGUAGE/900004
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "Smoke Test Language",
+  "countryId": 900001
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Configure TIME_ZONE
+PUT {{baseUrl}}/api/Lookup/TIME_ZONE/900005
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "Smoke UTC",
+  "countryId": 900001,
+  "zoneId": "UTC"
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Country-filtered state dropdown
+GET {{baseUrl}}/api/Lookup/STATE?countryId=900001
+Authorization: Basic {{username}} {{password}}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Create organization
+POST {{baseUrl}}/api/OrganizationUnit
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "name": "{{runName}}",
+  "description": "Live HTTP verification",
+  "tenantId": 1,
+  "parentId": null,
+  "status": 1,
+  "line1": "Test address",
+  "line2": "",
+  "city": 900003,
+  "state": 900002,
+  "country": 900001,
+  "countryCode": "99",
+  "currency": "TST",
+  "symbol": "T",
+  "timeZone": "UTC+05:30",
+  "keyContactName": "Smoke Test",
+  "phoneNumber": "9000000000",
+  "emailAddress": "smoke@example.com",
+  "isAnonymous": true,
+  "isObservationProofRequired": true,
+  "languageID": 900004,
+  "timeZoneID": 900005,
+  "attachments": null,
+  "shifts": []
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List organizations
+GET {{baseUrl}}/api/OrganizationUnit/GetAllOrganizations
+Authorization: Basic {{username}} {{password}}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("organizationId", response.body.results.find(x => x.name === client.global.get("runName")).id);
+%}
+
+### Create department
+POST {{baseUrl}}/api/Department/Create
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "name": "{{runName}}-Department",
+  "businessUnitId": {{organizationId}},
+  "description": "Operations",
+  "status": 1,
+  "translations": [
+    {
+      "languageId": 1,
+      "name": "Operations",
+      "description": "Operations"
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("departmentId", response.body.results.id);
+%}
+
+### Create designation
+POST {{baseUrl}}/api/Designation/Create
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "name": "{{runName}}-Designation",
+  "businessUnitId": {{organizationId}},
+  "description": "Manager",
+  "status": 1,
+  "translations": [
+    {
+      "languageId": 1,
+      "name": "Manager",
+      "description": "Manager"
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("designationId", response.body.results.id);
+%}
+
+### Create role
+POST {{baseUrl}}/api/Role/CreateRole
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "name": "{{runName}}-Role",
+  "roleDescription": "Verification observer",
+  "displayName": "Observer",
+  "landingPageId": 1,
+  "roleType": "Observer",
+  "status": 1,
+  "permissionLookupHierarchyDto": [
+    {
+      "id": 1024,
+      "name": "Observation",
+      "displayName": "Observation",
+      "isGranted": false,
+      "parentId": 1024,
+      "status": 1,
+      "children": [
+        {
+          "id": 2031,
+          "name": "CreateObservation",
+          "displayName": "Create Observation",
+          "isGranted": true,
+          "status": 1,
+          "parentId": 1024,
+          "children": []
+        }
+      ]
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("roleId", response.body.results.id);
+%}
+
+### Create employee
+POST {{baseUrl}}/api/User/CreateEmployee
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "firstName": "{{runName}}",
+  "middleName": "API",
+  "lastName": "Tester",
+  "dateOfBirth": "1994-04-03",
+  "age": "32",
+  "alias": "smoke",
+  "country": 900001,
+  "contractorId": 0,
+  "dateOfJoining": null,
+  "department": {{departmentId}},
+  "designation": {{designationId}},
+  "emailAddress": "smoke@example.com",
+  "hasAccess": true,
+  "isMobileUser": false,
+  "gender": 1,
+  "phoneNumber": "9000000000",
+  "status": 1,
+  "userNumber": "{{runName}}",
+  "userType": 1,
+  "organizationUnitId": {{organizationId}},
+  "profilePictureId": 0,
+  "languageID": 900004,
+  "userRoleIds": [
+    {{roleId}}
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("employeeId", response.body.results);
+%}
+
+### Activate employee as system user
+POST {{baseUrl}}/api/User/{{employeeId}}/ActivateSystemUser
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "username": "{{runName}}",
+  "password": "Example-password-123",
+  "basicRoleId": {{roleId}},
+  "scopes": [
+    {
+      "organizationUnitId": {{organizationId}},
+      "includeDescendants": true
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("accountId", response.body.results.id);
+%}
+
+### Create location
+POST {{baseUrl}}/api/Location/add
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "name": "{{runName}}-Location",
+  "locationSupervisor": "",
+  "locationDescription": "Live verification",
+  "organizationUnitId": {{organizationId}},
+  "status": 1,
+  "createdBy": {{employeeId}},
+  "supervisorIds": [
+    {{employeeId}}
+  ],
+  "subLocationNames": "Zone A, Zone B",
+  "newSublocations": [
+    {
+      "name": "Zone A",
+      "description": "First area",
+      "status": 1
+    },
+    {
+      "name": "Zone B",
+      "description": "",
+      "status": 1
+    }
+  ],
+  "subLocations": [],
+  "subLocationIds": [],
+  "translations": [
+    {
+      "languageId": 1,
+      "name": "Factory",
+      "description": "Live verification",
+      "subLocations": [
+        {
+          "name": "Zone A",
+          "description": "First area"
+        }
+      ]
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Create operation activity
+POST {{baseUrl}}/api/OperationActivity
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "activityName": "{{runName}}-Activity",
+  "businessUnitId": {{organizationId}},
+  "categoryId": 1,
+  "description": "Forklift operations",
+  "status": 1,
+  "createdBy": {{employeeId}},
+  "translations": [
+    {
+      "languageId": 1,
+      "activityName": "Forklift operations",
+      "description": "Routine"
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Create observation type
+POST {{baseUrl}}/api/ObservationType/Create
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "observationCategoryId": 4,
+  "typeDescription": "{{runName}}-Observation",
+  "businessUnitId": {{organizationId}},
+  "observationSubTypes": [
+    {
+      "subTypeDescription": "PPE",
+      "status": 1
+    },
+    {
+      "subTypeDescription": "Housekeeping",
+      "status": 1
+    }
+  ],
+  "enableSvt": false,
+  "status": 1,
+  "modifiedBy": {{employeeId}},
+  "translations": [
+    {
+      "languageId": 1,
+      "typeDescription": "Safe behavior",
+      "businessUnitId": {{organizationId}},
+      "observationSubTypes": [
+        {
+          "subTypeDescription": "PPE"
+        },
+        {
+          "subTypeDescription": "Housekeeping"
+        }
+      ]
+    }
+  ]
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Create equipment
+POST {{baseUrl}}/api/Equipment/Add
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "equipmentCategoryId": 3,
+  "equipmentTypeId": 18,
+  "organizationUnitId": {{organizationId}},
+  "uid": "{{runName}}-Equipment",
+  "manufacturer": "Acme",
+  "modelNumber": "M-1",
+  "serialNumber": "{{runName}}",
+  "yearofManufacture": "2022",
+  "status": 1,
+  "createdBy": {{employeeId}}
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List users
+POST {{baseUrl}}/api/User/GetUsers
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List employees
+POST {{baseUrl}}/api/User/GetAllEmployees
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List locations
+POST {{baseUrl}}/api/Location/GetAllLocations
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List roles
+GET {{baseUrl}}/api/Role/GetAllRoles
+Authorization: Basic {{username}} {{password}}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List operation activities
+POST {{baseUrl}}/api/OperationActivity/list
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List observation types
+POST {{baseUrl}}/api/ObservationType/GetAll
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "id",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List equipment
+POST {{baseUrl}}/api/Equipment/List
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List designations
+POST {{baseUrl}}/api/Designation/GetList
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### List departments
+POST {{baseUrl}}/api/Department/GetList
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Document contractor create
+POST {{baseUrl}}/api/Contractor/Add
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "contractorName": "{{runName}}-FullContractor",
+  "contractorCode": "{{runName}}-C",
+  "businessUnitId": {{organizationId}},
+  "status": 1,
+  "servicesOffered": "Safety audit",
+  "addressLine1": "Test road",
+  "addressLine2": "Suite 2",
+  "countryId": 900001,
+  "stateId": 900002,
+  "cityId": 900003,
+  "postalCode": "123456",
+  "primaryContactPersonName": "Test Contact",
+  "primaryContactDesignation": "Manager",
+  "phoneNumber": "9000000000",
+  "email": "contractor@example.com",
+  "website": "example.com",
+  "linkedIn": ""
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Document contractor list
+POST {{baseUrl}}/api/Contractor/GetAllContractors
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "contractorName",
+  "sortingType": "desc",
+  "filter": "{{runName}}-FullContractor",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("contractorId", response.body.results.items[0].id);
+%}
+
+### Document contract employee create
+POST {{baseUrl}}/api/User/CreateEmployee
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "firstName": "{{runName}}",
+  "lastName": "Contractor",
+  "gender": 1,
+  "userNumber": "{{runName}}-Contract2",
+  "organizationUnitId": {{organizationId}},
+  "designation": {{designationId}},
+  "contractorId": {{contractorId}},
+  "languageID": 900004,
+  "status": 1,
+  "userType": 2,
+  "department": 0
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Document contract employee list
+POST {{baseUrl}}/api/User/GetAllContractEmployees
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Predefined permission catalog
+GET {{baseUrl}}/api/Permission/GetAll
+Authorization: Basic {{username}} {{password}}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Document temporary user create
+POST {{baseUrl}}/api/User/CreateOrUpdateExternalCollabarator
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": 0,
+  "roleId": {{roleId}},
+  "firstName": "{{runName}}",
+  "middleName": "",
+  "lastName": "Auditor",
+  "emailAddress": "temporary@example.com",
+  "phoneNumber": "9000000000",
+  "gender": 1,
+  "status": 1,
+  "organizationUnitId": {{organizationId}},
+  "alias": "",
+  "country": 900001,
+  "companyName": "Audit Company",
+  "hasAccess": true,
+  "age": 0,
+  "organizationUnitListIds": [],
+  "externalDetails": {
+    "companyName": "Audit Company",
+    "designation": "Auditor",
+    "status": 1
+  }
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("temporaryId", response.body.results);
+%}
+
+### Document temporary user list
+POST {{baseUrl}}/api/User/GetAllExternalCollabarator
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "sorting": "createdDate",
+  "sortingType": "desc",
+  "filter": "",
+  "filters": [],
+  "maxResultCount": 10,
+  "skipCount": 0,
+  "multiSortMeta": [],
+  "businessUnitIds": "{{organizationId}}",
+  "userId": 0,
+  "isExportToExcel": false
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Update temporary user
+POST {{baseUrl}}/api/User/CreateOrUpdateExternalCollabarator
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "id": {{temporaryId}},
+  "roleId": {{roleId}},
+  "firstName": "{{runName}}",
+  "middleName": "",
+  "lastName": "Updated",
+  "emailAddress": "temporary@example.com",
+  "phoneNumber": "9000000000",
+  "gender": 1,
+  "status": 1,
+  "organizationUnitId": {{organizationId}},
+  "alias": "",
+  "country": 900001,
+  "companyName": "Audit Company",
+  "hasAccess": true,
+  "age": 0,
+  "organizationUnitListIds": [],
+  "externalDetails": {
+    "companyName": "Audit Company",
+    "designation": "Auditor",
+    "status": 1
+  }
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Super Admin current access
+GET {{baseUrl}}/api/Auth/Me
+Authorization: Basic {{username}} {{password}}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}

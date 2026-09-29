@@ -107,7 +107,7 @@ public class EmployeeService {
         dto.organizationUnitNames = entity.organizationUnitIds.stream().map(references::organizationName)
             .filter(Objects::nonNull).collect(Collectors.joining(", "));
         dto.fullName = references.fullName(entity);
-        dto.workerTypeName = Integer.valueOf(1).equals(entity.userType) ? "Employee" : null;
+        dto.workerTypeName = Integer.valueOf(1).equals(entity.userType) ? "Employee" : "Contract Employee";
         dto.userRoleNames = roles.findAllById(entity.userRoleIds).stream().map(r -> r.name).collect(Collectors.joining(", "));
         return dto;
     }

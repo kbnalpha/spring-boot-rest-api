@@ -17,8 +17,9 @@ public class RoleService {
     private final DtoMapper mapper;
     private final AccessService access;
     private final ReferenceDataService lookups;
-    public RoleService(RoleRepository repository,PermissionDefinitionRepository permissions,DtoMapper mapper,AccessService access,ReferenceDataService lookups) {
-        this.repository=repository;this.permissions=permissions;this.mapper=mapper;this.access=access;this.lookups=lookups;
+    private final PermissionSourceAliasRepository aliases;
+    public RoleService(RoleRepository repository,PermissionDefinitionRepository permissions,DtoMapper mapper,AccessService access,ReferenceDataService lookups,PermissionSourceAliasRepository aliases) {
+        this.repository=repository;this.permissions=permissions;this.mapper=mapper;this.access=access;this.lookups=lookups;this.aliases=aliases;
     }
     @Transactional public Long create(RoleDto dto) {
         access.require("CreateRole"); ReferenceService.creating(dto.id);
@@ -26,9 +27,10 @@ public class RoleService {
         return repository.saveAndFlush(entity).id;
     }
     @Transactional public Long update(Long id,RoleDto dto) {
-        access.superAdmin();
+        access.require("ManageRoles");
         Role old=repository.findById(id).orElseThrow(() -> ApiException.notFound("Role not found"));
         if(old.systemRole) throw ApiException.badRequest("System roles cannot be configured through the application");
+        access.tenant(old.tenantId);
         dto.tenantId=old.tenantId;
         Role entity=validated(dto);entity.id=id;entity.createdBy=old.createdBy;entity.createdDate=old.createdDate;
         return repository.saveAndFlush(entity).id;
@@ -58,7 +60,16 @@ public class RoleService {
             if(node==null) throw ApiException.badRequest("Permission nodes cannot be null");
             if(Boolean.TRUE.equals(node.isGranted)) {
                 if(node.id==null) throw ApiException.badRequest("Permission ID is required");
-                ids.add(node.id);
+                Long id=node.id;
+                var canonical=permissions.findById(id).orElse(null);
+                if(node.name!=null&&!node.name.isBlank()) {
+                    var alias=aliases.findById(id).orElse(null);
+                    if(alias!=null&&node.name.equals(alias.sourceCode)) id=alias.permissionId;
+                    else if(canonical==null||!node.name.equals(canonical.code)) throw ApiException.badRequest("Permission ID/name do not match the catalog");
+                } else if(canonical==null) {
+                    id=aliases.findById(id).map(a -> a.permissionId).orElse(id);
+                }
+                ids.add(id);
             }
             collect(node.children,ids,depth+1);
         }
@@ -81,11 +92,14 @@ public class RoleService {
     }
     public List<Map<String,Object>> catalog() {
         List<Map<String,Object>> result=new ArrayList<>();
+        var sourceAliases=aliases.findAll();
         for(PermissionDefinition p:permissions.findAll(Sort.by("moduleName","id"))) {
             Map<String,Object> value=new LinkedHashMap<>();value.put("id",p.id);value.put("name",p.code);
             value.put("displayName",p.displayName);value.put("module",p.moduleName);value.put("parentId",p.parentId);
             value.put("businessAction",p.businessAction);value.put("superAdminOnly",p.superAdminOnly);
             value.put("selectable",p.businessAction&&!p.superAdminOnly);value.put("disabled",!p.businessAction||p.superAdminOnly);
+            value.put("sourceAliases",sourceAliases.stream().filter(a -> a.permissionId.equals(p.id))
+                .map(a -> Map.of("id",a.sourceId,"name",a.sourceCode)).toList());
             result.add(value);
         }
         return result;

@@ -9,7 +9,7 @@ public class RoleController {
     private final RoleService service;
     public RoleController(RoleService service) { this.service = service; }
     @GetMapping("/GetAllRoles")
-    @org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ViewRoles') or hasAuthority('CreateRole') or hasRole('SUPER_ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyAuthority('ViewRoles','CreateRole','ManageRoles','ManageRoleUsers') or hasRole('SUPER_ADMIN')")
     public ApiResponse<?> list() {
         return ApiResponse.success(service.list());
     }
@@ -20,7 +20,7 @@ public class RoleController {
         return ApiResponse.success(java.util.Map.of("id", id, "message", "Role created successfully."));
     }
     @PutMapping("/{id}")
-    @org.springframework.security.access.prepost.PreAuthorize("hasRole('SUPER_ADMIN')")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageRoles') or hasRole('SUPER_ADMIN')")
     public ApiResponse<?> update(@PathVariable Long id, @Valid @RequestBody RoleDto request) {
         return ApiResponse.success(java.util.Map.of("id", service.update(id, request)));
     }

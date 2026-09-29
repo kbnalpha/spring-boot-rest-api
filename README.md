@@ -1,6 +1,8 @@
 # EHS Pro master API
 
-Java 21 / Spring Boot implementation of the original 19 endpoints, extended using `source/Master tables.xlsx` and `source/RBAC.docx`. Includes validated master fields, organizational-unit scopes, customer roles, predefined business permissions, employee-backed system accounts, and Liquibase migrations. Business Unit means Organizational Unit throughout.
+Java 21 / Spring Boot implementation of all master API contracts in `source/all master api with response.docx`, including contractor, contract-employee, and temporary-user workflows, extended using `source/Master tables.xlsx` and `source/RBAC.docx`. Includes validated master fields, organizational-unit scopes, customer roles, predefined business permissions, employee-backed system accounts, and Liquibase migrations. Business Unit means Organizational Unit throughout.
+
+Test with the ordered [IntelliJ HTTP collection](docs/master-api-tests.http), or copy URLs and JSON from [API test payloads](docs/api-test-payloads.md). The HTTP collection creates sample reference data and captures generated IDs. Run requests in order.
 
 See [master fields, RBAC, and account setup](database/master-fields-rbac.md) for the workbook mapping, new APIs, and required reference-data setup.
 
@@ -40,7 +42,9 @@ mvn spring-boot:run
 - `changes/001-initial-schema.sql` defines all 12 entity/collection tables, primary keys, unique constraints, and relationships. `${largeTextType}` resolves to MySQL `LONGTEXT` (H2 `CLOB` for tests), matching JSON converters.
 - `changes/002-list-query-indexes.sql` adds eight indexes as a separate migration.
 - `changes/003-master-fields-rbac.sql` aligns master fields and adds reference data, contractors, accounts, role grants, and scopes.
-- `changes/004-permission-catalog.sql` seeds business permissions and the immutable system Super Admin role. The final schema has 19 application tables plus 2 Liquibase tables, with 33 changesets.
+- `changes/004-permission-catalog.sql` seeds business permissions and the immutable system Super Admin role. Migration 005 extends this catalog for delegated role administration.
+- `changes/005-complete-master-contract.sql` adds contractor contact/address fields, temporary users and memberships, and selectable admin permissions. The final schema has 22 application tables plus 2 Liquibase tables, with 37 changesets.
+- `changes/006-source-permission-catalog.sql` adds all source permission definitions and maps 129 source IDs/names to canonical permissions without changing existing grants.
 - `DATABASECHANGELOG` stores each applied changeset's ID, author, filename, execution time, order, and checksum. `DATABASECHANGELOGLOCK` prevents concurrent migration runs.
 - `spring.jpa.hibernate.ddl-auto=validate` and `spring.sql.init.mode=never` leave schema writes to Liquibase. Do not switch Hibernate to `update`.
 
@@ -73,6 +77,12 @@ Successes return HTTP 200 and `{ "statusCode": 200, "message": "Successful", "re
 | POST | `/api/Designation/Create` | `{ "id": N }` |
 | POST | `/api/Department/GetList` | Paged departments |
 | POST | `/api/Department/Create` | `{ "id": N }` |
+| POST | `/api/Contractor/GetAllContractors` | Paged contractors with contact/address details |
+| POST | `/api/Contractor/Add` | `"Contractor added successfully."` |
+| POST | `/api/User/GetAllContractEmployees` | Paged contract employees |
+| POST | `/api/User/CreateEmployee` with `userType: 2` | Numeric contract-employee ID |
+| POST | `/api/User/GetAllExternalCollabarator` | Paged temporary users |
+| POST | `/api/User/CreateOrUpdateExternalCollabarator` | Numeric temporary-user ID; positive `id` updates |
 
 Example workflow after importing the referenced country/state/city/language/time-zone IDs using the lookup APIs:
 
@@ -92,7 +102,7 @@ Invoke-RestMethod "$base/Department/GetList" -Headers $headers -Method Post -Con
 
 `skipCount` is a zero-based row offset. `maxResultCount` defaults to 10 and accepts 1–1000. `businessUnitIds` accepts comma-separated positive IDs; employee filtering includes secondary memberships. `id` optionally selects one record. Empty sorting defaults to ascending `id`, and an ID tiebreaker keeps pagination deterministic.
 
-The document only supplies empty `filters` and `multiSortMeta`. Nonempty filters use `{ "field": "name", "matchMode": "contains", "value": "Ops" }`; multisort uses `{ "field": "name", "order": 1 }` (1 ascending, -1 descending). Supported match modes: `contains`, `startsWith`, `endsWith`, `equals`, `notEquals`. Null values support equality modes. Fields must be stored scalar properties. Free-text `filter` searches the main name/description field (employee first name, equipment UID). `totalCount` is calculated after filtering, before pagination.
+The source documents only supply empty `filters` and `multiSortMeta`. Nonempty filters use `{ "field": "name", "matchMode": "contains", "value": "Ops" }`; multisort uses `{ "field": "name", "order": 1 }` (1 ascending, -1 descending). Supported match modes: `contains`, `startsWith`, `endsWith`, `equals`, `notEquals`. Null values support equality modes. Fields must be stored scalar properties. Free-text `filter` searches the main name/description field (employee first name, equipment UID). `totalCount` is calculated after filtering, before pagination.
 
 Errors use the same envelope: HTTP 400 for invalid requests, 401 for missing/invalid credentials, 403 for denied actions or organizational scope, 404 for missing records, 409 for duplicate employee numbers or equipment UIDs within an organization, and 500 for unexpected failures. Creates accept ID 0 or omitted ID and generate IDs. Nested records are persisted transactionally. Employee DTOs return `password: null`; account activation stores only BCrypt hashes in the separate account table.
 
@@ -105,7 +115,7 @@ Errors use the same envelope: HTTP 400 for invalid requests, 401 for missing/inv
 - Geography, language, time-zone, and landing-page catalogs are configurable through the lookup APIs. No complete geography data or image-upload provider was supplied. Unknown equipment/category display names remain null. Images/attachments retain metadata; shift timings are typed and validated.
 - Organization parents, employee department/designation/role memberships, supervisors, and business units must exist. Department/designation must belong to the employee's primary organization. Parent and child organizations must have the same tenant.
 - Translations are typed JSON values; sublocations and observation subtypes are relational entities. Authorization grants and organizational scopes are relational tables, separate from legacy JSON fields. Subtype translations without IDs match child order.
-- PUT endpoints support master editing. No deletion workflows were specified. The catalog and backend system role are seeded; live smoke-test records are explicitly named `EHS-SMOKE-` and retained for inspection.
+- PUT endpoints support master editing. Temporary users use their documented create-or-update POST. No deletion workflows were specified. The catalog and backend system role are seeded; live smoke-test records are explicitly named `EHS-SMOKE-` and retained for inspection.
 
 ## Code layout and tests
 
@@ -128,3 +138,11 @@ python scripts/smoke_apis.py --base-url http://127.0.0.1:8080
 ```
 
 The script calls every OpenAPI operation, checks expected success/error responses, and writes [a summary](reports/api-smoke-results.md) and [full request/response bodies](reports/api-smoke-results.json). Passwords are redacted. It creates synthetic reference data and retains named test records.
+
+## Dynamic roles and temporary users
+
+Admins select `permissionIds` from `GET /api/Permission/GetAll`. Grant `CreateRole` (3302) to create roles, `ManageRoles` (3272) to edit roles, and `ManageRoleUsers` (3274) to assign basic/additional roles to system users. The admin role can have any name. Role definitions stay within the admin's tenant; user assignment also checks the target employee's organizational scope. Super Admin can perform all these actions. Scope assignment and account activation remain separate Super Admin operations.
+
+Temporary users require `ManageExternalCollaborators` (3357); creation or a role change additionally requires `ManageRoleUsers`. Their `roleId` must refer to an active, non-system role in the same tenant. `externalDetails` company/designation/status are persisted and returned. `hasAccess` is source metadata: temporary-user creation does not provision credentials or bypass the employee-backed account activation model. Passwords are always returned as null.
+
+The exact source spelling `Collabarator` is preserved in routes. Existing `/api/Contractor/Create`, `/api/Contractor/GetList`, and `/api/ContractEmployee/*` endpoints remain available. Contractor `name` remains a compatible alias for `contractorName`; conflicting names are rejected. Geography IDs must exist and agree. Source IDs and display values are examples; generated IDs and persisted values are returned.

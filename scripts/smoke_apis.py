@@ -199,6 +199,11 @@ def main():
         role_dto = next(item for item in roles if item['id'] == role)
         call('Edit customer role', f'/api/Role/{role}', role_dto, method='PUT')
         permissions = call('Predefined permission catalog', '/api/Permission/GetAll')
+        source_role = json.loads(Path('src/test/resources/document-role-payload.json').read_text())
+        source_role.update(name=prefix + '-SourceRole', status=1)
+        call('Complete document role permission tree', '/api/Role/CreateRole', source_role)
+        check('source permission catalog includes documented actions',
+              {'SubmitIncident', 'ViewObservation', 'MyTasks', 'ViewShiftInspectionChecklist'} <= {p['name'] for p in permissions})
         call('Super Admin current access', '/api/Auth/Me')
         department_role = call('Create setup manager role', '/api/Role/CreateRole', {
             'name': prefix + '-SetupRole', 'landingPageId': 1, 'permissionIds': [3342], 'status': 1})['id']
@@ -226,6 +231,48 @@ def main():
         contract_employee = call('Create contract employee', '/api/ContractEmployee/Create', contract_body)
         call('List contract employees', '/api/ContractEmployee/GetList', {'businessUnitIds': str(organization)})
         call('Edit contract employee', f'/api/ContractEmployee/{contract_employee}', contract_body, method='PUT')
+        # Exact routes and fields added in all master api with response.docx.
+        contractor_body = {'contractorName': prefix + '-FullContractor', 'contractorCode': prefix + '-C',
+            'businessUnitId': organization, 'status': 1, 'servicesOffered': 'Safety audit',
+            'addressLine1': 'Test road', 'addressLine2': 'Suite 2', 'countryId': 900001,
+            'stateId': 900002, 'cityId': 900003, 'postalCode': '123456',
+            'primaryContactPersonName': 'Test Contact', 'primaryContactDesignation': 'Manager',
+            'phoneNumber': '9000000000', 'email': 'contractor@example.com', 'website': 'example.com', 'linkedIn': ''}
+        call('Document contractor create', '/api/Contractor/Add', contractor_body)
+        full_contractors = listing('Document contractor list', '/api/Contractor/GetAllContractors', organization,
+                                  filter=prefix + '-FullContractor', sorting='contractorName')
+        full_contractor = full_contractors['items'][0]
+        check('contractor full fields persisted', full_contractor['contractorCode'] == prefix + '-C'
+              and full_contractor['city'] == 'Smoke Test City' and full_contractor['website'] == 'example.com')
+        call('Document contract employee create', '/api/User/CreateEmployee',
+             dict(contract_body, userType=2, department=0, contractorId=full_contractor['id'], userNumber=prefix + '-Contract2'))
+        contract_list = listing('Document contract employee list', '/api/User/GetAllContractEmployees', organization)
+        check('contract employee endpoint filters worker type', contract_list['totalCount'] == 2
+              and all(item['userType'] == 2 for item in contract_list['items']))
+        administrator = call('Create dynamic administrator role', '/api/Role/CreateRole', {
+            'name': prefix + '-Admin', 'landingPageId': 1, 'permissionIds': [3302, 3272, 3274, 3357], 'status': 1})['id']
+        call('Grant administration to system user', f'/api/SystemUser/{account["id"]}/Roles',
+             {'basicRoleId': administrator}, method='PUT')
+        dynamic = call('Admin creates role from catalog', '/api/Role/CreateRole', {
+            'name': prefix + '-Dynamic', 'landingPageId': 1, 'permissionIds': [3342], 'status': 1}, auth=normal_auth)['id']
+        call('Admin edits role', f'/api/Role/{dynamic}', {
+            'name': prefix + '-DynamicEdited', 'landingPageId': 1, 'permissionIds': [3342], 'status': 1}, auth=normal_auth, method='PUT')
+        call('Admin assigns role to user', f'/api/SystemUser/{account["id"]}/Roles',
+             {'basicRoleId': administrator, 'additionalRoleIds': [dynamic]}, auth=normal_auth, method='PUT')
+        temporary_body = {'id': 0, 'roleId': dynamic, 'firstName': prefix, 'middleName': '', 'lastName': 'Auditor',
+            'emailAddress': 'temporary@example.com', 'phoneNumber': '9000000000', 'gender': 1, 'status': 1,
+            'organizationUnitId': organization, 'alias': '', 'country': 900001, 'companyName': 'Audit Company',
+            'hasAccess': True, 'age': 0, 'organizationUnitListIds': [],
+            'externalDetails': {'companyName': 'Audit Company', 'designation': 'Auditor', 'status': 1}}
+        temporary = call('Document temporary user create', '/api/User/CreateOrUpdateExternalCollabarator', temporary_body, auth=normal_auth)
+        temporary_list = listing('Document temporary user list', '/api/User/GetAllExternalCollabarator', organization)
+        check('temporary user fields persist', temporary_list['items'][0]['externalDetails']['designation'] == 'Auditor'
+              and temporary_list['items'][0]['roleId'] == dynamic and temporary_list['items'][0]['password'] is None)
+        call('Update temporary user', '/api/User/CreateOrUpdateExternalCollabarator',
+             dict(temporary_body, id=temporary, lastName='Updated'), auth=normal_auth)
+        call('Invalid temporary user role rejected', '/api/User/CreateOrUpdateExternalCollabarator',
+             dict(temporary_body, roleId=9223372036854775807), expected=400)
+        call('Invalid contractor geography rejected', '/api/Contractor/Add', dict(contractor_body, cityId=9223372036854775807), expected=400)
         api = call('OpenAPI endpoint coverage', '/v3/api-docs', envelope=False)
         covered = {(c['method'].lower(), c['path']) for c in calls if c['httpStatus'] == 200}
         documented = {(method, path) for path, ops in api['paths'].items() for method in ops if method in ['get', 'post', 'put', 'patch', 'delete']}

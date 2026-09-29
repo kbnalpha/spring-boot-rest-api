@@ -2,8 +2,8 @@
 
 - Database: `ehs_db (MySQL)`
 - Server: `http://127.0.0.1:18080`
-- Test record prefix: `EHS-SMOKE-984d5875`
-- Requests: 72; failed checks: 0
+- Test record prefix: `EHS-SMOKE-9d359016`
+- Requests: 87; failed checks: 0
 
 Full request and response bodies: [api-smoke-results.json](api-smoke-results.json)
 
@@ -21,7 +21,7 @@ Full request and response bodies: [api-smoke-results.json](api-smoke-results.jso
 | Create designation | POST | `/api/Designation/Create` | 200 | 200 | PASS |
 | Create role | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
 | Create employee | POST | `/api/User/CreateEmployee` | 200 | 200 | PASS |
-| Activate employee as system user | POST | `/api/User/2/ActivateSystemUser` | 200 | 200 | PASS |
+| Activate employee as system user | POST | `/api/User/7/ActivateSystemUser` | 200 | 200 | PASS |
 | Create location | POST | `/api/Location/add` | 200 | 200 | PASS |
 | Create operation activity | POST | `/api/OperationActivity` | 200 | 200 | PASS |
 | Create observation type | POST | `/api/ObservationType/Create` | 200 | 200 | PASS |
@@ -52,34 +52,49 @@ Full request and response bodies: [api-smoke-results.json](api-smoke-results.jso
 | Null nested observation translation | POST | `/api/ObservationType/Create` | 400 | 400 | PASS |
 | Failed location creates leave no records | POST | `/api/Location/GetAllLocations` | 200 | 200 | PASS |
 | Failed observation create leaves no records | POST | `/api/ObservationType/GetAll` | 200 | 200 | PASS |
-| Edit organization and shifts | PUT | `/api/OrganizationUnit/4` | 200 | 200 | PASS |
-| Edit department | PUT | `/api/Department/2` | 200 | 200 | PASS |
-| Edit designation | PUT | `/api/Designation/2` | 200 | 200 | PASS |
-| Edit equipment | PUT | `/api/Equipment/3` | 200 | 200 | PASS |
-| Edit operation activity | PUT | `/api/OperationActivity/2` | 200 | 200 | PASS |
-| Edit location | PUT | `/api/Location/6` | 200 | 200 | PASS |
-| Edit observation type | PUT | `/api/ObservationType/3` | 200 | 200 | PASS |
-| Edit employee | PUT | `/api/User/2` | 200 | 200 | PASS |
-| Edit customer role | PUT | `/api/Role/2` | 200 | 200 | PASS |
+| Edit organization and shifts | PUT | `/api/OrganizationUnit/8` | 200 | 200 | PASS |
+| Edit department | PUT | `/api/Department/4` | 200 | 200 | PASS |
+| Edit designation | PUT | `/api/Designation/4` | 200 | 200 | PASS |
+| Edit equipment | PUT | `/api/Equipment/7` | 200 | 200 | PASS |
+| Edit operation activity | PUT | `/api/OperationActivity/4` | 200 | 200 | PASS |
+| Edit location | PUT | `/api/Location/10` | 200 | 200 | PASS |
+| Edit observation type | PUT | `/api/ObservationType/5` | 200 | 200 | PASS |
+| Edit employee | PUT | `/api/User/7` | 200 | 200 | PASS |
+| Edit customer role | PUT | `/api/Role/8` | 200 | 200 | PASS |
 | Predefined permission catalog | GET | `/api/Permission/GetAll` | 200 | 200 | PASS |
+| Complete document role permission tree | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
 | Super Admin current access | GET | `/api/Auth/Me` | 200 | 200 | PASS |
 | Create setup manager role | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
-| Assign additional role | PUT | `/api/SystemUser/1/Roles` | 200 | 200 | PASS |
-| Update separate BU scope | PUT | `/api/SystemUser/1/Scope` | 200 | 200 | PASS |
+| Assign additional role | PUT | `/api/SystemUser/3/Roles` | 200 | 200 | PASS |
+| Update separate BU scope | PUT | `/api/SystemUser/3/Scope` | 200 | 200 | PASS |
 | Normal user current access | GET | `/api/Auth/Me` | 200 | 200 | PASS |
 | Normal user permitted master list | POST | `/api/Department/GetList` | 200 | 200 | PASS |
 | Normal user denied ungranted master | POST | `/api/Equipment/List` | 403 | 403 | PASS |
-| Normal user denied role assignment | PUT | `/api/SystemUser/1/Roles` | 403 | 403 | PASS |
+| Normal user denied role assignment | PUT | `/api/SystemUser/3/Roles` | 403 | 403 | PASS |
 | Normal user denied outside scope | POST | `/api/Department/GetList` | 403 | 403 | PASS |
-| Deactivate account | PUT | `/api/SystemUser/1/Enabled` | 200 | 200 | PASS |
+| Deactivate account | PUT | `/api/SystemUser/3/Enabled` | 200 | 200 | PASS |
 | Disabled user rejected | GET | `/api/Auth/Me` | 401 | 401 | PASS |
-| Reactivate account | PUT | `/api/SystemUser/1/Enabled` | 200 | 200 | PASS |
+| Reactivate account | PUT | `/api/SystemUser/3/Enabled` | 200 | 200 | PASS |
 | Create contractor company | POST | `/api/Contractor/Create` | 200 | 200 | PASS |
 | List contractors | POST | `/api/Contractor/GetList` | 200 | 200 | PASS |
-| Edit contractor | PUT | `/api/Contractor/1` | 200 | 200 | PASS |
+| Edit contractor | PUT | `/api/Contractor/4` | 200 | 200 | PASS |
 | Create contract employee | POST | `/api/ContractEmployee/Create` | 200 | 200 | PASS |
 | List contract employees | POST | `/api/ContractEmployee/GetList` | 200 | 200 | PASS |
-| Edit contract employee | PUT | `/api/ContractEmployee/3` | 200 | 200 | PASS |
+| Edit contract employee | PUT | `/api/ContractEmployee/8` | 200 | 200 | PASS |
+| Document contractor create | POST | `/api/Contractor/Add` | 200 | 200 | PASS |
+| Document contractor list | POST | `/api/Contractor/GetAllContractors` | 200 | 200 | PASS |
+| Document contract employee create | POST | `/api/User/CreateEmployee` | 200 | 200 | PASS |
+| Document contract employee list | POST | `/api/User/GetAllContractEmployees` | 200 | 200 | PASS |
+| Create dynamic administrator role | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
+| Grant administration to system user | PUT | `/api/SystemUser/3/Roles` | 200 | 200 | PASS |
+| Admin creates role from catalog | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
+| Admin edits role | PUT | `/api/Role/12` | 200 | 200 | PASS |
+| Admin assigns role to user | PUT | `/api/SystemUser/3/Roles` | 200 | 200 | PASS |
+| Document temporary user create | POST | `/api/User/CreateOrUpdateExternalCollabarator` | 200 | 200 | PASS |
+| Document temporary user list | POST | `/api/User/GetAllExternalCollabarator` | 200 | 200 | PASS |
+| Update temporary user | POST | `/api/User/CreateOrUpdateExternalCollabarator` | 200 | 200 | PASS |
+| Invalid temporary user role rejected | POST | `/api/User/CreateOrUpdateExternalCollabarator` | 400 | 400 | PASS |
+| Invalid contractor geography rejected | POST | `/api/Contractor/Add` | 400 | 400 | PASS |
 | OpenAPI endpoint coverage | GET | `/v3/api-docs` | 200 | 200 | PASS |
 
 ## Response assertions
@@ -102,5 +117,9 @@ Full request and response bodies: [api-smoke-results.json](api-smoke-results.jso
 - PASS: offset preserves totalCount
 - PASS: invalid location rollback
 - PASS: invalid observation rollback
+- PASS: source permission catalog includes documented actions
 - PASS: normal user scope is separate from roles
+- PASS: contractor full fields persisted
+- PASS: contract employee endpoint filters worker type
+- PASS: temporary user fields persist
 - PASS: all documented endpoints called successfully

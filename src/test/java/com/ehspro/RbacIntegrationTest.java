@@ -61,7 +61,7 @@ class RbacIntegrationTest {
         request("POST","/api/Role/CreateRole",Map.of("name","Customer role","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,200);
         JsonNode roles=request("GET","/api/Role/GetAllRoles",null,user.username,password,200);
         for(JsonNode item:roles) assertThat(item.path("tenantId").asLong()).isEqualTo(tenant);
-        request("POST","/api/Role/CreateRole",Map.of("name","Forbidden grant","landingPageId",1,"permissionIds",List.of(3272)),user.username,password,400);
+        request("POST","/api/Role/CreateRole",Map.of("name","Forbidden grant","landingPageId",1,"permissionIds",List.of(3301)),user.username,password,400);
         request("POST","/api/Role/CreateRole",Map.of("name","Unknown grant","landingPageId",1,"permissionIds",List.of(999999)),user.username,password,400);
         request("PUT","/api/Role/"+role,Map.of("name","No","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,403);
         request("PUT","/api/SystemUser/"+user.id+"/Roles",Map.of("basicRoleId",role),user.username,password,403);
@@ -104,6 +104,73 @@ class RbacIntegrationTest {
         body.put("state",999999);admin("POST","/api/OrganizationUnit",body,400);
         body.put("state",50002);body.put("latitude",20);admin("POST","/api/OrganizationUnit",body,400);
         ObjectNode employee=employeeBody(created.path("id").asLong());employee.remove("lastName");admin("POST","/api/User/CreateEmployee",employee,400);
+    }
+    @Test void adminsCanCreateEditAndAssignDynamicRolesWithinTheirInstanceAndScope() throws Exception {
+        long unit=organization(null,tenant),outside=organization(null,tenant),foreign=organization(null,tenant+1);
+        long adminRole=role(tenant,List.of(3302L,3272L,3274L));
+        long viewer=role(tenant,List.of(2033L));
+        var admin=activate(employee(unit),adminRole,List.of(scope(unit,false)));
+        var target=activate(employee(unit),viewer,List.of(scope(unit,false)));
+        var out=activate(employee(outside),viewer,List.of(scope(outside,false)));
+        long foreignRole=role(tenant+1,List.of(3342L));
+        var other=activate(employee(foreign),foreignRole,List.of(scope(foreign,false)));
+        var body=Map.of("name","Custom department administrator","landingPageId",1,"permissionIds",List.of(3342));
+        long created=request("POST","/api/Role/CreateRole",body,admin.username,password,200).path("id").asLong();
+        request("PUT","/api/Role/"+created,body,admin.username,password,200);
+        request("PUT","/api/Role/"+foreignRole,body,admin.username,password,403);
+        request("PUT","/api/Role/-1",body,admin.username,password,400);
+        request("PUT","/api/SystemUser/"+target.id+"/Roles",Map.of("basicRoleId",created),admin.username,password,200);
+        request("POST","/api/Department/GetList",Map.of(),target.username,password,200);
+        request("PUT","/api/SystemUser/"+out.id+"/Roles",Map.of("basicRoleId",created),admin.username,password,403);
+        request("PUT","/api/SystemUser/"+other.id+"/Roles",Map.of("basicRoleId",created),admin.username,password,403);
+        request("PUT","/api/SystemUser/"+target.id+"/Roles",Map.of("basicRoleId",foreignRole),admin.username,password,400);
+    }
+    @Test void documentPermissionTreeResolvesSourceIdsWithoutChangingExistingAuthorities() throws Exception {
+        var payload=(ObjectNode)mapper.readTree(getClass().getResourceAsStream("/document-role-payload.json"));
+        payload.put("tenantId",tenant).put("status",1);
+        long roleId=admin("POST","/api/Role/CreateRole",payload,200).path("id").asLong();
+        var all=admin("GET","/api/Role/GetAllRoles",null,200);
+        JsonNode created=null;for(var role:all) if(role.path("id").asLong()==roleId) created=role;
+        assertThat(created).isNotNull();
+        Set<String> codes=new HashSet<>();created.path("permissions").forEach(p -> codes.add(p.path("name").asText()));
+        assertThat(codes).contains("ViewObservation","SubmitIncident","ViewIncident","IncidentDashboard","ObservationDashboard","MyTasks");
+        // 3301 means a different action in the source tree; flat permissionIds retain canonical meaning.
+        admin("POST","/api/Role/CreateRole",Map.of("name","Source permission","landingPageId",1,"permissionLookupHierarchyDto",
+            List.of(Map.of("id",3301,"name","ViewShiftInspectionChecklist","isGranted",true))),200);
+        admin("POST","/api/Role/CreateRole",Map.of("name","Reserved permission","landingPageId",1,"permissionIds",List.of(3301)),400);
+        admin("POST","/api/Role/CreateRole",Map.of("name","Mismatched permission","landingPageId",1,"permissionLookupHierarchyDto",
+            List.of(Map.of("id",3301,"name","InventedPermission","isGranted",true))),400);
+    }
+    @Test void completeContractorAndTemporaryUserContractsPersistAndValidate() throws Exception {
+        long unit=organization(null,tenant),outside=organization(null,tenant),foreign=organization(null,tenant+1);
+        ObjectNode contractor=mapper.createObjectNode();contractor.put("contractorName","Contract Co").put("businessUnitId",unit).put("status",1);
+        contractor.put("contractorCode","C-123").put("servicesOffered","Maintenance").put("addressLine1","Test Road")
+            .put("countryId",50001).put("stateId",50002).put("cityId",50003).put("email","test@example.com").put("website","example.com");
+        assertThat(admin("POST","/api/Contractor/Add",contractor,200).asText()).isEqualTo("Contractor added successfully.");
+        var company=admin("POST","/api/Contractor/GetAllContractors",Map.of("businessUnitIds",Long.toString(unit),"sorting","contractorName"),200).at("/items/0");
+        assertThat(company.path("contractorCode").asText()).isEqualTo("C-123");
+        assertThat(company.path("country").asText()).isEqualTo("Test Country");
+        contractor.put("cityId",999999);admin("POST","/api/Contractor/Add",contractor,400);
+        ObjectNode employee=employeeBody(unit);employee.put("userType",2).put("department",0).put("contractorId",company.path("id").asLong());
+        long managerRole=role(tenant,List.of(3355L,3357L,3274L));
+        var manager=activate(employee(unit),managerRole,List.of(scope(unit,false)));
+        request("POST","/api/User/CreateEmployee",employee,manager.username,password,200);
+        assertThat(request("POST","/api/User/GetAllContractEmployees",Map.of(),manager.username,password,200).path("totalCount").asInt()).isEqualTo(1);
+        long role=role(tenant,List.of(2033L));
+        ObjectNode temp=mapper.createObjectNode();temp.put("id",0).put("roleId",role).put("organizationUnitId",unit)
+            .put("firstName","Temporary").put("lastName","Auditor").put("gender",1).put("status",1).put("country",50001).put("hasAccess",true);
+        temp.putObject("externalDetails").put("companyName","Audit Co").put("designation","Auditor").put("status",1);
+        long id=request("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,manager.username,password,200).asLong();
+        var page=request("POST","/api/User/GetAllExternalCollabarator",Map.of(),manager.username,password,200);
+        assertThat(page.path("totalCount").asInt()).isEqualTo(1);
+        assertThat(page.at("/items/0/externalDetails/designation").asText()).isEqualTo("Auditor");
+        assertThat(page.at("/items/0/password").isNull()).isTrue();
+        temp.put("id",id).put("lastName","Updated");request("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,manager.username,password,200);
+        temp.put("organizationUnitId",outside);request("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,manager.username,password,400);
+        temp.put("id",0);request("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,manager.username,password,403);
+        temp.put("organizationUnitId",unit).put("roleId",role(tenant+1,List.of(2033L)));
+        request("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,manager.username,password,400);
+        temp.put("roleId",role).putNull("firstName");admin("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,400);
     }
     private ObjectNode organizationBody(Long parent,long tenantId) {
         ObjectNode node=mapper.createObjectNode();node.put("name","BU-"+UUID.randomUUID().toString().substring(0,12));node.put("tenantId",tenantId);if(parent!=null)node.put("parentId",parent);
