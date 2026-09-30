@@ -1,0 +1,7 @@
+# Only the Maven inputs enter the build context; excludes .env and source documents.
+**
+!pom.xml
+!src/
+!src/**
+!Dockerfile
+!.dockerignore

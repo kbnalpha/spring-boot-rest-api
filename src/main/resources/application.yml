@@ -31,6 +31,18 @@ spring:
 server:
   error:
     include-message: never
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      show-components: never
+  health:
+    mail:
+      enabled: false
 ehs:
   mail:
     from: ${SMTP_FROM:no-reply@example.com}

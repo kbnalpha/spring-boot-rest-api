@@ -8,6 +8,8 @@ See [master fields, RBAC, and account setup](database/master-fields-rbac.md) for
 
 ## Run with MySQL
 
+For container deployment, use the root `Dockerfile` and `render.yaml`. Follow the [Render deployment guide](docs/render-deployment.md) for environment variables, SMTP configuration, health checks, and local Docker commands.
+
 Requires Java 21, Maven 3.9+, and access to the configured Aiven MySQL service. The mysql profile imports the project-root `.env` file; `.env.example` provides a template.
 
 ```powershell

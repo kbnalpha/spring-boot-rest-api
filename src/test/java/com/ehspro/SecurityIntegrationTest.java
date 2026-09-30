@@ -21,6 +21,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SecurityIntegrationTest {
     @Autowired MockMvc mvc;
     @Test
+    void healthIsPublicWithoutExposingDetailsOrOtherManagementEndpoints() throws Exception {
+        mvc.perform(get("/actuator/health"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("UP"))
+            .andExpect(jsonPath("$.components").doesNotExist())
+            .andExpect(jsonPath("$.details").doesNotExist());
+        mvc.perform(get("/actuator/env")).andExpect(status().isUnauthorized());
+        mvc.perform(get("/actuator/env").with(httpBasic("test-api", "test-password")))
+            .andExpect(status().isNotFound());
+    }
+    @Test
     void nonLocalProfileRequiresCredentials() throws Exception {
         mvc.perform(get("/api/Role/GetAllRoles"))
             .andExpect(status().isUnauthorized()).andExpect(jsonPath("$.statusCode").value(401));
