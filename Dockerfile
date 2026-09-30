@@ -10,7 +10,7 @@ FROM eclipse-temurin:21-jre-jammy AS runtime
 WORKDIR /app
 RUN groupadd --system --gid 10001 ehs && useradd --system --uid 10001 --gid ehs --no-create-home ehs
 COPY --from=build --chown=ehs:ehs /build/target/ehspro-api-1.0.0.jar /app/app.jar
-ENV SPRING_PROFILES_ACTIVE=mysql,render \
+ENV SPRING_PROFILES_ACTIVE=render \
     PORT=10000 \
     JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=65.0 -XX:+ExitOnOutOfMemoryError"
 USER 10001:10001

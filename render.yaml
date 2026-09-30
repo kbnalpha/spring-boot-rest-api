@@ -8,7 +8,7 @@ services:
     healthCheckPath: /actuator/health
     envVars:
       - key: SPRING_PROFILES_ACTIVE
-        value: mysql,render
+        value: render
       - key: DB_HOST
         value: mysql-ehs-kbnalpha-bbce.l.aivencloud.com
       - key: DB_PORT
@@ -22,7 +22,7 @@ services:
       - key: API_USERNAME
         value: ehs-api
       - key: API_PASSWORD
-        generateValue: true
+        sync: false
       - key: SMTP_HOST
         value: smtp-relay.brevo.com
       - key: SMTP_PORT
