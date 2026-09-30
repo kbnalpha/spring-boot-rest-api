@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009-employee-organization-primary-key
+      author: ehspro
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - primaryKeyExists:
+                tableName: employee_organization
+      changes:
+        - addPrimaryKey:
+            tableName: employee_organization
+            columnNames: employee_id, organization_id
+            constraintName: pk_employee_organization
+  - changeSet:
+      id: 009-liquibase-history-primary-key
+      author: ehspro
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - primaryKeyExists:
+                tableName: DATABASECHANGELOG
+      changes:
+        - addPrimaryKey:
+            tableName: DATABASECHANGELOG
+            columnNames: ID, AUTHOR, FILENAME
+            constraintName: pk_databasechangelog

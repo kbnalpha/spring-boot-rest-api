@@ -2,22 +2,22 @@
 
 Java 21 / Spring Boot implementation of all master API contracts in `source/all master api with response.docx`, including contractor, contract-employee, and temporary-user workflows, extended using `source/Master tables.xlsx` and `source/RBAC.docx`. Includes validated master fields, organizational-unit scopes, customer roles, predefined business permissions, employee-backed system accounts, and Liquibase migrations. Business Unit means Organizational Unit throughout.
 
-Test with the ordered [IntelliJ HTTP collection](docs/master-api-tests.http), or copy URLs and JSON from [API test payloads](docs/api-test-payloads.md). The HTTP collection creates sample reference data and captures generated IDs. Run requests in order.
+Test with the ordered [IntelliJ HTTP collection](docs/master-api-tests.http), or copy URLs and JSON from [API test payloads](docs/api-test-payloads.md). The HTTP collection creates sample reference data and captures generated IDs. Configure SMTP and run through activation; read the emailed temporary password, fill the temporaryPassword variable, then continue. See [account onboarding](docs/account-onboarding.md).
 
 See [master fields, RBAC, and account setup](database/master-fields-rbac.md) for the workbook mapping, new APIs, and required reference-data setup.
 
 ## Run with MySQL
 
-Requires Java 21, Maven 3.9+, and MySQL 8 on localhost:3306.
+Requires Java 21, Maven 3.9+, and access to the configured Aiven MySQL service. The mysql profile imports the project-root `.env` file; `.env.example` provides a template.
 
 ```powershell
 mvn clean verify
 mvn spring-boot:run
 ```
 
-The default profile is now `mysql`: database **ehs_db**, database username **root**, database password **root**. The JDBC URL creates the database if missing. Liquibase then creates the tables and records migrations; Hibernate validates the schema without altering it. The server binds to `127.0.0.1:8080`.
+The default profile is `mysql`: host **mysql-ehs-kbnalpha-bbce.l.aivencloud.com**, port **15129**, database **ehs_db**, and username **avnadmin**. The password comes from `DB_PASSWORD` in the local Git-ignored `.env` file or the environment. TLS is required (`sslMode=REQUIRED`). The JDBC URL creates the database if missing. Liquibase then creates the tables and records migrations; Hibernate validates the schema without altering it. The server binds to `127.0.0.1:8080`.
 
-Backend Super Admin HTTP Basic credentials are separate from database credentials: **ehs-api / ehs-api-local** by default. Override them with `API_USERNAME` and `API_PASSWORD`. Customer system users authenticate with their assigned usernames and BCrypt-protected passwords. Configure reference dropdowns before creating organizations, then create their related records. IDs in the source documents are examples, not seeded geography data.
+Backend Super Admin HTTP Basic credentials are separate from database credentials: **ehs-api / ehs-api-local** by default. Override them with `API_USERNAME` and `API_PASSWORD`. New system users authenticate with their employee email and BCrypt-protected passwords. Admin/Super Admin activation emails a temporary password; a mandatory first-login reset precedes all business access. Configure reference dropdowns before creating organizations, then create their related records. IDs in the source documents are examples, not seeded geography data.
 
 Swagger UI: <http://localhost:8080/swagger-ui/index.html>. OpenAPI JSON: <http://localhost:8080/v3/api-docs>.
 
@@ -29,23 +29,25 @@ Defaults are in `src/main/resources/application-mysql.yml`. Environment override
 
 ```powershell
 $env:SPRING_PROFILES_ACTIVE = 'mysql'
-$env:DB_USERNAME = 'root'
-$env:DB_PASSWORD = 'root'
+$env:DB_USERNAME = 'avnadmin'
+# DB_PASSWORD is loaded from .env; set it in your deployment environment when deployed.
 $env:API_USERNAME = 'ehs-api'
 $env:API_PASSWORD = 'ehs-api-local'
 mvn spring-boot:run
 ```
 
-`DB_URL` can override the complete JDBC URL. `database/create-database.sql` optionally creates `ehs_db` in MySQL Workbench before startup. Do not run the table migrations manually: Liquibase executes them and maintains their history.
+`DB_HOST`, `DB_PORT`, `DB_NAME`, and `DB_USERNAME` can override individual connection settings; `DB_URL` can override the complete JDBC URL. API URLs and API authentication remain unchanged. Environment variables override `.env` values; restart the app after configuration changes. `database/create-database.sql` optionally creates `ehs_db` in MySQL Workbench before startup. Do not run the table migrations manually: Liquibase executes them and maintains their history.
 
 - `src/main/resources/db/changelog/db.changelog-master.yaml` orders the migrations.
 - `changes/001-initial-schema.sql` defines all 12 entity/collection tables, primary keys, unique constraints, and relationships. `${largeTextType}` resolves to MySQL `LONGTEXT` (H2 `CLOB` for tests), matching JSON converters.
 - `changes/002-list-query-indexes.sql` adds eight indexes as a separate migration.
 - `changes/003-master-fields-rbac.sql` aligns master fields and adds reference data, contractors, accounts, role grants, and scopes.
 - `changes/004-permission-catalog.sql` seeds business permissions and the immutable system Super Admin role. Migration 005 extends this catalog for delegated role administration.
-- `changes/005-complete-master-contract.sql` adds contractor contact/address fields, temporary users and memberships, and selectable admin permissions. The final schema has 22 application tables plus 2 Liquibase tables, with 38 changesets.
+- `changes/005-complete-master-contract.sql` adds contractor contact/address fields, temporary users and memberships, and selectable admin permissions. The final schema has 22 application tables plus 2 Liquibase tables, with 41 changesets.
 - `changes/006-source-permission-catalog.sql` adds all source permission definitions and maps 129 source IDs/names to canonical permissions without changing existing grants.
 - `changes/007-built-in-admin.sql` adds the protected built-in Admin role. Admin receives all actions within its assigned organization tree, including future descendants; root creation remains Super Admin-only.
+- `changes/008-account-onboarding.sql` adds mandatory first-login password state and expiry, and expands usernames for email addresses.
+- `changes/009-required-primary-keys.yaml` adds primary keys to Liquibase history and employee organization membership. A dedicated Liquibase connection bootstraps Aiven migrations; normal application connections retain the server primary-key requirement.
 - `DATABASECHANGELOG` stores each applied changeset's ID, author, filename, execution time, order, and checksum. `DATABASECHANGELOGLOCK` prevents concurrent migration runs.
 - `spring.jpa.hibernate.ddl-auto=validate` and `spring.sql.init.mode=never` leave schema writes to Liquibase. Do not switch Hibernate to `update`.
 
@@ -132,7 +134,7 @@ mvn verify
 Remove-Item Env:MYSQL_MIGRATION_TEST
 ```
 
-For real HTTP verification against a running instance:
+For real HTTP verification against a running instance, first start the local SMTP inbox with `python scripts/smtp_test_sink.py` and configure the app to use localhost:1025. The smoke script uses only synthetic email addresses:
 
 ```powershell
 python scripts/smoke_apis.py --base-url http://127.0.0.1:8080
@@ -149,3 +151,5 @@ Temporary users require `ManageExternalCollaborators` (3357); creation or a role
 The exact source spelling `Collabarator` is preserved in routes. Existing `/api/Contractor/Create`, `/api/Contractor/GetList`, and `/api/ContractEmployee/*` endpoints remain available. Contractor `name` remains a compatible alias for `contractorName`; conflicting names are rejected. Geography IDs must exist and agree. Source IDs and display values are examples; generated IDs and persisted values are returned.
 
 See [Admin setup and child-organization examples](docs/admin-role.md) for assigning the built-in Admin role.
+
+Account types are SUPER_ADMIN, ADMIN, and USER. The new `/api/Auth/Login`, `/api/Auth/FirstLoginPasswordReset`, and `/api/SystemUser/{id}/ResendActivation` APIs implement email onboarding without UI code. Activation no longer accepts a username or password. See [the complete flow and SMTP configuration](docs/account-onboarding.md).

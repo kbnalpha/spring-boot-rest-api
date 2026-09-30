@@ -3,12 +3,14 @@
 Verified against `source/all master api with response.docx` on 2026-09-30.
 
 - All 24 unique source routes exist in the generated OpenAPI definition. The employee and contract-employee create workflows share `/api/User/CreateEmployee`.
-- `MYSQL_MIGRATION_TEST=true mvn -q verify`: 21 tests passed, zero failures/errors/skips. Includes H2 migration replay, actual MySQL schema validation, RBAC, source permission compatibility, persistence, and validation.
-- Live MySQL verification: 100 HTTP requests passed, covering all 47 OpenAPI operations. See [requests and responses](api-smoke-results.json) and [results](api-smoke-results.md).
-- [Executable HTTP examples](../docs/master-api-tests.http): all 38 requests passed when their payloads and JavaScript response handlers were executed sequentially against the verification server. This validates the file contents and ID handoffs; the IntelliJ UI itself was not automated.
-- Liquibase: 38 applied changesets, 22 application tables plus 2 history/lock tables. Migrations 001–004 were preserved; additions are 005 and 006.
+- `MYSQL_MIGRATION_TEST=true mvn -q verify`: 24 tests passed, zero failures/errors/skips. Includes H2 migration replay, actual MySQL schema validation, RBAC, source permission compatibility, persistence, and validation.
+- Live MySQL verification: 108 HTTP requests passed, covering all 50 OpenAPI operations. See [requests and responses](api-smoke-results.json) and [results](api-smoke-results.md).
+- [Executable HTTP examples](../docs/master-api-tests.http): all 41 requests passed when their payloads and JavaScript response handlers were executed sequentially against the verification server. This validates file contents and ID handoffs; the test harness supplied the temporary password from the local SMTP inbox in place of manually reading the email. The IntelliJ UI itself was not automated.
+- Liquibase: 39 applied changesets, 22 application tables plus 2 history/lock tables. Migrations 001–004 were preserved; additions are 005 and 006.
 - The source permission tree contains 129 ID/name entries. Explicit aliases preserve existing canonical IDs and grants, including source IDs that conflict with existing permissions.
 
 Synthetic `EHS-SMOKE-` and `EHS-TEST-` records are retained for inspection. The verification server used port 18080 and was stopped afterward. Restart the normal application to load the updated code. MySQL migrations have already been applied to `ehs_db`.
 
 Built-in Admin verification covers nested organization creation, denied null/omitted/zero root parents, denied child-to-root promotion, cross-tree and cross-tenant isolation, user activation, role and scope assignment, disabling accounts, rejection of Super Admin creation/assignment, and immediate removal of Admin authority after reassignment.
+
+Email onboarding verification covers server-generated credentials received over local SMTP, email usernames, pending-account API denial, mandatory first-login reset, old-password rejection, role-based access after reset, expiration, resend, disabled users, duplicate/missing emails, and SMTP-failure transaction rollback. External inbox delivery was not tested; SMTP provider credentials must be configured.

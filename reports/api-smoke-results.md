@@ -2,8 +2,8 @@
 
 - Database: `ehs_db (MySQL)`
 - Server: `http://127.0.0.1:18080`
-- Test record prefix: `EHS-SMOKE-4b09952e`
-- Requests: 100; failed checks: 0
+- Test record prefix: `EHS-SMOKE-a13cc7f0`
+- Requests: 108; failed checks: 0
 
 Full request and response bodies: [api-smoke-results.json](api-smoke-results.json)
 
@@ -21,7 +21,12 @@ Full request and response bodies: [api-smoke-results.json](api-smoke-results.jso
 | Create designation | POST | `/api/Designation/Create` | 200 | 200 | PASS |
 | Create role | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
 | Create employee | POST | `/api/User/CreateEmployee` | 200 | 200 | PASS |
-| Activate employee as system user | POST | `/api/User/12/ActivateSystemUser` | 200 | 200 | PASS |
+| Activate employee as system user | POST | `/api/User/17/ActivateSystemUser` | 200 | 200 | PASS |
+| First login requires reset | POST | `/api/Auth/Login` | 200 | 200 | PASS |
+| Pending user cannot access permissions | GET | `/api/Permission/GetAll` | 403 | 403 | PASS |
+| Set first permanent password | POST | `/api/Auth/FirstLoginPasswordReset` | 200 | 200 | PASS |
+| Temporary password invalid after reset | POST | `/api/Auth/Login` | 401 | 401 | PASS |
+| Login with permanent password | POST | `/api/Auth/Login` | 200 | 200 | PASS |
 | Create location | POST | `/api/Location/add` | 200 | 200 | PASS |
 | Create operation activity | POST | `/api/OperationActivity` | 200 | 200 | PASS |
 | Create observation type | POST | `/api/ObservationType/Create` | 200 | 200 | PASS |
@@ -52,66 +57,70 @@ Full request and response bodies: [api-smoke-results.json](api-smoke-results.jso
 | Null nested observation translation | POST | `/api/ObservationType/Create` | 400 | 400 | PASS |
 | Failed location creates leave no records | POST | `/api/Location/GetAllLocations` | 200 | 200 | PASS |
 | Failed observation create leaves no records | POST | `/api/ObservationType/GetAll` | 200 | 200 | PASS |
-| Edit organization and shifts | PUT | `/api/OrganizationUnit/12` | 200 | 200 | PASS |
-| Edit department | PUT | `/api/Department/6` | 200 | 200 | PASS |
-| Edit designation | PUT | `/api/Designation/6` | 200 | 200 | PASS |
-| Edit equipment | PUT | `/api/Equipment/10` | 200 | 200 | PASS |
-| Edit operation activity | PUT | `/api/OperationActivity/6` | 200 | 200 | PASS |
-| Edit location | PUT | `/api/Location/14` | 200 | 200 | PASS |
-| Edit observation type | PUT | `/api/ObservationType/7` | 200 | 200 | PASS |
-| Edit employee | PUT | `/api/User/12` | 200 | 200 | PASS |
-| Edit customer role | PUT | `/api/Role/15` | 200 | 200 | PASS |
+| Edit organization and shifts | PUT | `/api/OrganizationUnit/19` | 200 | 200 | PASS |
+| Edit department | PUT | `/api/Department/9` | 200 | 200 | PASS |
+| Edit designation | PUT | `/api/Designation/8` | 200 | 200 | PASS |
+| Edit equipment | PUT | `/api/Equipment/13` | 200 | 200 | PASS |
+| Edit operation activity | PUT | `/api/OperationActivity/8` | 200 | 200 | PASS |
+| Edit location | PUT | `/api/Location/18` | 200 | 200 | PASS |
+| Edit observation type | PUT | `/api/ObservationType/9` | 200 | 200 | PASS |
+| Edit employee | PUT | `/api/User/17` | 200 | 200 | PASS |
+| Edit customer role | PUT | `/api/Role/21` | 200 | 200 | PASS |
 | Predefined permission catalog | GET | `/api/Permission/GetAll` | 200 | 200 | PASS |
 | Complete document role permission tree | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
 | Super Admin current access | GET | `/api/Auth/Me` | 200 | 200 | PASS |
 | Create setup manager role | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
-| Assign additional role | PUT | `/api/SystemUser/5/Roles` | 200 | 200 | PASS |
-| Update separate BU scope | PUT | `/api/SystemUser/5/Scope` | 200 | 200 | PASS |
+| Assign additional role | PUT | `/api/SystemUser/8/Roles` | 200 | 200 | PASS |
+| Update separate BU scope | PUT | `/api/SystemUser/8/Scope` | 200 | 200 | PASS |
 | Normal user current access | GET | `/api/Auth/Me` | 200 | 200 | PASS |
 | Normal user permitted master list | POST | `/api/Department/GetList` | 200 | 200 | PASS |
 | Normal user denied ungranted master | POST | `/api/Equipment/List` | 403 | 403 | PASS |
-| Normal user denied role assignment | PUT | `/api/SystemUser/5/Roles` | 403 | 403 | PASS |
+| Normal user denied role assignment | PUT | `/api/SystemUser/8/Roles` | 403 | 403 | PASS |
 | Normal user denied outside scope | POST | `/api/Department/GetList` | 403 | 403 | PASS |
-| Deactivate account | PUT | `/api/SystemUser/5/Enabled` | 200 | 200 | PASS |
+| Deactivate account | PUT | `/api/SystemUser/8/Enabled` | 200 | 200 | PASS |
 | Disabled user rejected | GET | `/api/Auth/Me` | 401 | 401 | PASS |
-| Reactivate account | PUT | `/api/SystemUser/5/Enabled` | 200 | 200 | PASS |
+| Reactivate account | PUT | `/api/SystemUser/8/Enabled` | 200 | 200 | PASS |
 | Create contractor company | POST | `/api/Contractor/Create` | 200 | 200 | PASS |
 | List contractors | POST | `/api/Contractor/GetList` | 200 | 200 | PASS |
-| Edit contractor | PUT | `/api/Contractor/7` | 200 | 200 | PASS |
+| Edit contractor | PUT | `/api/Contractor/10` | 200 | 200 | PASS |
 | Create contract employee | POST | `/api/ContractEmployee/Create` | 200 | 200 | PASS |
 | List contract employees | POST | `/api/ContractEmployee/GetList` | 200 | 200 | PASS |
-| Edit contract employee | PUT | `/api/ContractEmployee/13` | 200 | 200 | PASS |
+| Edit contract employee | PUT | `/api/ContractEmployee/18` | 200 | 200 | PASS |
 | Document contractor create | POST | `/api/Contractor/Add` | 200 | 200 | PASS |
 | Document contractor list | POST | `/api/Contractor/GetAllContractors` | 200 | 200 | PASS |
 | Document contract employee create | POST | `/api/User/CreateEmployee` | 200 | 200 | PASS |
 | Document contract employee list | POST | `/api/User/GetAllContractEmployees` | 200 | 200 | PASS |
 | Create dynamic administrator role | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
-| Grant administration to system user | PUT | `/api/SystemUser/5/Roles` | 200 | 200 | PASS |
+| Grant administration to system user | PUT | `/api/SystemUser/8/Roles` | 200 | 200 | PASS |
 | Admin creates role from catalog | POST | `/api/Role/CreateRole` | 200 | 200 | PASS |
-| Admin edits role | PUT | `/api/Role/19` | 200 | 200 | PASS |
-| Admin assigns role to user | PUT | `/api/SystemUser/5/Roles` | 200 | 200 | PASS |
+| Admin edits role | PUT | `/api/Role/25` | 200 | 200 | PASS |
+| Admin assigns role to user | PUT | `/api/SystemUser/8/Roles` | 200 | 200 | PASS |
 | Document temporary user create | POST | `/api/User/CreateOrUpdateExternalCollabarator` | 200 | 200 | PASS |
 | Document temporary user list | POST | `/api/User/GetAllExternalCollabarator` | 200 | 200 | PASS |
 | Update temporary user | POST | `/api/User/CreateOrUpdateExternalCollabarator` | 200 | 200 | PASS |
 | Invalid temporary user role rejected | POST | `/api/User/CreateOrUpdateExternalCollabarator` | 400 | 400 | PASS |
 | Invalid contractor geography rejected | POST | `/api/Contractor/Add` | 400 | 400 | PASS |
-| Assign built-in Admin | PUT | `/api/SystemUser/5/Roles` | 200 | 200 | PASS |
+| Assign built-in Admin | PUT | `/api/SystemUser/8/Roles` | 200 | 200 | PASS |
 | Built-in Admin current access | GET | `/api/Auth/Me` | 200 | 200 | PASS |
 | Admin creates child organization | POST | `/api/OrganizationUnit` | 200 | 200 | PASS |
 | Admin lists its tree | GET | `/api/OrganizationUnit/GetAllOrganizations` | 200 | 200 | PASS |
 | Admin creates grandchild organization | POST | `/api/OrganizationUnit` | 200 | 200 | PASS |
 | Admin denied root creation | POST | `/api/OrganizationUnit` | 403 | 403 | PASS |
 | Admin denied zero parent | POST | `/api/OrganizationUnit` | 403 | 403 | PASS |
-| Admin denied root promotion | PUT | `/api/OrganizationUnit/13` | 403 | 403 | PASS |
+| Admin denied root promotion | PUT | `/api/OrganizationUnit/20` | 403 | 403 | PASS |
 | Admin creates department in new child | POST | `/api/Department/Create` | 200 | 200 | PASS |
-| Admin activates employee account | POST | `/api/User/13/ActivateSystemUser` | 200 | 200 | PASS |
-| Admin changes account scope | PUT | `/api/SystemUser/6/Scope` | 200 | 200 | PASS |
-| Admin disables account | PUT | `/api/SystemUser/6/Enabled` | 200 | 200 | PASS |
+| Admin activates employee account | POST | `/api/User/18/ActivateSystemUser` | 200 | 200 | PASS |
+| Admin resends activation email | POST | `/api/SystemUser/9/ResendActivation` | 200 | 200 | PASS |
+| Resend invalidates old temporary password | POST | `/api/Auth/Login` | 401 | 401 | PASS |
+| Delegated Admin sets first password | POST | `/api/Auth/FirstLoginPasswordReset` | 200 | 200 | PASS |
+| Admin changes account scope | PUT | `/api/SystemUser/9/Scope` | 200 | 200 | PASS |
+| Admin disables account | PUT | `/api/SystemUser/9/Enabled` | 200 | 200 | PASS |
 | Admin cannot create Super Admin role | POST | `/api/Role/CreateRole` | 400 | 400 | PASS |
 | OpenAPI endpoint coverage | GET | `/v3/api-docs` | 200 | 200 | PASS |
 
 ## Response assertions
 
+- PASS: temporary credentials restricted to reset
 - PASS: users persisted and business-unit filtered
 - PASS: employees persisted and business-unit filtered
 - PASS: locations persisted and business-unit filtered

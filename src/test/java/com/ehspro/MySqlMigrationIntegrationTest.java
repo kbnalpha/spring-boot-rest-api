@@ -31,7 +31,10 @@ class MySqlMigrationIntegrationTest {
 
     @Test
     void mysqlSchemaValidatesAndMigrationsAreNotReapplied() throws Exception {
-        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM DATABASECHANGELOG", Integer.class)).isEqualTo(38);
+        assertThat(jdbc.queryForObject("SELECT @@SESSION.sql_require_primary_key",Integer.class))
+            .isEqualTo(jdbc.queryForObject("SELECT @@GLOBAL.sql_require_primary_key",Integer.class));
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM DATABASECHANGELOG", Integer.class)).isEqualTo(41);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM information_schema.tables t WHERE t.table_schema=DATABASE() AND t.table_type='BASE TABLE' AND NOT EXISTS (SELECT 1 FROM information_schema.table_constraints c WHERE c.table_schema=t.table_schema AND c.table_name=t.table_name AND c.constraint_type='PRIMARY KEY')",Integer.class)).isZero();
         var before = jdbc.queryForList("SELECT ID, MD5SUM, DATEEXECUTED FROM DATABASECHANGELOG ORDER BY ORDEREXECUTED");
         liquibase.afterPropertiesSet();
         assertThat(jdbc.queryForList("SELECT ID, MD5SUM, DATEEXECUTED FROM DATABASECHANGELOG ORDER BY ORDEREXECUTED")).isEqualTo(before);

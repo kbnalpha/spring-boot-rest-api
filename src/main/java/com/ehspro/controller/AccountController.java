@@ -13,6 +13,10 @@ public class AccountController {
     @GetMapping("/Permission/GetAll") public ApiResponse<?> permissions() { return ApiResponse.success(roles.catalog()); }
     @PostMapping("/User/{employeeId}/ActivateSystemUser") @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ApiResponse<?> activate(@PathVariable Long employeeId,@Valid @RequestBody AccountRequests.Activate dto) { return ApiResponse.success(service.activate(employeeId,dto)); }
+    @PostMapping("/SystemUser/{id}/ResendActivation") @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
+    public ApiResponse<?> resend(@PathVariable Long id) {return ApiResponse.success(service.resendActivation(id));}
+    @PostMapping("/Auth/FirstLoginPasswordReset")
+    public ApiResponse<?> firstLoginReset(@Valid @RequestBody AccountRequests.FirstLoginReset dto) {return ApiResponse.success(service.firstLoginReset(dto));}
     @PutMapping("/SystemUser/{id}/Roles") @PreAuthorize("hasAuthority('ManageRoleUsers') or hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ApiResponse<?> roles(@PathVariable Long id,@Valid @RequestBody AccountRequests.Roles dto) { return ApiResponse.success(service.roles(id,dto)); }
     @PutMapping("/SystemUser/{id}/Scope") @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")

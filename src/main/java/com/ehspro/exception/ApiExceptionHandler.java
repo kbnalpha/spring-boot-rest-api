@@ -24,6 +24,8 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> api(ApiException e) { return error(e.status, e.getMessage()); }
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> denied(Exception e) { return error(HttpStatus.FORBIDDEN, e.getMessage()); }
+    @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
+    public ResponseEntity<ApiResponse<Void>> authentication(Exception e) {return error(HttpStatus.UNAUTHORIZED,"Invalid credentials or account unavailable");}
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> validation(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldErrors().stream()

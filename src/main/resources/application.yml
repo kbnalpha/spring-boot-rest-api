@@ -1,6 +1,18 @@
 spring:
   application:
     name: ehspro-api
+  mail:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${SMTP_AUTH:false}
+      mail.smtp.starttls.enable: ${SMTP_STARTTLS:false}
+      mail.smtp.starttls.required: ${SMTP_STARTTLS:false}
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
   profiles:
     default: mysql
   liquibase:
@@ -19,3 +31,8 @@ spring:
 server:
   error:
     include-message: never
+ehs:
+  mail:
+    from: ${SMTP_FROM:no-reply@example.com}
+  onboarding:
+    temporary-password-hours: ${TEMP_PASSWORD_HOURS:24}

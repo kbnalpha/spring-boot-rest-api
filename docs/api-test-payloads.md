@@ -1,6 +1,7 @@
 # API URLs and sample payloads
 
-Run the ordered [IntelliJ HTTP collection](master-api-tests.http) to create fresh sample data and capture IDs automatically.
+Use the ordered [IntelliJ HTTP collection](master-api-tests.http). Configure SMTP, run through activation, read the emailed temporary password, set the temporaryPassword variable, then continue. IDs are captured automatically.
+See [email onboarding and first-login APIs](account-onboarding.md). Activation accepts role/scope only; username is the employee email and the server generates the temporary password. Pending users cannot call business APIs.
 For the built-in Admin role, account activation, and child-organization restrictions, see [Admin setup](admin-role.md). The HTTP collection also assigns Admin and creates a child using that account.
 The examples below are successful requests from the MySQL verification run. Replace IDs with your own records when testing separately; use unique employee numbers and equipment UIDs for new records.
 Base URL: `http://127.0.0.1:8080`. HTTP Basic: `ehs-api` / `ehs-api-local` (or your configured API credentials).
@@ -78,7 +79,7 @@ No payload.
 ```json
 {
   "id": 0,
-  "name": "EHS-SMOKE-4b09952e",
+  "name": "EHS-SMOKE-a13cc7f0",
   "description": "Live HTTP verification",
   "tenantId": 1,
   "parentId": null,
@@ -119,8 +120,8 @@ No payload.
 ```json
 {
   "id": 0,
-  "name": "EHS-SMOKE-4b09952e-Department",
-  "businessUnitId": 12,
+  "name": "EHS-SMOKE-a13cc7f0-Department",
+  "businessUnitId": 19,
   "description": "Operations",
   "status": 1,
   "translations": [
@@ -140,8 +141,8 @@ No payload.
 ```json
 {
   "id": 0,
-  "name": "EHS-SMOKE-4b09952e-Designation",
-  "businessUnitId": 12,
+  "name": "EHS-SMOKE-a13cc7f0-Designation",
+  "businessUnitId": 19,
   "description": "Manager",
   "status": 1,
   "translations": [
@@ -161,7 +162,7 @@ No payload.
 ```json
 {
   "id": 0,
-  "name": "EHS-SMOKE-4b09952e-Role",
+  "name": "EHS-SMOKE-a13cc7f0-Role",
   "roleDescription": "Verification observer",
   "displayName": "Observer",
   "landingPageId": 1,
@@ -198,7 +199,7 @@ No payload.
 ```json
 {
   "id": 0,
-  "firstName": "EHS-SMOKE-4b09952e",
+  "firstName": "EHS-SMOKE-a13cc7f0",
   "middleName": "API",
   "lastName": "Tester",
   "dateOfBirth": "1994-04-03",
@@ -207,42 +208,63 @@ No payload.
   "country": 900001,
   "contractorId": 0,
   "dateOfJoining": null,
-  "department": 6,
-  "designation": 6,
-  "emailAddress": "smoke@example.com",
+  "department": 9,
+  "designation": 8,
+  "emailAddress": "ehs-smoke-a13cc7f0@example.com",
   "hasAccess": true,
   "isMobileUser": false,
   "gender": 1,
   "phoneNumber": "9000000000",
   "status": 1,
-  "userNumber": "EHS-SMOKE-4b09952e",
+  "userNumber": "EHS-SMOKE-a13cc7f0",
   "userType": 1,
-  "organizationUnitId": 12,
+  "organizationUnitId": 19,
   "profilePictureId": 0,
   "languageID": 900004,
   "userRoleIds": [
-    15
+    21
   ]
 }
 ```
 
-Expected `results`: `12`.
+Expected `results`: `17`.
 
 ## Activate employee as system user
 
-`POST http://127.0.0.1:8080/api/User/12/ActivateSystemUser`
+`POST http://127.0.0.1:8080/api/User/17/ActivateSystemUser`
 
 ```json
 {
-  "username": "ehs-smoke-4b09952e",
-  "password": "Example-password-123",
-  "basicRoleId": 15,
+  "basicRoleId": 21,
   "scopes": [
     {
-      "organizationUnitId": 12,
+      "organizationUnitId": 19,
       "includeDescendants": true
     }
   ]
+}
+```
+
+## First login requires reset
+
+`POST http://127.0.0.1:8080/api/Auth/Login`
+
+```json
+{
+  "username": "ehs-smoke-a13cc7f0@example.com",
+  "password": "TEMPORARY_PASSWORD_FROM_EMAIL"
+}
+```
+
+## Set first permanent password
+
+`POST http://127.0.0.1:8080/api/Auth/FirstLoginPasswordReset`
+
+```json
+{
+  "currentPassword": "TEMPORARY_PASSWORD_FROM_EMAIL",
+  "newPassword": "Example-password-123",
+  "confirmPassword": "Example-password-123"
 }
 ```
 
@@ -252,14 +274,14 @@ Expected `results`: `12`.
 
 ```json
 {
-  "name": "EHS-SMOKE-4b09952e-Location",
+  "name": "EHS-SMOKE-a13cc7f0-Location",
   "locationSupervisor": "",
   "locationDescription": "Live verification",
-  "organizationUnitId": 12,
+  "organizationUnitId": 19,
   "status": 1,
-  "createdBy": 12,
+  "createdBy": 17,
   "supervisorIds": [
-    12
+    17
   ],
   "subLocationNames": "Zone A, Zone B",
   "newSublocations": [
@@ -292,7 +314,7 @@ Expected `results`: `12`.
 }
 ```
 
-Expected `results`: `14`.
+Expected `results`: `18`.
 
 ## Create operation activity
 
@@ -301,12 +323,12 @@ Expected `results`: `14`.
 ```json
 {
   "id": 0,
-  "activityName": "EHS-SMOKE-4b09952e-Activity",
-  "businessUnitId": 12,
+  "activityName": "EHS-SMOKE-a13cc7f0-Activity",
+  "businessUnitId": 19,
   "categoryId": 1,
   "description": "Forklift operations",
   "status": 1,
-  "createdBy": 12,
+  "createdBy": 17,
   "translations": [
     {
       "languageId": 1,
@@ -324,8 +346,8 @@ Expected `results`: `14`.
 ```json
 {
   "observationCategoryId": 4,
-  "typeDescription": "EHS-SMOKE-4b09952e-Observation",
-  "businessUnitId": 12,
+  "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
+  "businessUnitId": 19,
   "observationSubTypes": [
     {
       "subTypeDescription": "PPE",
@@ -338,12 +360,12 @@ Expected `results`: `14`.
   ],
   "enableSvt": false,
   "status": 1,
-  "modifiedBy": 12,
+  "modifiedBy": 17,
   "translations": [
     {
       "languageId": 1,
       "typeDescription": "Safe behavior",
-      "businessUnitId": 12,
+      "businessUnitId": 19,
       "observationSubTypes": [
         {
           "subTypeDescription": "PPE"
@@ -366,14 +388,14 @@ Expected `results`: `14`.
   "id": 0,
   "equipmentCategoryId": 3,
   "equipmentTypeId": 18,
-  "organizationUnitId": 12,
-  "uid": "EHS-SMOKE-4b09952e-Equipment",
+  "organizationUnitId": 19,
+  "uid": "EHS-SMOKE-a13cc7f0-Equipment",
   "manufacturer": "Acme",
   "modelNumber": "M-1",
-  "serialNumber": "EHS-SMOKE-4b09952e",
+  "serialNumber": "EHS-SMOKE-a13cc7f0",
   "yearofManufacture": "2022",
   "status": 1,
-  "createdBy": 12
+  "createdBy": 17
 }
 ```
 
@@ -392,7 +414,7 @@ Expected `results`: `"Equipment added successfully."`.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -411,7 +433,7 @@ Expected `results`: `"Equipment added successfully."`.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -430,7 +452,7 @@ Expected `results`: `"Equipment added successfully."`.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -455,7 +477,7 @@ No payload.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -474,7 +496,7 @@ No payload.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -493,7 +515,7 @@ No payload.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -512,7 +534,7 @@ No payload.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -531,7 +553,7 @@ No payload.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -539,19 +561,19 @@ No payload.
 
 ## Edit organization and shifts
 
-`PUT http://127.0.0.1:8080/api/OrganizationUnit/12`
+`PUT http://127.0.0.1:8080/api/OrganizationUnit/19`
 
 ```json
 {
-  "id": 12,
+  "id": 19,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:05.393948",
+  "createdDate": "2026-09-30T08:52:21.257112",
   "modifiedBy": null,
   "modifiedDate": null,
   "layoutImageUrl": null,
   "latitude": null,
   "longitude": null,
-  "name": "EHS-SMOKE-4b09952e",
+  "name": "EHS-SMOKE-a13cc7f0",
   "description": "Live HTTP verification",
   "tenantId": 1,
   "parentId": null,
@@ -593,19 +615,19 @@ No payload.
 
 ## Edit department
 
-`PUT http://127.0.0.1:8080/api/Department/6`
+`PUT http://127.0.0.1:8080/api/Department/9`
 
 ```json
 {
-  "id": 6,
+  "id": 9,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:05.751689",
+  "createdDate": "2026-09-30T08:52:21.597769",
   "modifiedBy": null,
   "modifiedDate": null,
-  "name": "EHS-SMOKE-4b09952e-Department",
+  "name": "EHS-SMOKE-a13cc7f0-Department",
   "description": "Operations",
   "status": 1,
-  "businessUnitId": 12,
+  "businessUnitId": 19,
   "translations": [
     {
       "languageId": 1,
@@ -619,19 +641,19 @@ No payload.
 
 ## Edit designation
 
-`PUT http://127.0.0.1:8080/api/Designation/6`
+`PUT http://127.0.0.1:8080/api/Designation/8`
 
 ```json
 {
-  "id": 6,
+  "id": 8,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:05.926596",
+  "createdDate": "2026-09-30T08:52:21.80557",
   "modifiedBy": null,
   "modifiedDate": null,
-  "name": "EHS-SMOKE-4b09952e-Designation",
+  "name": "EHS-SMOKE-a13cc7f0-Designation",
   "description": "Manager",
   "status": 1,
-  "businessUnitId": 12,
+  "businessUnitId": 19,
   "translations": [
     {
       "languageId": 1,
@@ -645,44 +667,44 @@ No payload.
 
 ## Edit equipment
 
-`PUT http://127.0.0.1:8080/api/Equipment/10`
+`PUT http://127.0.0.1:8080/api/Equipment/13`
 
 ```json
 {
-  "id": 10,
-  "createdBy": 12,
-  "createdDate": "2026-09-30T07:41:07.774209",
+  "id": 13,
+  "createdBy": 17,
+  "createdDate": "2026-09-30T08:52:24.691531",
   "modifiedBy": null,
   "modifiedDate": null,
   "equipmentCategoryId": 3,
   "equipmentTypeId": 18,
-  "organizationUnitId": 12,
-  "uid": "EHS-SMOKE-4b09952e-Equipment",
+  "organizationUnitId": 19,
+  "uid": "EHS-SMOKE-a13cc7f0-Equipment",
   "manufacturer": "Acme",
   "modelNumber": "M-1",
-  "serialNumber": "EHS-SMOKE-4b09952e",
+  "serialNumber": "EHS-SMOKE-a13cc7f0",
   "yearofManufacture": "2022",
   "status": 1,
   "equipmentCategoryName": null,
   "equipmentTypeName": null,
-  "organizationUnitNames": "EHS-SMOKE-4b09952e",
+  "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
   "active": "Active"
 }
 ```
 
 ## Edit operation activity
 
-`PUT http://127.0.0.1:8080/api/OperationActivity/6`
+`PUT http://127.0.0.1:8080/api/OperationActivity/8`
 
 ```json
 {
-  "id": 6,
-  "createdBy": 12,
-  "createdDate": "2026-09-30T07:41:07.36487",
+  "id": 8,
+  "createdBy": 17,
+  "createdDate": "2026-09-30T08:52:24.317628",
   "modifiedBy": null,
   "modifiedDate": null,
-  "activityName": "EHS-SMOKE-4b09952e-Activity",
-  "businessUnitId": 12,
+  "activityName": "EHS-SMOKE-a13cc7f0-Activity",
+  "businessUnitId": 19,
   "categoryId": 1,
   "description": "Forklift operations",
   "status": 1,
@@ -694,27 +716,27 @@ No payload.
     }
   ],
   "category": "Routine",
-  "businessUnitName": "EHS-SMOKE-4b09952e"
+  "businessUnitName": "EHS-SMOKE-a13cc7f0"
 }
 ```
 
 ## Edit location
 
-`PUT http://127.0.0.1:8080/api/Location/14`
+`PUT http://127.0.0.1:8080/api/Location/18`
 
 ```json
 {
-  "id": 14,
-  "createdBy": 12,
-  "createdDate": "2026-09-30T07:41:07.217544",
+  "id": 18,
+  "createdBy": 17,
+  "createdDate": "2026-09-30T08:52:24.14739",
   "modifiedBy": null,
   "modifiedDate": null,
-  "name": "EHS-SMOKE-4b09952e-Location",
+  "name": "EHS-SMOKE-a13cc7f0-Location",
   "locationDescription": "Live verification",
   "status": 1,
-  "organizationUnitId": 12,
+  "organizationUnitId": 19,
   "supervisorIds": [
-    12
+    17
   ],
   "translations": [
     {
@@ -723,7 +745,7 @@ No payload.
       "description": "Live verification",
       "subLocations": [
         {
-          "subLocationId": 17,
+          "subLocationId": 23,
           "name": "Zone A",
           "description": "First area"
         }
@@ -731,22 +753,22 @@ No payload.
     }
   ],
   "statusName": "Active",
-  "supervisorNames": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+  "supervisorNames": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
   "subLocationNames": "Zone A, Zone B",
-  "organizationUnitName": "EHS-SMOKE-4b09952e",
-  "createByName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+  "organizationUnitName": "EHS-SMOKE-a13cc7f0",
+  "createByName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
   "locationSupervisor": null,
   "subLocationIds": [],
   "newSublocations": null,
   "subLocations": [
     {
-      "id": 17,
+      "id": 23,
       "name": "Zone A",
       "description": "First area",
       "status": 1
     },
     {
-      "id": 18,
+      "id": 24,
       "name": "Zone B",
       "description": "",
       "status": 1
@@ -755,39 +777,39 @@ No payload.
 }
 ```
 
-Expected `results`: `14`.
+Expected `results`: `18`.
 
 ## Edit observation type
 
-`PUT http://127.0.0.1:8080/api/ObservationType/7`
+`PUT http://127.0.0.1:8080/api/ObservationType/9`
 
 ```json
 {
-  "id": 7,
+  "id": 9,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:07.55639",
-  "modifiedBy": 12,
+  "createdDate": "2026-09-30T08:52:24.541852",
+  "modifiedBy": 17,
   "modifiedDate": null,
   "observationCategoryId": 4,
-  "typeDescription": "EHS-SMOKE-4b09952e-Observation",
+  "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
   "enableSvt": false,
   "status": 1,
-  "businessUnitId": 12,
+  "businessUnitId": 19,
   "isDefault": null,
   "translations": [
     {
       "languageId": 1,
       "typeDescription": "Safe behavior",
-      "businessUnitId": 12,
+      "businessUnitId": 19,
       "observationSubTypes": [
         {
           "languageId": 1,
-          "observationSubTypeId": 12,
+          "observationSubTypeId": 16,
           "subTypeDescription": "PPE"
         },
         {
           "languageId": 1,
-          "observationSubTypeId": 13,
+          "observationSubTypeId": 17,
           "subTypeDescription": "Housekeeping"
         }
       ]
@@ -801,14 +823,14 @@ Expected `results`: `14`.
   "isEditDelete": true,
   "observationSubTypes": [
     {
-      "id": 12,
-      "observationTypeId": 7,
+      "id": 16,
+      "observationTypeId": 9,
       "subTypeDescription": "PPE",
       "status": 1
     },
     {
-      "id": 13,
-      "observationTypeId": 7,
+      "id": 17,
+      "observationTypeId": 9,
       "subTypeDescription": "Housekeeping",
       "status": 1
     }
@@ -818,39 +840,39 @@ Expected `results`: `14`.
 
 ## Edit employee
 
-`PUT http://127.0.0.1:8080/api/User/12`
+`PUT http://127.0.0.1:8080/api/User/17`
 
 ```json
 {
-  "id": 12,
+  "id": 17,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:06.348633",
+  "createdDate": "2026-09-30T08:52:22.357314",
   "modifiedBy": null,
   "modifiedDate": null,
-  "systemAccountId": 5,
-  "basicRoleId": 15,
+  "systemAccountId": 8,
+  "basicRoleId": 21,
   "additionalRoleIds": [],
-  "systemUsername": "ehs-smoke-4b09952e",
+  "systemUsername": "ehs-smoke-a13cc7f0@example.com",
   "systemAccountEnabled": true,
   "countryCode": "99",
-  "firstName": "EHS-SMOKE-4b09952e",
+  "firstName": "EHS-SMOKE-a13cc7f0",
   "middleName": "API",
   "lastName": "Tester",
-  "emailAddress": "smoke@example.com",
+  "emailAddress": "ehs-smoke-a13cc7f0@example.com",
   "phoneNumber": "9000000000",
   "profilePictureId": 0,
   "gender": 1,
-  "department": 6,
+  "department": 9,
   "dateOfJoining": null,
   "contractorId": 0,
   "accessFailedCount": null,
-  "designation": 6,
+  "designation": 8,
   "userType": 1,
   "status": 1,
-  "userNumber": "EHS-SMOKE-4b09952e",
+  "userNumber": "EHS-SMOKE-a13cc7f0",
   "tenantID": 1,
   "languageID": 900004,
-  "organizationUnitId": 12,
+  "organizationUnitId": 19,
   "hasAccess": true,
   "isMobileUser": false,
   "alias": "smoke",
@@ -859,45 +881,45 @@ Expected `results`: `14`.
   "country": 900001,
   "isSubscribed": false,
   "userRoleIds": [
-    15
+    21
   ],
   "organizationUnitIds": [
-    12
+    19
   ],
   "organizationUnitIdsMapped": [
-    12
+    19
   ],
   "organizationUnitListIds": [
-    12
+    19
   ],
   "uploadedFiles": null,
   "password": "Example-password-123",
-  "departmentName": "EHS-SMOKE-4b09952e-Department",
-  "designationName": "EHS-SMOKE-4b09952e-Designation",
+  "departmentName": "EHS-SMOKE-a13cc7f0-Department",
+  "designationName": "EHS-SMOKE-a13cc7f0-Designation",
   "contractorName": null,
-  "organizationUnitNames": "EHS-SMOKE-4b09952e",
+  "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
   "workerTypeName": "Employee",
-  "userRoleNames": "EHS-SMOKE-4b09952e-Role",
+  "userRoleNames": "EHS-SMOKE-a13cc7f0-Role",
   "genderText": null,
   "contractorNameText": null,
-  "fullName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
-  "organizationUnitName": "EHS-SMOKE-4b09952e",
+  "fullName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
+  "organizationUnitName": "EHS-SMOKE-a13cc7f0",
   "countryName": "Smoke Test Country",
   "profilePictureUrl": null
 }
 ```
 
-Expected `results`: `12`.
+Expected `results`: `17`.
 
 ## Edit customer role
 
-`PUT http://127.0.0.1:8080/api/Role/15`
+`PUT http://127.0.0.1:8080/api/Role/21`
 
 ```json
 {
-  "id": 15,
+  "id": 21,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:06.05186",
+  "createdDate": "2026-09-30T08:52:22.077007",
   "modifiedBy": null,
   "modifiedDate": null,
   "tenantId": 1,
@@ -906,7 +928,7 @@ Expected `results`: `12`.
   "permissionIds": [
     2031
   ],
-  "name": "EHS-SMOKE-4b09952e-Role",
+  "name": "EHS-SMOKE-a13cc7f0-Role",
   "displayName": "Observer",
   "status": 1,
   "roleDescription": "Verification observer",
@@ -954,26 +976,26 @@ No payload.
 
 ## Assign additional role
 
-`PUT http://127.0.0.1:8080/api/SystemUser/5/Roles`
+`PUT http://127.0.0.1:8080/api/SystemUser/8/Roles`
 
 ```json
 {
-  "basicRoleId": 15,
+  "basicRoleId": 21,
   "additionalRoleIds": [
-    17
+    23
   ]
 }
 ```
 
 ## Update separate BU scope
 
-`PUT http://127.0.0.1:8080/api/SystemUser/5/Scope`
+`PUT http://127.0.0.1:8080/api/SystemUser/8/Scope`
 
 ```json
 {
   "scopes": [
     {
-      "organizationUnitId": 12,
+      "organizationUnitId": 19,
       "includeDescendants": false
     }
   ]
@@ -982,7 +1004,7 @@ No payload.
 
 ## Deactivate account
 
-`PUT http://127.0.0.1:8080/api/SystemUser/5/Enabled`
+`PUT http://127.0.0.1:8080/api/SystemUser/8/Enabled`
 
 ```json
 {
@@ -996,8 +1018,8 @@ No payload.
 
 ```json
 {
-  "name": "EHS-SMOKE-4b09952e-Contractor",
-  "businessUnitId": 12,
+  "name": "EHS-SMOKE-a13cc7f0-Contractor",
+  "businessUnitId": 19,
   "status": 1
 }
 ```
@@ -1008,18 +1030,18 @@ No payload.
 
 ```json
 {
-  "businessUnitIds": "12"
+  "businessUnitIds": "19"
 }
 ```
 
 ## Edit contractor
 
-`PUT http://127.0.0.1:8080/api/Contractor/7`
+`PUT http://127.0.0.1:8080/api/Contractor/10`
 
 ```json
 {
-  "name": "EHS-SMOKE-4b09952e-Contractor",
-  "businessUnitId": 12,
+  "name": "EHS-SMOKE-a13cc7f0-Contractor",
+  "businessUnitId": 19,
   "status": 1
 }
 ```
@@ -1030,19 +1052,20 @@ No payload.
 
 ```json
 {
-  "firstName": "EHS-SMOKE-4b09952e",
+  "firstName": "EHS-SMOKE-a13cc7f0",
   "lastName": "Contractor",
   "gender": 1,
-  "userNumber": "EHS-SMOKE-4b09952e-Contract",
-  "organizationUnitId": 12,
-  "designation": 6,
-  "contractorId": 7,
+  "userNumber": "EHS-SMOKE-a13cc7f0-Contract",
+  "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
+  "organizationUnitId": 19,
+  "designation": 8,
+  "contractorId": 10,
   "languageID": 900004,
   "status": 1
 }
 ```
 
-Expected `results`: `13`.
+Expected `results`: `18`.
 
 ## List contract employees
 
@@ -1050,29 +1073,30 @@ Expected `results`: `13`.
 
 ```json
 {
-  "businessUnitIds": "12"
+  "businessUnitIds": "19"
 }
 ```
 
 ## Edit contract employee
 
-`PUT http://127.0.0.1:8080/api/ContractEmployee/13`
+`PUT http://127.0.0.1:8080/api/ContractEmployee/18`
 
 ```json
 {
-  "firstName": "EHS-SMOKE-4b09952e",
+  "firstName": "EHS-SMOKE-a13cc7f0",
   "lastName": "Contractor",
   "gender": 1,
-  "userNumber": "EHS-SMOKE-4b09952e-Contract",
-  "organizationUnitId": 12,
-  "designation": 6,
-  "contractorId": 7,
+  "userNumber": "EHS-SMOKE-a13cc7f0-Contract",
+  "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
+  "organizationUnitId": 19,
+  "designation": 8,
+  "contractorId": 10,
   "languageID": 900004,
   "status": 1
 }
 ```
 
-Expected `results`: `13`.
+Expected `results`: `18`.
 
 ## Document contractor create
 
@@ -1080,9 +1104,9 @@ Expected `results`: `13`.
 
 ```json
 {
-  "contractorName": "EHS-SMOKE-4b09952e-FullContractor",
-  "contractorCode": "EHS-SMOKE-4b09952e-C",
-  "businessUnitId": 12,
+  "contractorName": "EHS-SMOKE-a13cc7f0-FullContractor",
+  "contractorCode": "EHS-SMOKE-a13cc7f0-C",
+  "businessUnitId": 19,
   "status": 1,
   "servicesOffered": "Safety audit",
   "addressLine1": "Test road",
@@ -1110,12 +1134,12 @@ Expected `results`: `"Contractor added successfully."`.
 {
   "sorting": "contractorName",
   "sortingType": "desc",
-  "filter": "EHS-SMOKE-4b09952e-FullContractor",
+  "filter": "EHS-SMOKE-a13cc7f0-FullContractor",
   "filters": [],
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -1134,7 +1158,7 @@ Expected `results`: `"Contractor added successfully."`.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
@@ -1147,15 +1171,15 @@ Expected `results`: `"Contractor added successfully."`.
 ```json
 {
   "id": 0,
-  "roleId": 19,
-  "firstName": "EHS-SMOKE-4b09952e",
+  "roleId": 25,
+  "firstName": "EHS-SMOKE-a13cc7f0",
   "middleName": "",
   "lastName": "Auditor",
   "emailAddress": "temporary@example.com",
   "phoneNumber": "9000000000",
   "gender": 1,
   "status": 1,
-  "organizationUnitId": 12,
+  "organizationUnitId": 19,
   "alias": "",
   "country": 900001,
   "companyName": "Audit Company",
@@ -1170,7 +1194,7 @@ Expected `results`: `"Contractor added successfully."`.
 }
 ```
 
-Expected `results`: `4`.
+Expected `results`: `6`.
 
 ## Document temporary user list
 
@@ -1185,8 +1209,14 @@ Expected `results`: `4`.
   "maxResultCount": 10,
   "skipCount": 0,
   "multiSortMeta": [],
-  "businessUnitIds": "12",
+  "businessUnitIds": "19",
   "userId": 0,
   "isExportToExcel": false
 }
 ```
+
+## Admin resends activation email
+
+`POST http://127.0.0.1:8080/api/SystemUser/9/ResendActivation`
+
+No payload.

@@ -42,7 +42,7 @@ Applied migrations 001 and 002 remain unchanged. New migrations are:
 
 Legacy JSON role and employee membership columns remain for compatibility. Authorization reads only the new validated relational grants and account scopes. Existing roles' unverified JSON permissions do not automatically become authorization grants; review/save those roles and explicitly activate accounts. Existing employee `hasAccess` alone does not create credentials or bypass activation.
 
-After these migrations there are 22 application tables and 2 Liquibase history/lock tables, with 38 recorded changesets.
+After these migrations there are 22 application tables and 2 Liquibase history/lock tables, with 41 recorded changesets.
 
 ## Reference dropdowns
 
@@ -87,8 +87,6 @@ Language entries with no `countryId` are globally available. Time zones require 
 
 ```json
 {
-  "username":"department.manager",
-  "password":"choose-a-strong-password",
   "basicRoleId":1,
   "additionalRoleIds":[],
   "scopes":[{"organizationUnitId":1,"includeDescendants":true}]
@@ -123,3 +121,5 @@ The complete master API payloads and ordered executable test data are in [API te
 Permission catalogs expose `sourceAliases` for the document's IDs/names. Use returned canonical `id` values in `permissionIds`. Legacy `permissionLookupHierarchyDto` entries resolve using their source ID and name, because several source IDs collide with existing canonical IDs. Migration 006 retains both definitions without reinterpreting existing grants. All listed source business actions can be selected except reserved organization administration; definitions for modules without supplied workflow APIs do not invent those APIs.
 
 Migration `007-built-in-admin.sql` adds `role.built_in_admin` and seeds the Admin role. Its authentication authority is `ROLE_ADMIN`, never `ROLE_SUPER_ADMIN`. Admin scopes always include descendants, even if the stored includeDescendants flag is false. Admin cannot create root organizations using null, omitted, or zero parent IDs, promote children to roots, or assign/create/edit Super Admin. See [setup examples](../docs/admin-role.md).
+
+Migration 008 adds account onboarding state and temporary-password expiry. Existing accounts are retained; new activations and resends use normalized employee email usernames. No credentials are accepted in activation payloads or returned in responses. SMTP failure rolls back activation changes.

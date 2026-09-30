@@ -1,10 +1,12 @@
 # EHS master API executable examples
-# Start the application, then use Run All Requests in IntelliJ HTTP Client.
+# Configure SMTP and start the application. Run through account activation first.
+# Read its email, set temporaryPassword below, then continue the remaining requests.
 # Requests run in order; response handlers capture generated IDs.
 # Synthetic data is retained. Change baseUrl/credentials if configured differently.
 @baseUrl = http://127.0.0.1:8080
 @username = ehs-api
 @password = ehs-api-local
+@temporaryPassword = REPLACE_WITH_PASSWORD_FROM_EMAIL
 
 ### Configure COUNTRY
 < {%
@@ -245,7 +247,7 @@ Content-Type: application/json
   "dateOfJoining": null,
   "department": {{departmentId}},
   "designation": {{designationId}},
-  "emailAddress": "smoke@example.com",
+  "emailAddress": "{{runName}}@example.com",
   "hasAccess": true,
   "isMobileUser": false,
   "gender": 1,
@@ -272,8 +274,6 @@ Authorization: Basic {{username}} {{password}}
 Content-Type: application/json
 
 {
-  "username": "{{runName}}",
-  "password": "Example-password-123",
   "basicRoleId": {{roleId}},
   "scopes": [
     {
@@ -285,7 +285,49 @@ Content-Type: application/json
 
 > {%
     client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("accountEmail", response.body.results.username);
     client.global.set("accountId", response.body.results.id);
+%}
+
+### First login requires reset
+POST {{baseUrl}}/api/Auth/Login
+Content-Type: application/json
+
+{
+  "username": "{{accountEmail}}",
+  "password": "{{temporaryPassword}}"
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Set first permanent password
+POST {{baseUrl}}/api/Auth/FirstLoginPasswordReset
+Authorization: Basic {{accountEmail}} {{temporaryPassword}}
+Content-Type: application/json
+
+{
+  "currentPassword": "{{temporaryPassword}}",
+  "newPassword": "Example-password-123",
+  "confirmPassword": "Example-password-123"
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Login with permanent password
+POST {{baseUrl}}/api/Auth/Login
+Content-Type: application/json
+
+{
+  "username": "{{accountEmail}}",
+  "password": "Example-password-123"
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
 %}
 
 ### Create location
@@ -676,6 +718,7 @@ Content-Type: application/json
   "lastName": "Contractor",
   "gender": 1,
   "userNumber": "{{runName}}-Contract2",
+  "emailAddress": "{{runName}}-contract@example.com",
   "organizationUnitId": {{organizationId}},
   "designation": {{designationId}},
   "contractorId": {{contractorId}},
@@ -831,7 +874,7 @@ Content-Type: application/json
 
 ### Built-in Admin current access
 GET {{baseUrl}}/api/Auth/Me
-Authorization: Basic {{runName}} Example-password-123
+Authorization: Basic {{accountEmail}} Example-password-123
 
 > {%
     client.test("HTTP 200", function () { client.assert(response.status === 200); });
@@ -839,13 +882,13 @@ Authorization: Basic {{runName}} Example-password-123
 
 ### Admin creates child organization
 POST {{baseUrl}}/api/OrganizationUnit
-Authorization: Basic {{runName}} Example-password-123
+Authorization: Basic {{accountEmail}} Example-password-123
 Content-Type: application/json
 
 {
   "id": 0,
   "createdBy": null,
-  "createdDate": "2026-09-30T07:41:05.393948",
+  "createdDate": "2026-09-30T08:52:21.257112",
   "modifiedBy": null,
   "modifiedDate": null,
   "layoutImageUrl": null,

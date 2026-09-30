@@ -29,7 +29,7 @@ public class AccountDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if (superUsername.equals(username)) return new EhsPrincipal(username,superPasswordHash,true,null,0L,
             List.of(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN")));
-        UserAccount account=accounts.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
+        UserAccount account=accounts.findByUsernameIgnoreCase(username.trim()).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
         Employee employee=employees.findById(account.employeeId).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
         Set<Long> roleIds=new HashSet<>(account.additionalRoleIds); roleIds.add(account.basicRoleId);
         Set<Long> permissionIds=new HashSet<>();
@@ -40,10 +40,17 @@ public class AccountDetailsService implements UserDetailsService {
         }
         var authorities=new ArrayList<SimpleGrantedAuthority>();
         if(admin) authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        else authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         for(var permission:admin?permissions.findAll():permissions.findAllById(permissionIds)) {
             if(permission.businessAction&&(admin||!permission.superAdminOnly)) authorities.add(new SimpleGrantedAuthority(permission.code));
         }
         boolean active=account.enabled && Integer.valueOf(1).equals(employee.status) && Boolean.TRUE.equals(employee.hasAccess);
-        return new EhsPrincipal(username,account.passwordHash,active,account.id,account.tenantId,authorities);
+        if(account.mustChangePassword) {
+            active=active&&account.temporaryPasswordExpiresAt!=null&&java.time.LocalDateTime.now(java.time.Clock.systemUTC()).isBefore(account.temporaryPasswordExpiresAt);
+            authorities.clear();authorities.add(new SimpleGrantedAuthority("PASSWORD_CHANGE_REQUIRED"));
+        }
+        var principal=new EhsPrincipal(account.username,account.passwordHash,active,account.id,account.tenantId,authorities);
+        principal.mustChangePassword=account.mustChangePassword;principal.accountType=admin?"ADMIN":"USER";
+        return principal;
     }
 }

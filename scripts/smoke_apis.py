@@ -15,12 +15,22 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base-url', default='http://127.0.0.1:18080')
     parser.add_argument('--output', default='reports/api-smoke-results.json')
+    parser.add_argument('--mail-capture-file', default='target/smtp-test-messages.jsonl', help='Local smtp_test_sink.py output; synthetic testing only')
     args = parser.parse_args()
     credentials = '{}:{}'.format(os.getenv('API_USERNAME', 'ehs-api'), os.getenv('API_PASSWORD', 'ehs-api-local'))
     authorization = 'Basic ' + base64.b64encode(credentials.encode()).decode()
     prefix = 'EHS-SMOKE-' + uuid.uuid4().hex[:8]
     calls = []
     checks = []
+    def temporary_password(email):
+        from email import policy
+        from email.parser import Parser
+        records=[json.loads(line) for line in Path(args.mail_capture_file).read_text(encoding='utf-8').splitlines()]
+        for record in reversed(records):
+            if email in record['to']:
+                text=Parser(policy=policy.default).parsestr(record['message']).get_content()
+                return next(line.split(': ',1)[1] for line in text.splitlines() if line.startswith('Temporary password: '))
+        raise RuntimeError('Activation email not received by local test SMTP inbox')
 
     def check(label, condition):
         checks.append({'check': label, 'passed': bool(condition)})
@@ -51,8 +61,9 @@ def main():
         if envelope:
             passed = passed and isinstance(result, dict) and result.get('statusCode') == expected and 'results' in result
         safe_body = json.loads(json.dumps(body)) if body is not None else None
-        if isinstance(safe_body, dict) and 'password' in safe_body:
-            safe_body['password'] = '[REDACTED]'
+        if isinstance(safe_body, dict):
+            for key in ['password','currentPassword','newPassword','confirmPassword']:
+                if key in safe_body: safe_body[key]='[REDACTED]'
         calls.append({'case': label, 'method': method, 'path': path, 'request': safe_body,
                       'expectedStatus': expected, 'httpStatus': status, 'passed': passed,
                       'elapsedMs': round((time.monotonic() - start) * 1000), 'response': result})
@@ -102,13 +113,22 @@ def main():
         employee = call('Create employee', '/api/User/CreateEmployee', {
             'id': 0, 'firstName': prefix, 'middleName': 'API', 'lastName': 'Tester', 'dateOfBirth': '1994-04-03',
             'age': '32', 'alias': 'smoke', 'country': 900001, 'contractorId': 0, 'dateOfJoining': None,
-            'department': department, 'designation': designation, 'emailAddress': 'smoke@example.com',
+            'department': department, 'designation': designation, 'emailAddress': prefix.lower() + '@example.com',
             'hasAccess': True, 'isMobileUser': False, 'gender': 1, 'phoneNumber': '9000000000', 'status': 1,
             'userNumber': prefix, 'userType': 1, 'organizationUnitId': organization,
             'profilePictureId': 0, 'languageID': 900004, 'userRoleIds': [role]})
         account = call('Activate employee as system user', f'/api/User/{employee}/ActivateSystemUser', {
-            'username': prefix.lower(), 'password': 'Smoke-test-password-123', 'basicRoleId': role,
+            'basicRoleId': role,
             'scopes': [{'organizationUnitId': organization, 'includeDescendants': True}]})
+        email=account['username']
+        temporary=temporary_password(email)
+        first_login=call('First login requires reset', '/api/Auth/Login', {'username': email, 'password': temporary}, auth='none')
+        check('temporary credentials restricted to reset', first_login['mustChangePassword'] and first_login['nextAction']=='RESET_PASSWORD')
+        call('Pending user cannot access permissions', '/api/Permission/GetAll', auth=(email,temporary), expected=403)
+        call('Set first permanent password', '/api/Auth/FirstLoginPasswordReset',
+             {'currentPassword':temporary,'newPassword':'Smoke-test-password-123','confirmPassword':'Smoke-test-password-123'},auth=(email,temporary))
+        call('Temporary password invalid after reset', '/api/Auth/Login', {'username':email,'password':temporary},auth='none',expected=401)
+        call('Login with permanent password', '/api/Auth/Login', {'username':email,'password':'Smoke-test-password-123'},auth='none')
         location_body = {'name': prefix + '-Location', 'locationSupervisor': '', 'locationDescription': 'Live verification',
             'organizationUnitId': organization, 'status': 1, 'createdBy': employee, 'supervisorIds': [employee],
             'subLocationNames': 'Zone A, Zone B', 'newSublocations': [
@@ -211,7 +231,7 @@ def main():
              {'basicRoleId': role, 'additionalRoleIds': [department_role]}, method='PUT')
         call('Update separate BU scope', f'/api/SystemUser/{account["id"]}/Scope',
              {'scopes': [{'organizationUnitId': organization, 'includeDescendants': False}]}, method='PUT')
-        normal_auth = (prefix.lower(), 'Smoke-test-password-123')
+        normal_auth = (email, 'Smoke-test-password-123')
         me = call('Normal user current access', '/api/Auth/Me', auth=normal_auth)
         check('normal user scope is separate from roles', me['organizationUnitIds'] == [organization])
         call('Normal user permitted master list', '/api/Department/GetList', {}, auth=normal_auth)
@@ -226,6 +246,7 @@ def main():
         call('List contractors', '/api/Contractor/GetList', {'businessUnitIds': str(organization)})
         call('Edit contractor', f'/api/Contractor/{contractor}', {'name': prefix + '-Contractor', 'businessUnitId': organization, 'status': 1}, method='PUT')
         contract_body = {'firstName': prefix, 'lastName': 'Contractor', 'gender': 1, 'userNumber': prefix + '-Contract',
+                         'emailAddress': prefix.lower() + '-contract@example.com',
                          'organizationUnitId': organization, 'designation': designation, 'contractorId': contractor,
                          'languageID': 900004, 'status': 1}
         contract_employee = call('Create contract employee', '/api/ContractEmployee/Create', contract_body)
@@ -291,8 +312,14 @@ def main():
         call('Admin creates department in new child', '/api/Department/Create',
              {'name': 'Child Safety', 'businessUnitId': child, 'status': 1}, auth=normal_auth)
         admin_created_account = call('Admin activates employee account', f'/api/User/{contract_employee}/ActivateSystemUser',
-             {'username': prefix.lower() + '-delegated', 'password': 'Smoke-test-password-123', 'basicRoleId': built_in_admin,
+             {'basicRoleId': built_in_admin,
               'scopes': [{'organizationUnitId': organization, 'includeDescendants': True}]}, auth=normal_auth)
+        delegated_email=admin_created_account['username'];old_temp=temporary_password(delegated_email)
+        call('Admin resends activation email', f'/api/SystemUser/{admin_created_account["id"]}/ResendActivation', method='POST', auth=normal_auth)
+        new_temp=temporary_password(delegated_email)
+        call('Resend invalidates old temporary password','/api/Auth/Login',{'username':delegated_email,'password':old_temp},auth='none',expected=401)
+        call('Delegated Admin sets first password','/api/Auth/FirstLoginPasswordReset',
+             {'currentPassword':new_temp,'newPassword':'Smoke-test-password-123','confirmPassword':'Smoke-test-password-123'},auth=(delegated_email,new_temp))
         call('Admin changes account scope', f'/api/SystemUser/{admin_created_account["id"]}/Scope',
              {'scopes': [{'organizationUnitId': child, 'includeDescendants': True}]}, method='PUT', auth=normal_auth)
         call('Admin disables account', f'/api/SystemUser/{admin_created_account["id"]}/Enabled',

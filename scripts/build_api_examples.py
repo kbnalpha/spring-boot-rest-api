@@ -7,7 +7,7 @@ calls={c['case']:c for c in report['calls']}
 selected=[
     'Configure COUNTRY','Configure STATE','Configure CITY','Configure LANGUAGE','Configure TIME_ZONE',
     'Country-filtered state dropdown','Create organization','List organizations','Create department','Create designation',
-    'Create role','Create employee','Activate employee as system user','Create location','Create operation activity',
+    'Create role','Create employee','Activate employee as system user','First login requires reset','Set first permanent password','Login with permanent password','Create location','Create operation activity',
     'Create observation type','Create equipment','List users','List employees','List locations','List roles',
     'List operation activities','List observation types','List equipment','List designations','List departments',
     'Document contractor create','Document contractor list','Document contract employee create','Document contract employee list',
@@ -44,10 +44,12 @@ def transform(value,key=None):
     return value
 
 lines=['# EHS master API executable examples',
-    '# Start the application, then use Run All Requests in IntelliJ HTTP Client.',
+    '# Configure SMTP and start the application. Run through account activation first.',
+    '# Read its email, set temporaryPassword below, then continue the remaining requests.',
     '# Requests run in order; response handlers capture generated IDs.',
     '# Synthetic data is retained. Change baseUrl/credentials if configured differently.',
-    '@baseUrl = http://127.0.0.1:8080','@username = ehs-api','@password = ehs-api-local','']
+    '@baseUrl = http://127.0.0.1:8080','@username = ehs-api','@password = ehs-api-local',
+    '@temporaryPassword = REPLACE_WITH_PASSWORD_FROM_EMAIL','']
 capture={'Create department':('departmentId','response.body.results.id'),
     'Create designation':('designationId','response.body.results.id'),'Create role':('roleId','response.body.results.id'),
     'Create employee':('employeeId','response.body.results'),'Activate employee as system user':('accountId','response.body.results.id'),
@@ -62,10 +64,16 @@ for i,label in enumerate(selected):
     if label=='Document temporary user create':body['roleId']='{{roleId}}'
     if label=='Assign built-in Admin':body['basicRoleId']='{{adminRoleId}}'
     if label=='Admin creates child organization':body['parentId']='{{organizationId}}'
+    if label in ['First login requires reset','Login with permanent password']:
+        body={'username':'{{accountEmail}}','password':'{{temporaryPassword}}' if label=='First login requires reset' else 'Example-password-123'}
+    if label=='Set first permanent password':
+        body={'currentPassword':'{{temporaryPassword}}','newPassword':'Example-password-123','confirmPassword':'Example-password-123'}
     lines.extend(['### '+label])
     if i==0:lines.extend(['< {%','    client.global.set("runName", "EHS-TEST-" + Date.now());','%}'])
-    auth='Authorization: Basic {{runName}} Example-password-123' if label in ['Built-in Admin current access','Admin creates child organization'] else 'Authorization: Basic {{username}} {{password}}'
-    lines.extend([c['method']+' {{baseUrl}}'+path,auth])
+    auth='Authorization: Basic {{accountEmail}} Example-password-123' if label in ['Built-in Admin current access','Admin creates child organization'] else 'Authorization: Basic {{username}} {{password}}'
+    if label=='Set first permanent password':auth='Authorization: Basic {{accountEmail}} {{temporaryPassword}}'
+    lines.append(c['method']+' {{baseUrl}}'+path)
+    if label not in ['First login requires reset','Login with permanent password']:lines.append(auth)
     if body is not None:
         text=json.dumps(body,indent=2,ensure_ascii=False)
         # Numeric ID variables must not be quoted; runName/businessUnitIds remain strings.
@@ -77,6 +85,7 @@ for i,label in enumerate(selected):
     if label=='List organizations':lines.append('    client.global.set("organizationId", response.body.results.find(x => x.name === client.global.get("runName")).id);')
     if label=='Document contractor list':lines.append('    client.global.set("contractorId", response.body.results.items[0].id);')
     if label=='List roles':lines.append('    client.global.set("adminRoleId", response.body.results.find(x => x.builtInAdmin).id);')
+    if label=='Activate employee as system user':lines.append('    client.global.set("accountEmail", response.body.results.username);')
     if label in capture:
         name,expr=capture[label];lines.append(f'    client.global.set("{name}", {expr});')
     lines.extend(['%}',''])
@@ -85,7 +94,8 @@ Path('docs/master-api-tests.http').write_text('\n'.join(lines),encoding='utf-8')
 
 # Every operation (including backward-compatible aliases and updates) has a concrete example.
 seen=set();md=['# API URLs and sample payloads','',
-    'Run the ordered [IntelliJ HTTP collection](master-api-tests.http) to create fresh sample data and capture IDs automatically.',
+    'Use the ordered [IntelliJ HTTP collection](master-api-tests.http). Configure SMTP, run through activation, read the emailed temporary password, set the temporaryPassword variable, then continue. IDs are captured automatically.',
+    'See [email onboarding and first-login APIs](account-onboarding.md). Activation accepts role/scope only; username is the employee email and the server generates the temporary password. Pending users cannot call business APIs.',
     'For the built-in Admin role, account activation, and child-organization restrictions, see [Admin setup](admin-role.md). The HTTP collection also assigns Admin and creates a child using that account.',
     'The examples below are successful requests from the MySQL verification run. Replace IDs with your own records when testing separately; use unique employee numbers and equipment UIDs for new records.',
     'Base URL: `http://127.0.0.1:8080`. HTTP Basic: `ehs-api` / `ehs-api-local` (or your configured API credentials).',
@@ -101,7 +111,8 @@ for c in report['calls']:
     if c['request'] is None:md.extend(['No payload.',''])
     else:
         body=dict(c['request'])
-        if 'password' in body:body['password']='Example-password-123'
+        for key in ['password','currentPassword','newPassword','confirmPassword']:
+            if key in body:body[key]='TEMPORARY_PASSWORD_FROM_EMAIL' if key=='currentPassword' or (key=='password' and c['case']=='First login requires reset') else 'Example-password-123'
         md.extend(['```json',json.dumps(body,indent=2,ensure_ascii=False),'```',''])
     result=c['response']['results'] if 'results' in c['response'] else c['response']
     if not isinstance(result,(dict,list)):md.extend(['Expected `results`: `'+json.dumps(result)+'`.',''])

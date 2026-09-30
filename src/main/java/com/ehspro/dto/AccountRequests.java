@@ -6,12 +6,13 @@ public final class AccountRequests {
     private AccountRequests() {}
     public record Scope(@NotNull @Positive Long organizationUnitId, boolean includeDescendants) {}
     public record Activate(
-        @NotBlank @Pattern(regexp="[a-zA-Z0-9._@-]{3,100}") String username,
-        @NotBlank @Size(min=12,max=72) String password,
         @NotNull @Positive Long basicRoleId,
         Set<@NotNull @Positive Long> additionalRoleIds,
         @NotEmpty List<@NotNull @Valid Scope> scopes) {}
     public record Roles(@NotNull @Positive Long basicRoleId, Set<@NotNull @Positive Long> additionalRoleIds) {}
     public record Scopes(@NotEmpty List<@NotNull @Valid Scope> scopes) {}
     public record Enabled(boolean enabled) {}
+    public record Login(@NotBlank @Size(max=254) String username, @NotBlank @Size(max=200) String password) {}
+    public record FirstLoginReset(@NotBlank @Size(max=200) String currentPassword,
+        @NotBlank @Size(min=12,max=72) String newPassword, @NotBlank @Size(max=72) String confirmPassword) {}
 }

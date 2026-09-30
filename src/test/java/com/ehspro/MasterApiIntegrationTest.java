@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MasterApiIntegrationTest {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper json;
+    @org.springframework.boot.test.mock.mockito.MockBean org.springframework.mail.javamail.JavaMailSender mail;
     @Autowired com.ehspro.service.ReferenceDataService lookups;
 
     @org.junit.jupiter.api.BeforeEach
@@ -67,9 +68,9 @@ class MasterApiIntegrationTest {
         employee.putArray("userRoleIds").add(role.path("id").asLong());
         long employeeId = postJson("/api/User/CreateEmployee", employee.toString()).asLong();
         postJson("/api/User/" + employeeId + "/ActivateSystemUser", """
-            {"username":"employee-%d","password":"Integration-password-123","basicRoleId":%d,
+            {"basicRoleId":%d,
              "scopes":[{"organizationUnitId":%d,"includeDescendants":false}]}
-            """.formatted(employeeId,role.path("id").asLong(),organization));
+            """.formatted(role.path("id").asLong(),organization));
         assertThat(employeeId).isPositive();
         JsonNode employees = list("/api/User/GetAllEmployees", organization);
         assertThat(employees.path("totalCount").asInt()).isEqualTo(1);

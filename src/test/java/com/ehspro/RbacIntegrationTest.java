@@ -20,6 +20,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 class RbacIntegrationTest {
     @Autowired MockMvc mvc;
     @Autowired ObjectMapper mapper;
+    @org.springframework.boot.test.mock.mockito.MockBean org.springframework.mail.javamail.JavaMailSender mail;
+    @Autowired com.ehspro.repository.UserAccountRepository accounts;
+    @Autowired com.ehspro.repository.EmployeeRepository employees;
     @Autowired ReferenceDataService lookups;
     final String superUser="ehs-api",superPassword="ehs-api-local",password="Rbac-test-password-123";
     long tenant;
@@ -90,7 +93,7 @@ class RbacIntegrationTest {
         body.put("contractorId",contractor.path("id").asLong());
         admin("POST","/api/ContractEmployee/Create",body,200);
         assertThat(admin("POST","/api/ContractEmployee/GetList",Map.of("businessUnitIds",Long.toString(unit)),200).path("totalCount").asInt()).isEqualTo(1);
-        request("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("username","blocked","password",password,"basicRoleId",role,"scopes",List.of(scope(unit,false))),account.username,password,403);
+        request("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),account.username,password,403);
     }
     @Test void workbookFieldsValidateAndOrganizationDerivesCountryMetadata() throws Exception {
         ObjectNode body=organizationBody(null,tenant);body.put("name","X".repeat(51));admin("POST","/api/OrganizationUnit",body,400);
@@ -204,8 +207,8 @@ class RbacIntegrationTest {
         long custom=request("POST","/api/Role/CreateRole",Map.of("name","Child Manager","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,200).path("id").asLong();
         ObjectNode body=employeeBody(child);body.put("hasAccess",true);
         long employee=request("POST","/api/User/CreateEmployee",body,user.username,password,200).asLong();
-        String name="child-admin-"+UUID.randomUUID();
-        var account=request("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("username",name,"password",password,"basicRoleId",adminRole,"scopes",List.of(scope(child,true))),user.username,password,200);
+        var account=request("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",adminRole,"scopes",List.of(scope(child,true))),user.username,password,200);
+        String name=account.path("username").asText();completeFirstLogin(name);
         long accountId=account.path("id").asLong();
         request("POST","/api/OrganizationUnit",organizationBody(child,tenant),name,password,200);
         request("POST","/api/OrganizationUnit",organizationBody(root,tenant),name,password,403);
@@ -222,9 +225,75 @@ class RbacIntegrationTest {
         request("PUT","/api/Role/"+adminRole,Map.of("name","Admin","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,400);
         request("PUT","/api/SystemUser/"+accountId+"/Roles",Map.of("basicRoleId",-1),user.username,password,400);
         long foreignEmployee=employee(foreign);
-        request("POST","/api/User/"+foreignEmployee+"/ActivateSystemUser",Map.of("username","forbidden-user","password",password,"basicRoleId",adminRole,"scopes",List.of(scope(foreign,true))),user.username,password,403);
+        request("POST","/api/User/"+foreignEmployee+"/ActivateSystemUser",Map.of("basicRoleId",adminRole,"scopes",List.of(scope(foreign,true))),user.username,password,403);
         var limited=activate(employee(root),role(tenant,List.of(3274L)),List.of(scope(root,true)));
         request("PUT","/api/SystemUser/"+limited.id+"/Roles",Map.of("basicRoleId",adminRole),limited.username,password,403);
+    }
+    @Test void emailedTemporaryPasswordRequiresResetBeforeAnyBusinessAccess() throws Exception {
+        long unit=organization(null,tenant),role=role(tenant,List.of(3342L)),employee=employee(unit);
+        var activation=admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),200);
+        String email=activation.path("username").asText(),temporary=TestMail.temporaryPassword(mail,email);
+        assertThat(email).isEqualTo(employees.findById(employee).orElseThrow().emailAddress.toLowerCase(Locale.ROOT));
+        assertThat(activation.path("mustChangePassword").asBoolean()).isTrue();
+        assertThat(activation.toString()).doesNotContain(temporary,"passwordHash");
+        assertThat(accounts.findById(activation.path("id").asLong()).orElseThrow().passwordHash).isNotEqualTo(temporary);
+        var login=login(email,temporary,200);assertThat(login.path("nextAction").asText()).isEqualTo("RESET_PASSWORD");
+        assertThat(login.path("accountType").asText()).isEqualTo("USER");assertThat(login.has("permissions")).isFalse();
+        for(String path:List.of("/api/Auth/Me","/api/Permission/GetAll","/api/OrganizationUnit/GetAllOrganizations","/v3/api-docs"))
+            request("GET",path,null,email,temporary,403);
+        request("POST","/api/Department/GetList",Map.of(),email,temporary,403);
+        request("POST","/api/Auth/FirstLoginPasswordReset",Map.of("currentPassword",temporary,"newPassword",password,"confirmPassword","not-the-same"),email,temporary,400);
+        request("POST","/api/Auth/FirstLoginPasswordReset",Map.of("currentPassword",temporary,"newPassword",temporary,"confirmPassword",temporary),email,temporary,400);
+        request("POST","/api/Auth/FirstLoginPasswordReset",Map.of("currentPassword","wrong","newPassword",password,"confirmPassword",password),email,temporary,401);
+        completeFirstLogin(email);
+        login(email,temporary,401);login(email.toUpperCase(Locale.ROOT),password,200);
+        request("POST","/api/Department/GetList",Map.of(),email,password,200);
+        request("POST","/api/Equipment/List",Map.of(),email,password,403);
+        request("POST","/api/Auth/FirstLoginPasswordReset",Map.of("currentPassword",password,"newPassword","Another-password-123","confirmPassword","Another-password-123"),email,password,400);
+    }
+    @Test void activationExpiresCanBeResentAndCannotBypassAdminOrEmailRequirements() throws Exception {
+        long unit=organization(null,tenant),role=role(tenant,List.of(3342L)),employee=employee(unit);
+        var activation=admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),200);
+        String email=activation.path("username").asText(),oldTemporary=TestMail.temporaryPassword(mail,email);
+        long id=activation.path("id").asLong();var account=accounts.findById(id).orElseThrow();
+        account.temporaryPasswordExpiresAt=java.time.LocalDateTime.now(java.time.Clock.systemUTC()).minusMinutes(1);accounts.saveAndFlush(account);
+        login(email,oldTemporary,401);
+        admin("POST","/api/SystemUser/"+id+"/ResendActivation",null,200);
+        String temporary=TestMail.temporaryPassword(mail,email);assertThat(temporary).isNotEqualTo(oldTemporary);
+        login(email,oldTemporary,401);login(email,temporary,200);completeFirstLogin(email);
+        request("POST","/api/SystemUser/"+id+"/ResendActivation",null,email,password,403);
+        admin("POST","/api/SystemUser/"+id+"/ResendActivation",null,200);
+        login(email,password,401);completeFirstLogin(email);
+        admin("PUT","/api/SystemUser/"+id+"/Enabled",Map.of("enabled",false),200);login(email,password,401);
+        admin("POST","/api/SystemUser/"+id+"/ResendActivation",null,400);
+        long missingEmail=employee(unit);var person=employees.findById(missingEmail).orElseThrow();person.emailAddress=null;employees.saveAndFlush(person);
+        admin("POST","/api/User/"+missingEmail+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),400);
+        person.emailAddress=email.toUpperCase(Locale.ROOT);employees.saveAndFlush(person);
+        admin("POST","/api/User/"+missingEmail+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),409);
+        person.emailAddress="unique-"+UUID.randomUUID()+"@example.com";employees.saveAndFlush(person);
+        admin("POST","/api/User/"+missingEmail+"/ActivateSystemUser",Map.of("username","custom","password",password,"basicRoleId",role,"scopes",List.of(scope(unit,false))),400);
+    }
+    @Test void mailFailureRollsBackActivationAndAdminAlsoMustCompleteFirstLogin() throws Exception {
+        long unit=organization(null,tenant),employee=employee(unit),adminRole=0;
+        for(var r:admin("GET","/api/Role/GetAllRoles",null,200)) if(r.path("builtInAdmin").asBoolean()) adminRole=r.path("id").asLong();
+        org.mockito.Mockito.doThrow(new org.springframework.mail.MailSendException("Synthetic SMTP failure")).when(mail).send(org.mockito.ArgumentMatchers.any(org.springframework.mail.SimpleMailMessage.class));
+        admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",adminRole,"scopes",List.of(scope(unit,true))),503);
+        assertThat(accounts.findByEmployeeId(employee)).isEmpty();assertThat(employees.findById(employee).orElseThrow().hasAccess).isFalse();
+        org.mockito.Mockito.reset(mail);
+        var account=admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",adminRole,"scopes",List.of(scope(unit,true))),200);
+        String email=account.path("username").asText(),temporary=TestMail.temporaryPassword(mail,email);
+        assertThat(login(email,temporary,200).path("accountType").asText()).isEqualTo("ADMIN");
+        request("POST","/api/OrganizationUnit",organizationBody(unit,tenant),email,temporary,403);
+        completeFirstLogin(email);request("POST","/api/OrganizationUnit",organizationBody(unit,tenant),email,password,200);
+        org.mockito.Mockito.doThrow(new org.springframework.mail.MailSendException("Synthetic SMTP failure")).when(mail).send(org.mockito.ArgumentMatchers.any(org.springframework.mail.SimpleMailMessage.class));
+        admin("POST","/api/SystemUser/"+account.path("id").asLong()+"/ResendActivation",null,503);
+        assertThat(login(email,password,200).path("mustChangePassword").asBoolean()).isFalse();
+        assertThat(login(superUser,superPassword,200).path("accountType").asText()).isEqualTo("SUPER_ADMIN");
+    }
+    private JsonNode login(String username,String secret,int expected) throws Exception {
+        var response=mvc.perform(post("/api/Auth/Login").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))
+            .andExpect(status().is(expected)).andReturn();
+        return mapper.readTree(response.getResponse().getContentAsString()).path("results");
     }
     private ObjectNode organizationBody(Long parent,long tenantId) {
         ObjectNode node=mapper.createObjectNode();node.put("name","BU-"+UUID.randomUUID().toString().substring(0,12));node.put("tenantId",tenantId);if(parent!=null)node.put("parentId",parent);
@@ -249,14 +318,20 @@ class RbacIntegrationTest {
         long department=department(unit);
         long designation=admin("POST","/api/Designation/Create",Map.of("name","Designation","businessUnitId",unit,"status",1),200).path("id").asLong();
         ObjectNode body=mapper.createObjectNode();body.put("firstName","Test").put("lastName","Employee").put("gender",1).put("status",1).put("languageID",50004);
+        body.put("emailAddress",UUID.randomUUID()+"@example.com");
         body.put("userNumber",UUID.randomUUID().toString()).put("organizationUnitId",unit).put("department",department).put("designation",designation);return body;
     }
     private long employee(long unit) throws Exception { return admin("POST","/api/User/CreateEmployee",employeeBody(unit),200).asLong(); }
     private Map<String,Object> scope(long unit,boolean descendants) { return Map.of("organizationUnitId",unit,"includeDescendants",descendants); }
     private record Account(long id,String username) {}
     private Account activate(long employee,long role,List<Map<String,Object>> scopes) throws Exception {
-        String username="user-"+UUID.randomUUID();JsonNode result=admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("username",username,"password",password,"basicRoleId",role,"scopes",scopes),200);
+        JsonNode result=admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",scopes),200);
+        String username=result.path("username").asText();completeFirstLogin(username);
         return new Account(result.path("id").asLong(),username);
+    }
+    private void completeFirstLogin(String username) throws Exception {
+        String temporary=TestMail.temporaryPassword(mail,username);
+        request("POST","/api/Auth/FirstLoginPasswordReset",Map.of("currentPassword",temporary,"newPassword",password,"confirmPassword",password),username,temporary,200);
     }
     private JsonNode admin(String method,String path,Object body,int expected) throws Exception { return request(method,path,body,superUser,superPassword,expected); }
     private JsonNode request(String method,String path,Object body,String username,String secret,int expected) throws Exception {

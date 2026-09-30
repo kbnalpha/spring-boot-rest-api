@@ -28,3 +28,9 @@ databaseChangeLog:
   - include:
       file: changes/007-built-in-admin.sql
       relativeToChangelogFile: true
+  - include:
+      file: changes/008-account-onboarding.sql
+      relativeToChangelogFile: true
+  - include:
+      file: changes/009-required-primary-keys.yaml
+      relativeToChangelogFile: true

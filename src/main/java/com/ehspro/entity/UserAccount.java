@@ -6,9 +6,12 @@ public class UserAccount {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY) public Long id;
     @Column(nullable=false, unique=true) public Long employeeId;
     @Column(nullable=false) public Long tenantId;
-    @Column(nullable=false, unique=true, length=100) public String username;
+    @Column(nullable=false, unique=true, length=254) public String username;
     @Column(nullable=false, length=100) public String passwordHash;
     public boolean enabled;
+    public boolean mustChangePassword;
+    public java.time.LocalDateTime temporaryPasswordExpiresAt;
+    public java.time.LocalDateTime passwordChangedAt;
     @Column(nullable=false) public Long basicRoleId;
     @ElementCollection
     @CollectionTable(name="account_role",joinColumns=@JoinColumn(name="account_id"))

@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-09-30T02:11:20.566878+00:00",
+  "generatedAt": "2026-09-30T03:22:38.454781+00:00",
   "baseUrl": "http://127.0.0.1:18080",
   "database": "ehs_db (MySQL)",
-  "recordPrefix": "EHS-SMOKE-4b09952e",
+  "recordPrefix": "EHS-SMOKE-a13cc7f0",
   "note": "Test records are retained. Authentication headers and passwords are omitted.",
-  "requestCount": 100,
+  "requestCount": 108,
   "failedChecks": 0,
   "calls": [
     {
@@ -20,7 +20,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 964,
+      "elapsedMs": 814,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -48,7 +48,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 147,
+      "elapsedMs": 155,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -77,7 +77,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 178,
+      "elapsedMs": 117,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -105,7 +105,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 152,
+      "elapsedMs": 147,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -134,7 +134,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 149,
+      "elapsedMs": 164,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -159,7 +159,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 311,
+      "elapsedMs": 172,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -184,7 +184,7 @@
       "path": "/api/OrganizationUnit",
       "request": {
         "id": 0,
-        "name": "EHS-SMOKE-4b09952e",
+        "name": "EHS-SMOKE-a13cc7f0",
         "description": "Live HTTP verification",
         "tenantId": 1,
         "parentId": null,
@@ -211,7 +211,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 451,
+      "elapsedMs": 309,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -226,7 +226,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 186,
+      "elapsedMs": 167,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -459,11 +459,243 @@
             "createdBy": null,
             "createdDate": "2026-09-30T07:41:05.393948",
             "modifiedBy": null,
-            "modifiedDate": null,
+            "modifiedDate": "2026-09-30T07:41:11.371485",
             "layoutImageUrl": null,
             "latitude": null,
             "longitude": null,
             "name": "EHS-SMOKE-4b09952e",
+            "description": "Live HTTP verification",
+            "tenantId": 1,
+            "parentId": null,
+            "status": 1,
+            "currency": "TST",
+            "line1": "Test address",
+            "line2": "",
+            "city": 900003,
+            "state": 900002,
+            "country": 900001,
+            "countryCode": "99",
+            "symbol": "T",
+            "timeZone": "UTC",
+            "timeZoneId": 900005,
+            "languageId": 900004,
+            "keyContactName": "Smoke Test",
+            "phoneNumber": "9000000000",
+            "emailAddress": "smoke@example.com",
+            "isAnonymous": true,
+            "isObservationProofRequired": true,
+            "attachments": null,
+            "shifts": [
+              {
+                "name": "Night",
+                "startTime": "22:00:00",
+                "endTime": "06:00:00"
+              }
+            ],
+            "buImage": null,
+            "cityName": "Smoke Test City",
+            "stateName": "Smoke Test State",
+            "countryName": "Smoke Test Country",
+            "timeZoneName": "Smoke UTC",
+            "languageName": "Smoke Test Language",
+            "shiftMaster": null,
+            "children": [
+              {
+                "id": 13,
+                "createdBy": null,
+                "createdDate": "2026-09-30T07:41:05.393948",
+                "modifiedBy": null,
+                "modifiedDate": null,
+                "layoutImageUrl": null,
+                "latitude": null,
+                "longitude": null,
+                "name": "EHS-SMOKE-4b09952e-Child",
+                "description": "Live HTTP verification",
+                "tenantId": 1,
+                "parentId": 12,
+                "status": 1,
+                "currency": "TST",
+                "line1": "Test address",
+                "line2": "",
+                "city": 900003,
+                "state": 900002,
+                "country": 900001,
+                "countryCode": "99",
+                "symbol": "T",
+                "timeZone": "UTC",
+                "timeZoneId": 900005,
+                "languageId": 900004,
+                "keyContactName": "Smoke Test",
+                "phoneNumber": "9000000000",
+                "emailAddress": "smoke@example.com",
+                "isAnonymous": true,
+                "isObservationProofRequired": true,
+                "attachments": null,
+                "shifts": [
+                  {
+                    "name": "Night",
+                    "startTime": "22:00:00",
+                    "endTime": "06:00:00"
+                  }
+                ],
+                "buImage": null,
+                "cityName": "Smoke Test City",
+                "stateName": "Smoke Test State",
+                "countryName": "Smoke Test Country",
+                "timeZoneName": "Smoke UTC",
+                "languageName": "Smoke Test Language",
+                "shiftMaster": null,
+                "children": [
+                  {
+                    "id": 14,
+                    "createdBy": null,
+                    "createdDate": "2026-09-30T07:41:05.393948",
+                    "modifiedBy": null,
+                    "modifiedDate": null,
+                    "layoutImageUrl": null,
+                    "latitude": null,
+                    "longitude": null,
+                    "name": "EHS-SMOKE-4b09952e-Grandchild",
+                    "description": "Live HTTP verification",
+                    "tenantId": 1,
+                    "parentId": 13,
+                    "status": 1,
+                    "currency": "TST",
+                    "line1": "Test address",
+                    "line2": "",
+                    "city": 900003,
+                    "state": 900002,
+                    "country": 900001,
+                    "countryCode": "99",
+                    "symbol": "T",
+                    "timeZone": "UTC",
+                    "timeZoneId": 900005,
+                    "languageId": 900004,
+                    "keyContactName": "Smoke Test",
+                    "phoneNumber": "9000000000",
+                    "emailAddress": "smoke@example.com",
+                    "isAnonymous": true,
+                    "isObservationProofRequired": true,
+                    "attachments": null,
+                    "shifts": [
+                      {
+                        "name": "Night",
+                        "startTime": "22:00:00",
+                        "endTime": "06:00:00"
+                      }
+                    ],
+                    "buImage": null,
+                    "cityName": "Smoke Test City",
+                    "stateName": "Smoke Test State",
+                    "countryName": "Smoke Test Country",
+                    "timeZoneName": "Smoke UTC",
+                    "languageName": "Smoke Test Language",
+                    "shiftMaster": null,
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 15,
+            "createdBy": null,
+            "createdDate": "2026-09-30T07:41:33.321935",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "layoutImageUrl": null,
+            "latitude": null,
+            "longitude": null,
+            "name": "EHS-TEST-1790734292268",
+            "description": "Live HTTP verification",
+            "tenantId": 1,
+            "parentId": null,
+            "status": 1,
+            "currency": "TST",
+            "line1": "Test address",
+            "line2": "",
+            "city": 900003,
+            "state": 900002,
+            "country": 900001,
+            "countryCode": "99",
+            "symbol": "T",
+            "timeZone": "UTC",
+            "timeZoneId": 900005,
+            "languageId": 900004,
+            "keyContactName": "Smoke Test",
+            "phoneNumber": "9000000000",
+            "emailAddress": "smoke@example.com",
+            "isAnonymous": true,
+            "isObservationProofRequired": true,
+            "attachments": null,
+            "shifts": [],
+            "buImage": null,
+            "cityName": "Smoke Test City",
+            "stateName": "Smoke Test State",
+            "countryName": "Smoke Test Country",
+            "timeZoneName": "Smoke UTC",
+            "languageName": "Smoke Test Language",
+            "shiftMaster": null,
+            "children": [
+              {
+                "id": 16,
+                "createdBy": null,
+                "createdDate": "2026-09-30T07:41:05.393948",
+                "modifiedBy": null,
+                "modifiedDate": null,
+                "layoutImageUrl": null,
+                "latitude": null,
+                "longitude": null,
+                "name": "EHS-TEST-1790734292268-Child",
+                "description": "Live HTTP verification",
+                "tenantId": 1,
+                "parentId": 15,
+                "status": 1,
+                "currency": "TST",
+                "line1": "Test address",
+                "line2": "",
+                "city": 900003,
+                "state": 900002,
+                "country": 900001,
+                "countryCode": "99",
+                "symbol": "T",
+                "timeZone": "UTC",
+                "timeZoneId": 900005,
+                "languageId": 900004,
+                "keyContactName": "Smoke Test",
+                "phoneNumber": "9000000000",
+                "emailAddress": "smoke@example.com",
+                "isAnonymous": true,
+                "isObservationProofRequired": true,
+                "attachments": null,
+                "shifts": [
+                  {
+                    "name": "Night",
+                    "startTime": "22:00:00",
+                    "endTime": "06:00:00"
+                  }
+                ],
+                "buImage": null,
+                "cityName": "Smoke Test City",
+                "stateName": "Smoke Test State",
+                "countryName": "Smoke Test Country",
+                "timeZoneName": "Smoke UTC",
+                "languageName": "Smoke Test Language",
+                "shiftMaster": null,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 19,
+            "createdBy": null,
+            "createdDate": "2026-09-30T08:52:21.257112",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "layoutImageUrl": null,
+            "latitude": null,
+            "longitude": null,
+            "name": "EHS-SMOKE-a13cc7f0",
             "description": "Live HTTP verification",
             "tenantId": 1,
             "parentId": null,
@@ -510,8 +742,8 @@
       "path": "/api/Department/Create",
       "request": {
         "id": 0,
-        "name": "EHS-SMOKE-4b09952e-Department",
-        "businessUnitId": 12,
+        "name": "EHS-SMOKE-a13cc7f0-Department",
+        "businessUnitId": 19,
         "description": "Operations",
         "status": 1,
         "translations": [
@@ -525,12 +757,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 130,
+      "elapsedMs": 161,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6
+          "id": 9
         }
       }
     },
@@ -540,8 +772,8 @@
       "path": "/api/Designation/Create",
       "request": {
         "id": 0,
-        "name": "EHS-SMOKE-4b09952e-Designation",
-        "businessUnitId": 12,
+        "name": "EHS-SMOKE-a13cc7f0-Designation",
+        "businessUnitId": 19,
         "description": "Manager",
         "status": 1,
         "translations": [
@@ -555,12 +787,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 146,
+      "elapsedMs": 181,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6
+          "id": 8
         }
       }
     },
@@ -570,7 +802,7 @@
       "path": "/api/Role/CreateRole",
       "request": {
         "id": 0,
-        "name": "EHS-SMOKE-4b09952e-Role",
+        "name": "EHS-SMOKE-a13cc7f0-Role",
         "roleDescription": "Verification observer",
         "displayName": "Observer",
         "landingPageId": 1,
@@ -601,12 +833,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 159,
+      "elapsedMs": 296,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 15,
+          "id": 21,
           "message": "Role created successfully."
         }
       }
@@ -617,7 +849,7 @@
       "path": "/api/User/CreateEmployee",
       "request": {
         "id": 0,
-        "firstName": "EHS-SMOKE-4b09952e",
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "middleName": "API",
         "lastName": "Tester",
         "dateOfBirth": "1994-04-03",
@@ -626,44 +858,42 @@
         "country": 900001,
         "contractorId": 0,
         "dateOfJoining": null,
-        "department": 6,
-        "designation": 6,
-        "emailAddress": "smoke@example.com",
+        "department": 9,
+        "designation": 8,
+        "emailAddress": "ehs-smoke-a13cc7f0@example.com",
         "hasAccess": true,
         "isMobileUser": false,
         "gender": 1,
         "phoneNumber": "9000000000",
         "status": 1,
-        "userNumber": "EHS-SMOKE-4b09952e",
+        "userNumber": "EHS-SMOKE-a13cc7f0",
         "userType": 1,
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "profilePictureId": 0,
         "languageID": 900004,
         "userRoleIds": [
-          15
+          21
         ]
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 293,
+      "elapsedMs": 273,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 12
+        "results": 17
       }
     },
     {
       "case": "Activate employee as system user",
       "method": "POST",
-      "path": "/api/User/12/ActivateSystemUser",
+      "path": "/api/User/17/ActivateSystemUser",
       "request": {
-        "username": "ehs-smoke-4b09952e",
-        "password": "[REDACTED]",
-        "basicRoleId": 15,
+        "basicRoleId": 21,
         "scopes": [
           {
-            "organizationUnitId": 12,
+            "organizationUnitId": 19,
             "includeDescendants": true
           }
         ]
@@ -671,23 +901,139 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 228,
+      "elapsedMs": 331,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
-          "basicRoleId": 15,
+          "mustChangePassword": true,
+          "temporaryPasswordExpiresAt": "2026-10-01T03:22:22.6280205",
+          "basicRoleId": 21,
           "additionalRoleIds": [],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": true
             }
+          ]
+        }
+      }
+    },
+    {
+      "case": "First login requires reset",
+      "method": "POST",
+      "path": "/api/Auth/Login",
+      "request": {
+        "username": "ehs-smoke-a13cc7f0@example.com",
+        "password": "[REDACTED]"
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 245,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "username": "ehs-smoke-a13cc7f0@example.com",
+          "accountType": "USER",
+          "mustChangePassword": true,
+          "nextAction": "RESET_PASSWORD",
+          "authenticationType": "HTTP_BASIC",
+          "resetPasswordEndpoint": "/api/Auth/FirstLoginPasswordReset"
+        }
+      }
+    },
+    {
+      "case": "Pending user cannot access permissions",
+      "method": "GET",
+      "path": "/api/Permission/GetAll",
+      "request": null,
+      "expectedStatus": 403,
+      "httpStatus": 403,
+      "passed": true,
+      "elapsedMs": 160,
+      "response": {
+        "statusCode": 403,
+        "message": "Password change required",
+        "results": {
+          "nextAction": "RESET_PASSWORD",
+          "resetPasswordEndpoint": "/api/Auth/FirstLoginPasswordReset",
+          "mustChangePassword": true
+        }
+      }
+    },
+    {
+      "case": "Set first permanent password",
+      "method": "POST",
+      "path": "/api/Auth/FirstLoginPasswordReset",
+      "request": {
+        "currentPassword": "[REDACTED]",
+        "newPassword": "[REDACTED]",
+        "confirmPassword": "[REDACTED]"
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 448,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "mustChangePassword": false,
+          "username": "ehs-smoke-a13cc7f0@example.com",
+          "message": "Password set. Log in with your new password.",
+          "nextAction": "LOGIN"
+        }
+      }
+    },
+    {
+      "case": "Temporary password invalid after reset",
+      "method": "POST",
+      "path": "/api/Auth/Login",
+      "request": {
+        "username": "ehs-smoke-a13cc7f0@example.com",
+        "password": "[REDACTED]"
+      },
+      "expectedStatus": 401,
+      "httpStatus": 401,
+      "passed": true,
+      "elapsedMs": 171,
+      "response": {
+        "statusCode": 401,
+        "message": "Invalid credentials or account unavailable",
+        "results": null
+      }
+    },
+    {
+      "case": "Login with permanent password",
+      "method": "POST",
+      "path": "/api/Auth/Login",
+      "request": {
+        "username": "ehs-smoke-a13cc7f0@example.com",
+        "password": "[REDACTED]"
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 114,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "username": "ehs-smoke-a13cc7f0@example.com",
+          "accountType": "USER",
+          "mustChangePassword": false,
+          "nextAction": "LOGIN_SUCCESS",
+          "authenticationType": "HTTP_BASIC",
+          "permissions": [
+            "CreateObservation",
+            "ROLE_USER"
           ]
         }
       }
@@ -697,14 +1043,14 @@
       "method": "POST",
       "path": "/api/Location/add",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Location",
+        "name": "EHS-SMOKE-a13cc7f0-Location",
         "locationSupervisor": "",
         "locationDescription": "Live verification",
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "status": 1,
-        "createdBy": 12,
+        "createdBy": 17,
         "supervisorIds": [
-          12
+          17
         ],
         "subLocationNames": "Zone A, Zone B",
         "newSublocations": [
@@ -738,11 +1084,11 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 633,
+      "elapsedMs": 219,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 14
+        "results": 18
       }
     },
     {
@@ -751,12 +1097,12 @@
       "path": "/api/OperationActivity",
       "request": {
         "id": 0,
-        "activityName": "EHS-SMOKE-4b09952e-Activity",
-        "businessUnitId": 12,
+        "activityName": "EHS-SMOKE-a13cc7f0-Activity",
+        "businessUnitId": 19,
         "categoryId": 1,
         "description": "Forklift operations",
         "status": 1,
-        "createdBy": 12,
+        "createdBy": 17,
         "translations": [
           {
             "languageId": 1,
@@ -768,12 +1114,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 143,
+      "elapsedMs": 125,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6
+          "id": 8
         }
       }
     },
@@ -783,8 +1129,8 @@
       "path": "/api/ObservationType/Create",
       "request": {
         "observationCategoryId": 4,
-        "typeDescription": "EHS-SMOKE-4b09952e-Observation",
-        "businessUnitId": 12,
+        "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
+        "businessUnitId": 19,
         "observationSubTypes": [
           {
             "subTypeDescription": "PPE",
@@ -797,12 +1143,12 @@
         ],
         "enableSvt": false,
         "status": 1,
-        "modifiedBy": 12,
+        "modifiedBy": 17,
         "translations": [
           {
             "languageId": 1,
             "typeDescription": "Safe behavior",
-            "businessUnitId": 12,
+            "businessUnitId": 19,
             "observationSubTypes": [
               {
                 "subTypeDescription": "PPE"
@@ -817,36 +1163,36 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 211,
+      "elapsedMs": 243,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 7,
+          "id": 9,
           "createdBy": null,
-          "createdDate": "2026-09-30T07:41:07.5563899",
-          "modifiedBy": 12,
+          "createdDate": "2026-09-30T08:52:24.5418524",
+          "modifiedBy": 17,
           "modifiedDate": null,
           "observationCategoryId": 4,
-          "typeDescription": "EHS-SMOKE-4b09952e-Observation",
+          "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
           "enableSvt": false,
           "status": 1,
-          "businessUnitId": 12,
+          "businessUnitId": 19,
           "isDefault": null,
           "translations": [
             {
               "languageId": 1,
               "typeDescription": "Safe behavior",
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "observationSubTypes": [
                 {
                   "languageId": 1,
-                  "observationSubTypeId": 12,
+                  "observationSubTypeId": 16,
                   "subTypeDescription": "PPE"
                 },
                 {
                   "languageId": 1,
-                  "observationSubTypeId": 13,
+                  "observationSubTypeId": 17,
                   "subTypeDescription": "Housekeeping"
                 }
               ]
@@ -860,14 +1206,14 @@
           "isEditDelete": true,
           "observationSubTypes": [
             {
-              "id": 12,
-              "observationTypeId": 7,
+              "id": 16,
+              "observationTypeId": 9,
               "subTypeDescription": "PPE",
               "status": 1
             },
             {
-              "id": 13,
-              "observationTypeId": 7,
+              "id": 17,
+              "observationTypeId": 9,
               "subTypeDescription": "Housekeeping",
               "status": 1
             }
@@ -883,19 +1229,19 @@
         "id": 0,
         "equipmentCategoryId": 3,
         "equipmentTypeId": 18,
-        "organizationUnitId": 12,
-        "uid": "EHS-SMOKE-4b09952e-Equipment",
+        "organizationUnitId": 19,
+        "uid": "EHS-SMOKE-a13cc7f0-Equipment",
         "manufacturer": "Acme",
         "modelNumber": "M-1",
-        "serialNumber": "EHS-SMOKE-4b09952e",
+        "serialNumber": "EHS-SMOKE-a13cc7f0",
         "yearofManufacture": "2022",
         "status": 1,
-        "createdBy": 12
+        "createdBy": 17
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 181,
+      "elapsedMs": 124,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -914,49 +1260,49 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 173,
+      "elapsedMs": 200,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 12,
+              "id": 17,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:06.348633",
+              "createdDate": "2026-09-30T08:52:22.357314",
               "modifiedBy": null,
               "modifiedDate": null,
-              "systemAccountId": 5,
-              "basicRoleId": 15,
+              "systemAccountId": 8,
+              "basicRoleId": 21,
               "additionalRoleIds": [],
-              "systemUsername": "ehs-smoke-4b09952e",
+              "systemUsername": "ehs-smoke-a13cc7f0@example.com",
               "systemAccountEnabled": true,
               "countryCode": "99",
-              "firstName": "EHS-SMOKE-4b09952e",
+              "firstName": "EHS-SMOKE-a13cc7f0",
               "middleName": "API",
               "lastName": "Tester",
-              "emailAddress": "smoke@example.com",
+              "emailAddress": "ehs-smoke-a13cc7f0@example.com",
               "phoneNumber": "9000000000",
               "profilePictureId": 0,
               "gender": 1,
-              "department": 6,
+              "department": 9,
               "dateOfJoining": null,
               "contractorId": 0,
               "accessFailedCount": null,
-              "designation": 6,
+              "designation": 8,
               "userType": 1,
               "status": 1,
-              "userNumber": "EHS-SMOKE-4b09952e",
+              "userNumber": "EHS-SMOKE-a13cc7f0",
               "tenantID": 1,
               "languageID": 900004,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "hasAccess": true,
               "isMobileUser": false,
               "alias": "smoke",
@@ -965,29 +1311,29 @@
               "country": 900001,
               "isSubscribed": false,
               "userRoleIds": [
-                15
+                21
               ],
               "organizationUnitIds": [
-                12
+                19
               ],
               "organizationUnitIdsMapped": [
-                12
+                19
               ],
               "organizationUnitListIds": [
-                12
+                19
               ],
               "uploadedFiles": null,
               "password": null,
-              "departmentName": "EHS-SMOKE-4b09952e-Department",
-              "designationName": "EHS-SMOKE-4b09952e-Designation",
+              "departmentName": "EHS-SMOKE-a13cc7f0-Department",
+              "designationName": "EHS-SMOKE-a13cc7f0-Designation",
               "contractorName": null,
-              "organizationUnitNames": "EHS-SMOKE-4b09952e",
+              "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
               "workerTypeName": "Employee",
-              "userRoleNames": "EHS-SMOKE-4b09952e-Role",
+              "userRoleNames": "EHS-SMOKE-a13cc7f0-Role",
               "genderText": null,
               "contractorNameText": null,
-              "fullName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
+              "fullName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
               "countryName": "Smoke Test Country",
               "profilePictureUrl": null
             }
@@ -1008,49 +1354,49 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 171,
+      "elapsedMs": 114,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 12,
+              "id": 17,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:06.348633",
+              "createdDate": "2026-09-30T08:52:22.357314",
               "modifiedBy": null,
               "modifiedDate": null,
-              "systemAccountId": 5,
-              "basicRoleId": 15,
+              "systemAccountId": 8,
+              "basicRoleId": 21,
               "additionalRoleIds": [],
-              "systemUsername": "ehs-smoke-4b09952e",
+              "systemUsername": "ehs-smoke-a13cc7f0@example.com",
               "systemAccountEnabled": true,
               "countryCode": "99",
-              "firstName": "EHS-SMOKE-4b09952e",
+              "firstName": "EHS-SMOKE-a13cc7f0",
               "middleName": "API",
               "lastName": "Tester",
-              "emailAddress": "smoke@example.com",
+              "emailAddress": "ehs-smoke-a13cc7f0@example.com",
               "phoneNumber": "9000000000",
               "profilePictureId": 0,
               "gender": 1,
-              "department": 6,
+              "department": 9,
               "dateOfJoining": null,
               "contractorId": 0,
               "accessFailedCount": null,
-              "designation": 6,
+              "designation": 8,
               "userType": 1,
               "status": 1,
-              "userNumber": "EHS-SMOKE-4b09952e",
+              "userNumber": "EHS-SMOKE-a13cc7f0",
               "tenantID": 1,
               "languageID": 900004,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "hasAccess": true,
               "isMobileUser": false,
               "alias": "smoke",
@@ -1059,29 +1405,29 @@
               "country": 900001,
               "isSubscribed": false,
               "userRoleIds": [
-                15
+                21
               ],
               "organizationUnitIds": [
-                12
+                19
               ],
               "organizationUnitIdsMapped": [
-                12
+                19
               ],
               "organizationUnitListIds": [
-                12
+                19
               ],
               "uploadedFiles": null,
               "password": null,
-              "departmentName": "EHS-SMOKE-4b09952e-Department",
-              "designationName": "EHS-SMOKE-4b09952e-Designation",
+              "departmentName": "EHS-SMOKE-a13cc7f0-Department",
+              "designationName": "EHS-SMOKE-a13cc7f0-Designation",
               "contractorName": null,
-              "organizationUnitNames": "EHS-SMOKE-4b09952e",
+              "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
               "workerTypeName": "Employee",
-              "userRoleNames": "EHS-SMOKE-4b09952e-Role",
+              "userRoleNames": "EHS-SMOKE-a13cc7f0-Role",
               "genderText": null,
               "contractorNameText": null,
-              "fullName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
+              "fullName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
               "countryName": "Smoke Test Country",
               "profilePictureUrl": null
             }
@@ -1102,31 +1448,31 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 120,
+      "elapsedMs": 139,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 14,
-              "createdBy": 12,
-              "createdDate": "2026-09-30T07:41:07.217544",
+              "id": 18,
+              "createdBy": 17,
+              "createdDate": "2026-09-30T08:52:24.14739",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-Location",
+              "name": "EHS-SMOKE-a13cc7f0-Location",
               "locationDescription": "Live verification",
               "status": 1,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "supervisorIds": [
-                12
+                17
               ],
               "translations": [
                 {
@@ -1135,7 +1481,7 @@
                   "description": "Live verification",
                   "subLocations": [
                     {
-                      "subLocationId": 17,
+                      "subLocationId": 23,
                       "name": "Zone A",
                       "description": "First area"
                     }
@@ -1143,22 +1489,22 @@
                 }
               ],
               "statusName": "Active",
-              "supervisorNames": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+              "supervisorNames": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
               "subLocationNames": "Zone A, Zone B",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
-              "createByName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
+              "createByName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
               "locationSupervisor": null,
               "subLocationIds": [],
               "newSublocations": null,
               "subLocations": [
                 {
-                  "id": 17,
+                  "id": 23,
                   "name": "Zone A",
                   "description": "First area",
                   "status": 1
                 },
                 {
-                  "id": 18,
+                  "id": 24,
                   "name": "Zone B",
                   "description": "",
                   "status": 1
@@ -1178,7 +1524,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 287,
+      "elapsedMs": 231,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -6120,6 +6466,441 @@
                 "children": []
               }
             ]
+          },
+          {
+            "id": 16,
+            "createdBy": 4,
+            "createdDate": "2026-09-25T17:48:17.071",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "tenantId": 1,
+            "systemRole": false,
+            "builtInAdmin": false,
+            "permissionIds": [
+              2033,
+              3171,
+              3172,
+              3286,
+              3208,
+              5002,
+              2031
+            ],
+            "name": "EHS-SMOKE-4b09952e-SourceRole",
+            "displayName": "t rol des",
+            "status": 1,
+            "roleDescription": "t rol des",
+            "roleType": "test role",
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              },
+              {
+                "id": 2033,
+                "name": "ViewObservation",
+                "displayName": "View Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              },
+              {
+                "id": 3171,
+                "name": "IncidentDashboard",
+                "displayName": "Incident Dashboard",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3170,
+                "children": []
+              },
+              {
+                "id": 3172,
+                "name": "ObservationDashboard",
+                "displayName": "Observation Dashboard",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3170,
+                "children": []
+              },
+              {
+                "id": 3208,
+                "name": "SubmitIncident",
+                "displayName": "Submit Incident",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 5000,
+                "children": []
+              },
+              {
+                "id": 3286,
+                "name": "MyTasks",
+                "displayName": "My Tasks",
+                "isGranted": true,
+                "status": 1,
+                "parentId": null,
+                "children": []
+              },
+              {
+                "id": 5002,
+                "name": "ViewIncident",
+                "displayName": "View Incident",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 5000,
+                "children": []
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": 4,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              },
+              {
+                "id": 2033,
+                "name": "ViewObservation",
+                "displayName": "View Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              },
+              {
+                "id": 3171,
+                "name": "IncidentDashboard",
+                "displayName": "Incident Dashboard",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3170,
+                "children": []
+              },
+              {
+                "id": 3172,
+                "name": "ObservationDashboard",
+                "displayName": "Observation Dashboard",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3170,
+                "children": []
+              },
+              {
+                "id": 3208,
+                "name": "SubmitIncident",
+                "displayName": "Submit Incident",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 5000,
+                "children": []
+              },
+              {
+                "id": 3286,
+                "name": "MyTasks",
+                "displayName": "My Tasks",
+                "isGranted": true,
+                "status": 1,
+                "parentId": null,
+                "children": []
+              },
+              {
+                "id": 5002,
+                "name": "ViewIncident",
+                "displayName": "View Incident",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 5000,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 17,
+            "createdBy": null,
+            "createdDate": "2026-09-30T07:41:13.046112",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "tenantId": 1,
+            "systemRole": false,
+            "builtInAdmin": false,
+            "permissionIds": [
+              3342
+            ],
+            "name": "EHS-SMOKE-4b09952e-SetupRole",
+            "displayName": null,
+            "status": 1,
+            "roleDescription": null,
+            "roleType": null,
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 3342,
+                "name": "ManageDepartment",
+                "displayName": "Manage Department",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3330,
+                "children": []
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": null,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 3342,
+                "name": "ManageDepartment",
+                "displayName": "Manage Department",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3330,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 18,
+            "createdBy": null,
+            "createdDate": "2026-09-30T07:41:15.768192",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "tenantId": 1,
+            "systemRole": false,
+            "builtInAdmin": false,
+            "permissionIds": [
+              3302,
+              3272,
+              3274,
+              3357
+            ],
+            "name": "EHS-SMOKE-4b09952e-Admin",
+            "displayName": null,
+            "status": 1,
+            "roleDescription": null,
+            "roleType": null,
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 3272,
+                "name": "ManageRoles",
+                "displayName": "Manage Roles",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1023,
+                "children": []
+              },
+              {
+                "id": 3274,
+                "name": "ManageRoleUsers",
+                "displayName": "Manage Role Users",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1023,
+                "children": []
+              },
+              {
+                "id": 3302,
+                "name": "CreateRole",
+                "displayName": "Create Role",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1023,
+                "children": []
+              },
+              {
+                "id": 3357,
+                "name": "ManageExternalCollaborators",
+                "displayName": "Manage Temporary Users",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3330,
+                "children": []
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": null,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 3272,
+                "name": "ManageRoles",
+                "displayName": "Manage Roles",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1023,
+                "children": []
+              },
+              {
+                "id": 3274,
+                "name": "ManageRoleUsers",
+                "displayName": "Manage Role Users",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1023,
+                "children": []
+              },
+              {
+                "id": 3302,
+                "name": "CreateRole",
+                "displayName": "Create Role",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1023,
+                "children": []
+              },
+              {
+                "id": 3357,
+                "name": "ManageExternalCollaborators",
+                "displayName": "Manage Temporary Users",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3330,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 19,
+            "createdBy": null,
+            "createdDate": "2026-09-30T07:41:16.041855",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "tenantId": 1,
+            "systemRole": false,
+            "builtInAdmin": false,
+            "permissionIds": [
+              3342
+            ],
+            "name": "EHS-SMOKE-4b09952e-DynamicEdited",
+            "displayName": null,
+            "status": 1,
+            "roleDescription": null,
+            "roleType": null,
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 3342,
+                "name": "ManageDepartment",
+                "displayName": "Manage Department",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3330,
+                "children": []
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": null,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 3342,
+                "name": "ManageDepartment",
+                "displayName": "Manage Department",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 3330,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 20,
+            "createdBy": null,
+            "createdDate": "2026-09-30T07:41:33.755577",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "tenantId": 1,
+            "systemRole": false,
+            "builtInAdmin": false,
+            "permissionIds": [
+              2031
+            ],
+            "name": "EHS-TEST-1790734292268-Role",
+            "displayName": "Observer",
+            "status": 1,
+            "roleDescription": "Verification observer",
+            "roleType": "Observer",
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": null,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": 21,
+            "createdBy": null,
+            "createdDate": "2026-09-30T08:52:22.077007",
+            "modifiedBy": null,
+            "modifiedDate": null,
+            "tenantId": 1,
+            "systemRole": false,
+            "builtInAdmin": false,
+            "permissionIds": [
+              2031
+            ],
+            "name": "EHS-SMOKE-a13cc7f0-Role",
+            "displayName": "Observer",
+            "status": 1,
+            "roleDescription": "Verification observer",
+            "roleType": "Observer",
+            "landingPageId": 1,
+            "permissions": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              }
+            ],
+            "roleOrganizationUnits": [],
+            "userRoles": [],
+            "createBy": null,
+            "permissionLookupHierarchyDto": [
+              {
+                "id": 2031,
+                "name": "CreateObservation",
+                "displayName": "Create Observation",
+                "isGranted": true,
+                "status": 1,
+                "parentId": 1024,
+                "children": []
+              }
+            ]
           }
         ]
       }
@@ -6136,27 +6917,27 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 98,
+      "elapsedMs": 151,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 6,
-              "createdBy": 12,
-              "createdDate": "2026-09-30T07:41:07.36487",
+              "id": 8,
+              "createdBy": 17,
+              "createdDate": "2026-09-30T08:52:24.317628",
               "modifiedBy": null,
               "modifiedDate": null,
-              "activityName": "EHS-SMOKE-4b09952e-Activity",
-              "businessUnitId": 12,
+              "activityName": "EHS-SMOKE-a13cc7f0-Activity",
+              "businessUnitId": 19,
               "categoryId": 1,
               "description": "Forklift operations",
               "status": 1,
@@ -6168,7 +6949,7 @@
                 }
               ],
               "category": "Routine",
-              "businessUnitName": "EHS-SMOKE-4b09952e"
+              "businessUnitName": "EHS-SMOKE-a13cc7f0"
             }
           ],
           "totalCount": 1
@@ -6187,45 +6968,45 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 126,
+      "elapsedMs": 102,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 7,
+              "id": 9,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:07.55639",
-              "modifiedBy": 12,
+              "createdDate": "2026-09-30T08:52:24.541852",
+              "modifiedBy": 17,
               "modifiedDate": null,
               "observationCategoryId": 4,
-              "typeDescription": "EHS-SMOKE-4b09952e-Observation",
+              "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
               "enableSvt": false,
               "status": 1,
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "isDefault": null,
               "translations": [
                 {
                   "languageId": 1,
                   "typeDescription": "Safe behavior",
-                  "businessUnitId": 12,
+                  "businessUnitId": 19,
                   "observationSubTypes": [
                     {
                       "languageId": 1,
-                      "observationSubTypeId": 12,
+                      "observationSubTypeId": 16,
                       "subTypeDescription": "PPE"
                     },
                     {
                       "languageId": 1,
-                      "observationSubTypeId": 13,
+                      "observationSubTypeId": 17,
                       "subTypeDescription": "Housekeeping"
                     }
                   ]
@@ -6239,14 +7020,14 @@
               "isEditDelete": true,
               "observationSubTypes": [
                 {
-                  "id": 12,
-                  "observationTypeId": 7,
+                  "id": 16,
+                  "observationTypeId": 9,
                   "subTypeDescription": "PPE",
                   "status": 1
                 },
                 {
-                  "id": 13,
-                  "observationTypeId": 7,
+                  "id": 17,
+                  "observationTypeId": 9,
                   "subTypeDescription": "Housekeeping",
                   "status": 1
                 }
@@ -6269,37 +7050,37 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 153,
+      "elapsedMs": 94,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 10,
-              "createdBy": 12,
-              "createdDate": "2026-09-30T07:41:07.774209",
+              "id": 13,
+              "createdBy": 17,
+              "createdDate": "2026-09-30T08:52:24.691531",
               "modifiedBy": null,
               "modifiedDate": null,
               "equipmentCategoryId": 3,
               "equipmentTypeId": 18,
-              "organizationUnitId": 12,
-              "uid": "EHS-SMOKE-4b09952e-Equipment",
+              "organizationUnitId": 19,
+              "uid": "EHS-SMOKE-a13cc7f0-Equipment",
               "manufacturer": "Acme",
               "modelNumber": "M-1",
-              "serialNumber": "EHS-SMOKE-4b09952e",
+              "serialNumber": "EHS-SMOKE-a13cc7f0",
               "yearofManufacture": "2022",
               "status": 1,
               "equipmentCategoryName": null,
               "equipmentTypeName": null,
-              "organizationUnitNames": "EHS-SMOKE-4b09952e",
+              "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
               "active": "Active"
             }
           ],
@@ -6319,29 +7100,29 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 128,
+      "elapsedMs": 90,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 6,
+              "id": 8,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:05.926596",
+              "createdDate": "2026-09-30T08:52:21.80557",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-Designation",
+              "name": "EHS-SMOKE-a13cc7f0-Designation",
               "description": "Manager",
               "status": 1,
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "translations": [
                 {
                   "languageId": 1,
@@ -6368,29 +7149,29 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 114,
+      "elapsedMs": 98,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 6,
+              "id": 9,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:05.751689",
+              "createdDate": "2026-09-30T08:52:21.597769",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-Department",
+              "name": "EHS-SMOKE-a13cc7f0-Department",
               "description": "Operations",
               "status": 1,
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "translations": [
                 {
                   "languageId": 1,
@@ -6417,7 +7198,7 @@
           {
             "field": "name",
             "matchMode": "contains",
-            "value": "EHS-SMOKE-4b09952e"
+            "value": "EHS-SMOKE-a13cc7f0"
           }
         ],
         "maxResultCount": 10,
@@ -6428,29 +7209,29 @@
             "order": -1
           }
         ],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 169,
+      "elapsedMs": 105,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 6,
+              "id": 9,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:05.751689",
+              "createdDate": "2026-09-30T08:52:21.597769",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-Department",
+              "name": "EHS-SMOKE-a13cc7f0-Department",
               "description": "Operations",
               "status": 1,
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "translations": [
                 {
                   "languageId": 1,
@@ -6477,14 +7258,14 @@
         "maxResultCount": 1,
         "skipCount": 1,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 151,
+      "elapsedMs": 99,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -6502,7 +7283,7 @@
       "expectedStatus": 401,
       "httpStatus": 401,
       "passed": true,
-      "elapsedMs": 7,
+      "elapsedMs": 3,
       "response": {
         "statusCode": 401,
         "message": "Authentication required",
@@ -6517,7 +7298,7 @@
       "expectedStatus": 401,
       "httpStatus": 401,
       "passed": true,
-      "elapsedMs": 158,
+      "elapsedMs": 82,
       "response": {
         "statusCode": 401,
         "message": "Authentication required",
@@ -6532,7 +7313,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 126,
+      "elapsedMs": 145,
       "response": {
         "statusCode": 400,
         "message": "businessUnitId: must not be null; name: must not be blank",
@@ -6550,7 +7331,7 @@
       "expectedStatus": 404,
       "httpStatus": 404,
       "passed": true,
-      "elapsedMs": 113,
+      "elapsedMs": 100,
       "response": {
         "statusCode": 404,
         "message": "Organization not found: 9223372036854775807",
@@ -6565,19 +7346,19 @@
         "id": 0,
         "equipmentCategoryId": 3,
         "equipmentTypeId": 18,
-        "organizationUnitId": 12,
-        "uid": "EHS-SMOKE-4b09952e-Equipment",
+        "organizationUnitId": 19,
+        "uid": "EHS-SMOKE-a13cc7f0-Equipment",
         "manufacturer": "Acme",
         "modelNumber": "M-1",
-        "serialNumber": "EHS-SMOKE-4b09952e",
+        "serialNumber": "EHS-SMOKE-a13cc7f0",
         "yearofManufacture": "2022",
         "status": 1,
-        "createdBy": 12
+        "createdBy": 17
       },
       "expectedStatus": 409,
       "httpStatus": 409,
       "passed": true,
-      "elapsedMs": 105,
+      "elapsedMs": 140,
       "response": {
         "statusCode": 409,
         "message": "A duplicate record or invalid reference was supplied",
@@ -6596,7 +7377,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 93,
+      "elapsedMs": 131,
       "response": {
         "statusCode": 400,
         "message": "filters[0]: must not be null",
@@ -6627,14 +7408,14 @@
       "method": "POST",
       "path": "/api/Location/add",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Invalid",
+        "name": "EHS-SMOKE-a13cc7f0-Invalid",
         "locationSupervisor": "",
         "locationDescription": "Live verification",
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "status": 1,
-        "createdBy": 12,
+        "createdBy": 17,
         "supervisorIds": [
-          12
+          17
         ],
         "subLocationNames": "Zone A, Zone B",
         "newSublocations": [],
@@ -6653,7 +7434,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 102,
+      "elapsedMs": 86,
       "response": {
         "statusCode": 400,
         "message": "translations[0].subLocations[0]: must not be null",
@@ -6665,14 +7446,14 @@
       "method": "POST",
       "path": "/api/Location/add",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Oversized",
+        "name": "EHS-SMOKE-a13cc7f0-Oversized",
         "locationSupervisor": "",
         "locationDescription": "Live verification",
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "status": 1,
-        "createdBy": 12,
+        "createdBy": 17,
         "supervisorIds": [
-          12
+          17
         ],
         "subLocationNames": "Zone A, Zone B",
         "newSublocations": [
@@ -6688,7 +7469,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 103,
+      "elapsedMs": 92,
       "response": {
         "statusCode": 400,
         "message": "newSublocations[0].name: size must be between 0 and 255",
@@ -6700,14 +7481,14 @@
       "method": "POST",
       "path": "/api/Location/add",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Oversized",
+        "name": "EHS-SMOKE-a13cc7f0-Oversized",
         "locationSupervisor": "",
         "locationDescription": "Live verification",
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "status": 1,
-        "createdBy": 12,
+        "createdBy": 17,
         "supervisorIds": [
-          12
+          17
         ],
         "subLocationNames": "Zone A, Zone B",
         "newSublocations": [
@@ -6724,7 +7505,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 92,
+      "elapsedMs": 83,
       "response": {
         "statusCode": 400,
         "message": "newSublocations[0].description: size must be between 0 and 255",
@@ -6737,8 +7518,8 @@
       "path": "/api/ObservationType/Create",
       "request": {
         "observationCategoryId": 4,
-        "typeDescription": "EHS-SMOKE-4b09952e-Oversized",
-        "businessUnitId": 12,
+        "typeDescription": "EHS-SMOKE-a13cc7f0-Oversized",
+        "businessUnitId": 19,
         "observationSubTypes": [
           {
             "subTypeDescription": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
@@ -6749,7 +7530,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 134,
+      "elapsedMs": 80,
       "response": {
         "statusCode": 400,
         "message": "observationSubTypes[0].subTypeDescription: size must be between 0 and 255",
@@ -6761,7 +7542,7 @@
       "method": "POST",
       "path": "/api/Role/CreateRole",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Invalid-role",
+        "name": "EHS-SMOKE-a13cc7f0-Invalid-role",
         "permissionLookupHierarchyDto": [
           {
             "id": 1,
@@ -6774,7 +7555,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 110,
+      "elapsedMs": 85,
       "response": {
         "statusCode": 400,
         "message": "landingPageId: must not be null; permissionLookupHierarchyDto[0].children[0]: must not be null",
@@ -6787,8 +7568,8 @@
       "path": "/api/ObservationType/Create",
       "request": {
         "observationCategoryId": 4,
-        "typeDescription": "EHS-SMOKE-4b09952e-Invalid",
-        "businessUnitId": 12,
+        "typeDescription": "EHS-SMOKE-a13cc7f0-Invalid",
+        "businessUnitId": 19,
         "observationSubTypes": [
           {
             "subTypeDescription": "PPE",
@@ -6807,7 +7588,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 128,
+      "elapsedMs": 84,
       "response": {
         "statusCode": 400,
         "message": "translations[0].observationSubTypes[0]: must not be null",
@@ -6826,31 +7607,31 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 173,
+      "elapsedMs": 108,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 14,
-              "createdBy": 12,
-              "createdDate": "2026-09-30T07:41:07.217544",
+              "id": 18,
+              "createdBy": 17,
+              "createdDate": "2026-09-30T08:52:24.14739",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-Location",
+              "name": "EHS-SMOKE-a13cc7f0-Location",
               "locationDescription": "Live verification",
               "status": 1,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "supervisorIds": [
-                12
+                17
               ],
               "translations": [
                 {
@@ -6859,7 +7640,7 @@
                   "description": "Live verification",
                   "subLocations": [
                     {
-                      "subLocationId": 17,
+                      "subLocationId": 23,
                       "name": "Zone A",
                       "description": "First area"
                     }
@@ -6867,22 +7648,22 @@
                 }
               ],
               "statusName": "Active",
-              "supervisorNames": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+              "supervisorNames": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
               "subLocationNames": "Zone A, Zone B",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
-              "createByName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
+              "createByName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
               "locationSupervisor": null,
               "subLocationIds": [],
               "newSublocations": null,
               "subLocations": [
                 {
-                  "id": 17,
+                  "id": 23,
                   "name": "Zone A",
                   "description": "First area",
                   "status": 1
                 },
                 {
-                  "id": 18,
+                  "id": 24,
                   "name": "Zone B",
                   "description": "",
                   "status": 1
@@ -6906,45 +7687,45 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 157,
+      "elapsedMs": 112,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 7,
+              "id": 9,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:07.55639",
-              "modifiedBy": 12,
+              "createdDate": "2026-09-30T08:52:24.541852",
+              "modifiedBy": 17,
               "modifiedDate": null,
               "observationCategoryId": 4,
-              "typeDescription": "EHS-SMOKE-4b09952e-Observation",
+              "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
               "enableSvt": false,
               "status": 1,
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "isDefault": null,
               "translations": [
                 {
                   "languageId": 1,
                   "typeDescription": "Safe behavior",
-                  "businessUnitId": 12,
+                  "businessUnitId": 19,
                   "observationSubTypes": [
                     {
                       "languageId": 1,
-                      "observationSubTypeId": 12,
+                      "observationSubTypeId": 16,
                       "subTypeDescription": "PPE"
                     },
                     {
                       "languageId": 1,
-                      "observationSubTypeId": 13,
+                      "observationSubTypeId": 17,
                       "subTypeDescription": "Housekeeping"
                     }
                   ]
@@ -6958,14 +7739,14 @@
               "isEditDelete": true,
               "observationSubTypes": [
                 {
-                  "id": 12,
-                  "observationTypeId": 7,
+                  "id": 16,
+                  "observationTypeId": 9,
                   "subTypeDescription": "PPE",
                   "status": 1
                 },
                 {
-                  "id": 13,
-                  "observationTypeId": 7,
+                  "id": 17,
+                  "observationTypeId": 9,
                   "subTypeDescription": "Housekeeping",
                   "status": 1
                 }
@@ -6979,17 +7760,17 @@
     {
       "case": "Edit organization and shifts",
       "method": "PUT",
-      "path": "/api/OrganizationUnit/12",
+      "path": "/api/OrganizationUnit/19",
       "request": {
-        "id": 12,
+        "id": 19,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.393948",
+        "createdDate": "2026-09-30T08:52:21.257112",
         "modifiedBy": null,
         "modifiedDate": null,
         "layoutImageUrl": null,
         "latitude": null,
         "longitude": null,
-        "name": "EHS-SMOKE-4b09952e",
+        "name": "EHS-SMOKE-a13cc7f0",
         "description": "Live HTTP verification",
         "tenantId": 1,
         "parentId": null,
@@ -7030,29 +7811,29 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 217,
+      "elapsedMs": 142,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 12
+          "id": 19
         }
       }
     },
     {
       "case": "Edit department",
       "method": "PUT",
-      "path": "/api/Department/6",
+      "path": "/api/Department/9",
       "request": {
-        "id": 6,
+        "id": 9,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.751689",
+        "createdDate": "2026-09-30T08:52:21.597769",
         "modifiedBy": null,
         "modifiedDate": null,
-        "name": "EHS-SMOKE-4b09952e-Department",
+        "name": "EHS-SMOKE-a13cc7f0-Department",
         "description": "Operations",
         "status": 1,
-        "businessUnitId": 12,
+        "businessUnitId": 19,
         "translations": [
           {
             "languageId": 1,
@@ -7065,29 +7846,29 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 143,
+      "elapsedMs": 104,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6
+          "id": 9
         }
       }
     },
     {
       "case": "Edit designation",
       "method": "PUT",
-      "path": "/api/Designation/6",
+      "path": "/api/Designation/8",
       "request": {
-        "id": 6,
+        "id": 8,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.926596",
+        "createdDate": "2026-09-30T08:52:21.80557",
         "modifiedBy": null,
         "modifiedDate": null,
-        "name": "EHS-SMOKE-4b09952e-Designation",
+        "name": "EHS-SMOKE-a13cc7f0-Designation",
         "description": "Manager",
         "status": 1,
-        "businessUnitId": 12,
+        "businessUnitId": 19,
         "translations": [
           {
             "languageId": 1,
@@ -7100,63 +7881,63 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 178,
+      "elapsedMs": 169,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6
+          "id": 8
         }
       }
     },
     {
       "case": "Edit equipment",
       "method": "PUT",
-      "path": "/api/Equipment/10",
+      "path": "/api/Equipment/13",
       "request": {
-        "id": 10,
-        "createdBy": 12,
-        "createdDate": "2026-09-30T07:41:07.774209",
+        "id": 13,
+        "createdBy": 17,
+        "createdDate": "2026-09-30T08:52:24.691531",
         "modifiedBy": null,
         "modifiedDate": null,
         "equipmentCategoryId": 3,
         "equipmentTypeId": 18,
-        "organizationUnitId": 12,
-        "uid": "EHS-SMOKE-4b09952e-Equipment",
+        "organizationUnitId": 19,
+        "uid": "EHS-SMOKE-a13cc7f0-Equipment",
         "manufacturer": "Acme",
         "modelNumber": "M-1",
-        "serialNumber": "EHS-SMOKE-4b09952e",
+        "serialNumber": "EHS-SMOKE-a13cc7f0",
         "yearofManufacture": "2022",
         "status": 1,
         "equipmentCategoryName": null,
         "equipmentTypeName": null,
-        "organizationUnitNames": "EHS-SMOKE-4b09952e",
+        "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
         "active": "Active"
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 113,
+      "elapsedMs": 169,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 10
+          "id": 13
         }
       }
     },
     {
       "case": "Edit operation activity",
       "method": "PUT",
-      "path": "/api/OperationActivity/6",
+      "path": "/api/OperationActivity/8",
       "request": {
-        "id": 6,
-        "createdBy": 12,
-        "createdDate": "2026-09-30T07:41:07.36487",
+        "id": 8,
+        "createdBy": 17,
+        "createdDate": "2026-09-30T08:52:24.317628",
         "modifiedBy": null,
         "modifiedDate": null,
-        "activityName": "EHS-SMOKE-4b09952e-Activity",
-        "businessUnitId": 12,
+        "activityName": "EHS-SMOKE-a13cc7f0-Activity",
+        "businessUnitId": 19,
         "categoryId": 1,
         "description": "Forklift operations",
         "status": 1,
@@ -7168,36 +7949,36 @@
           }
         ],
         "category": "Routine",
-        "businessUnitName": "EHS-SMOKE-4b09952e"
+        "businessUnitName": "EHS-SMOKE-a13cc7f0"
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 109,
+      "elapsedMs": 174,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6
+          "id": 8
         }
       }
     },
     {
       "case": "Edit location",
       "method": "PUT",
-      "path": "/api/Location/14",
+      "path": "/api/Location/18",
       "request": {
-        "id": 14,
-        "createdBy": 12,
-        "createdDate": "2026-09-30T07:41:07.217544",
+        "id": 18,
+        "createdBy": 17,
+        "createdDate": "2026-09-30T08:52:24.14739",
         "modifiedBy": null,
         "modifiedDate": null,
-        "name": "EHS-SMOKE-4b09952e-Location",
+        "name": "EHS-SMOKE-a13cc7f0-Location",
         "locationDescription": "Live verification",
         "status": 1,
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "supervisorIds": [
-          12
+          17
         ],
         "translations": [
           {
@@ -7206,7 +7987,7 @@
             "description": "Live verification",
             "subLocations": [
               {
-                "subLocationId": 17,
+                "subLocationId": 23,
                 "name": "Zone A",
                 "description": "First area"
               }
@@ -7214,22 +7995,22 @@
           }
         ],
         "statusName": "Active",
-        "supervisorNames": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+        "supervisorNames": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
         "subLocationNames": "Zone A, Zone B",
-        "organizationUnitName": "EHS-SMOKE-4b09952e",
-        "createByName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
+        "organizationUnitName": "EHS-SMOKE-a13cc7f0",
+        "createByName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
         "locationSupervisor": null,
         "subLocationIds": [],
         "newSublocations": null,
         "subLocations": [
           {
-            "id": 17,
+            "id": 23,
             "name": "Zone A",
             "description": "First area",
             "status": 1
           },
           {
-            "id": 18,
+            "id": 24,
             "name": "Zone B",
             "description": "",
             "status": 1
@@ -7239,43 +8020,43 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 129,
+      "elapsedMs": 182,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 14
+        "results": 18
       }
     },
     {
       "case": "Edit observation type",
       "method": "PUT",
-      "path": "/api/ObservationType/7",
+      "path": "/api/ObservationType/9",
       "request": {
-        "id": 7,
+        "id": 9,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:07.55639",
-        "modifiedBy": 12,
+        "createdDate": "2026-09-30T08:52:24.541852",
+        "modifiedBy": 17,
         "modifiedDate": null,
         "observationCategoryId": 4,
-        "typeDescription": "EHS-SMOKE-4b09952e-Observation",
+        "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
         "enableSvt": false,
         "status": 1,
-        "businessUnitId": 12,
+        "businessUnitId": 19,
         "isDefault": null,
         "translations": [
           {
             "languageId": 1,
             "typeDescription": "Safe behavior",
-            "businessUnitId": 12,
+            "businessUnitId": 19,
             "observationSubTypes": [
               {
                 "languageId": 1,
-                "observationSubTypeId": 12,
+                "observationSubTypeId": 16,
                 "subTypeDescription": "PPE"
               },
               {
                 "languageId": 1,
-                "observationSubTypeId": 13,
+                "observationSubTypeId": 17,
                 "subTypeDescription": "Housekeeping"
               }
             ]
@@ -7289,14 +8070,14 @@
         "isEditDelete": true,
         "observationSubTypes": [
           {
-            "id": 12,
-            "observationTypeId": 7,
+            "id": 16,
+            "observationTypeId": 9,
             "subTypeDescription": "PPE",
             "status": 1
           },
           {
-            "id": 13,
-            "observationTypeId": 7,
+            "id": 17,
+            "observationTypeId": 9,
             "subTypeDescription": "Housekeeping",
             "status": 1
           }
@@ -7305,36 +8086,36 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 118,
+      "elapsedMs": 164,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 7,
+          "id": 9,
           "createdBy": null,
-          "createdDate": "2026-09-30T07:41:07.55639",
-          "modifiedBy": 12,
-          "modifiedDate": "2026-09-30T07:41:12.1866082",
+          "createdDate": "2026-09-30T08:52:24.541852",
+          "modifiedBy": 17,
+          "modifiedDate": "2026-09-30T08:52:28.6490673",
           "observationCategoryId": 4,
-          "typeDescription": "EHS-SMOKE-4b09952e-Observation",
+          "typeDescription": "EHS-SMOKE-a13cc7f0-Observation",
           "enableSvt": false,
           "status": 1,
-          "businessUnitId": 12,
+          "businessUnitId": 19,
           "isDefault": null,
           "translations": [
             {
               "languageId": 1,
               "typeDescription": "Safe behavior",
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "observationSubTypes": [
                 {
                   "languageId": 1,
-                  "observationSubTypeId": 12,
+                  "observationSubTypeId": 16,
                   "subTypeDescription": "PPE"
                 },
                 {
                   "languageId": 1,
-                  "observationSubTypeId": 13,
+                  "observationSubTypeId": 17,
                   "subTypeDescription": "Housekeeping"
                 }
               ]
@@ -7348,14 +8129,14 @@
           "isEditDelete": true,
           "observationSubTypes": [
             {
-              "id": 12,
-              "observationTypeId": 7,
+              "id": 16,
+              "observationTypeId": 9,
               "subTypeDescription": "PPE",
               "status": 1
             },
             {
-              "id": 13,
-              "observationTypeId": 7,
+              "id": 17,
+              "observationTypeId": 9,
               "subTypeDescription": "Housekeeping",
               "status": 1
             }
@@ -7366,37 +8147,37 @@
     {
       "case": "Edit employee",
       "method": "PUT",
-      "path": "/api/User/12",
+      "path": "/api/User/17",
       "request": {
-        "id": 12,
+        "id": 17,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:06.348633",
+        "createdDate": "2026-09-30T08:52:22.357314",
         "modifiedBy": null,
         "modifiedDate": null,
-        "systemAccountId": 5,
-        "basicRoleId": 15,
+        "systemAccountId": 8,
+        "basicRoleId": 21,
         "additionalRoleIds": [],
-        "systemUsername": "ehs-smoke-4b09952e",
+        "systemUsername": "ehs-smoke-a13cc7f0@example.com",
         "systemAccountEnabled": true,
         "countryCode": "99",
-        "firstName": "EHS-SMOKE-4b09952e",
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "middleName": "API",
         "lastName": "Tester",
-        "emailAddress": "smoke@example.com",
+        "emailAddress": "ehs-smoke-a13cc7f0@example.com",
         "phoneNumber": "9000000000",
         "profilePictureId": 0,
         "gender": 1,
-        "department": 6,
+        "department": 9,
         "dateOfJoining": null,
         "contractorId": 0,
         "accessFailedCount": null,
-        "designation": 6,
+        "designation": 8,
         "userType": 1,
         "status": 1,
-        "userNumber": "EHS-SMOKE-4b09952e",
+        "userNumber": "EHS-SMOKE-a13cc7f0",
         "tenantID": 1,
         "languageID": 900004,
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "hasAccess": true,
         "isMobileUser": false,
         "alias": "smoke",
@@ -7405,50 +8186,50 @@
         "country": 900001,
         "isSubscribed": false,
         "userRoleIds": [
-          15
+          21
         ],
         "organizationUnitIds": [
-          12
+          19
         ],
         "organizationUnitIdsMapped": [
-          12
+          19
         ],
         "organizationUnitListIds": [
-          12
+          19
         ],
         "uploadedFiles": null,
         "password": "[REDACTED]",
-        "departmentName": "EHS-SMOKE-4b09952e-Department",
-        "designationName": "EHS-SMOKE-4b09952e-Designation",
+        "departmentName": "EHS-SMOKE-a13cc7f0-Department",
+        "designationName": "EHS-SMOKE-a13cc7f0-Designation",
         "contractorName": null,
-        "organizationUnitNames": "EHS-SMOKE-4b09952e",
+        "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
         "workerTypeName": "Employee",
-        "userRoleNames": "EHS-SMOKE-4b09952e-Role",
+        "userRoleNames": "EHS-SMOKE-a13cc7f0-Role",
         "genderText": null,
         "contractorNameText": null,
-        "fullName": "EHS-SMOKE-4b09952e API Tester (EHS-SMOKE-4b09952e)",
-        "organizationUnitName": "EHS-SMOKE-4b09952e",
+        "fullName": "EHS-SMOKE-a13cc7f0 API Tester (EHS-SMOKE-a13cc7f0)",
+        "organizationUnitName": "EHS-SMOKE-a13cc7f0",
         "countryName": "Smoke Test Country",
         "profilePictureUrl": null
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 123,
+      "elapsedMs": 134,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 12
+        "results": 17
       }
     },
     {
       "case": "Edit customer role",
       "method": "PUT",
-      "path": "/api/Role/15",
+      "path": "/api/Role/21",
       "request": {
-        "id": 15,
+        "id": 21,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:06.05186",
+        "createdDate": "2026-09-30T08:52:22.077007",
         "modifiedBy": null,
         "modifiedDate": null,
         "tenantId": 1,
@@ -7457,7 +8238,7 @@
         "permissionIds": [
           2031
         ],
-        "name": "EHS-SMOKE-4b09952e-Role",
+        "name": "EHS-SMOKE-a13cc7f0-Role",
         "displayName": "Observer",
         "status": 1,
         "roleDescription": "Verification observer",
@@ -7492,12 +8273,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 110,
+      "elapsedMs": 144,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 15
+          "id": 21
         }
       }
     },
@@ -7509,7 +8290,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 160,
+      "elapsedMs": 168,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -10847,7 +11628,7 @@
           }
         ],
         "id": 0,
-        "name": "EHS-SMOKE-4b09952e-SourceRole",
+        "name": "EHS-SMOKE-a13cc7f0-SourceRole",
         "roleDescription": "t rol des",
         "landingPageId": 1,
         "displayName": "t rol des",
@@ -10859,12 +11640,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 191,
+      "elapsedMs": 193,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 16,
+          "id": 22,
           "message": "Role created successfully."
         }
       }
@@ -10877,22 +11658,28 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 131,
+      "elapsedMs": 133,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "superAdmin": true,
           "admin": false,
+          "accountType": "SUPER_ADMIN",
           "username": "ehs-api",
           "tenantId": null,
           "organizationUnitIds": [
+            16,
             2,
+            19,
             4,
             6,
             8,
             9,
-            12
+            12,
+            13,
+            14,
+            15
           ],
           "permissions": [
             "ROLE_SUPER_ADMIN"
@@ -10905,7 +11692,7 @@
       "method": "POST",
       "path": "/api/Role/CreateRole",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-SetupRole",
+        "name": "EHS-SMOKE-a13cc7f0-SetupRole",
         "landingPageId": 1,
         "permissionIds": [
           3342
@@ -10915,12 +11702,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 125,
+      "elapsedMs": 113,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 17,
+          "id": 23,
           "message": "Role created successfully."
         }
       }
@@ -10928,33 +11715,35 @@
     {
       "case": "Assign additional role",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Roles",
+      "path": "/api/SystemUser/8/Roles",
       "request": {
-        "basicRoleId": 15,
+        "basicRoleId": 21,
         "additionalRoleIds": [
-          17
+          23
         ]
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 158,
+      "elapsedMs": 141,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
-          "basicRoleId": 15,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
+          "basicRoleId": 21,
           "additionalRoleIds": [
-            17
+            23
           ],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": true
             }
           ]
@@ -10964,11 +11753,11 @@
     {
       "case": "Update separate BU scope",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Scope",
+      "path": "/api/SystemUser/8/Scope",
       "request": {
         "scopes": [
           {
-            "organizationUnitId": 12,
+            "organizationUnitId": 19,
             "includeDescendants": false
           }
         ]
@@ -10976,23 +11765,25 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 129,
+      "elapsedMs": 128,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
-          "basicRoleId": 15,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
+          "basicRoleId": 21,
           "additionalRoleIds": [
-            17
+            23
           ],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": false
             }
           ]
@@ -11007,35 +11798,39 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 127,
+      "elapsedMs": 184,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "superAdmin": false,
           "admin": false,
-          "username": "ehs-smoke-4b09952e",
+          "accountType": "USER",
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "organizationUnitIds": [
-            12
+            19
           ],
           "permissions": [
             "CreateObservation",
-            "ManageDepartment"
+            "ManageDepartment",
+            "ROLE_USER"
           ],
           "account": {
-            "id": 5,
-            "employeeId": 12,
-            "username": "ehs-smoke-4b09952e",
+            "id": 8,
+            "employeeId": 17,
+            "username": "ehs-smoke-a13cc7f0@example.com",
             "tenantId": 1,
             "enabled": true,
-            "basicRoleId": 15,
+            "mustChangePassword": false,
+            "temporaryPasswordExpiresAt": null,
+            "basicRoleId": 21,
             "additionalRoleIds": [
-              17
+              23
             ],
             "scopes": [
               {
-                "organizationUnitId": 12,
+                "organizationUnitId": 19,
                 "includeDescendants": false
               }
             ]
@@ -11051,22 +11846,22 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 143,
+      "elapsedMs": 226,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 6,
+              "id": 9,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:05.751689",
+              "createdDate": "2026-09-30T08:52:21.597769",
               "modifiedBy": null,
-              "modifiedDate": "2026-09-30T07:41:11.517356",
-              "name": "EHS-SMOKE-4b09952e-Department",
+              "modifiedDate": "2026-09-30T08:52:27.794109",
+              "name": "EHS-SMOKE-a13cc7f0-Department",
               "description": "Operations",
               "status": 1,
-              "businessUnitId": 12,
+              "businessUnitId": 19,
               "translations": [
                 {
                   "languageId": 1,
@@ -11089,7 +11884,7 @@
       "expectedStatus": 403,
       "httpStatus": 403,
       "passed": true,
-      "elapsedMs": 180,
+      "elapsedMs": 143,
       "response": {
         "statusCode": 403,
         "message": "Access Denied",
@@ -11099,14 +11894,14 @@
     {
       "case": "Normal user denied role assignment",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Roles",
+      "path": "/api/SystemUser/8/Roles",
       "request": {
-        "basicRoleId": 17
+        "basicRoleId": 23
       },
       "expectedStatus": 403,
       "httpStatus": 403,
       "passed": true,
-      "elapsedMs": 144,
+      "elapsedMs": 257,
       "response": {
         "statusCode": 403,
         "message": "Access Denied",
@@ -11123,7 +11918,7 @@
       "expectedStatus": 403,
       "httpStatus": 403,
       "passed": true,
-      "elapsedMs": 97,
+      "elapsedMs": 280,
       "response": {
         "statusCode": 403,
         "message": "Requested organizations are outside your scope",
@@ -11133,30 +11928,32 @@
     {
       "case": "Deactivate account",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Enabled",
+      "path": "/api/SystemUser/8/Enabled",
       "request": {
         "enabled": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 105,
+      "elapsedMs": 197,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": false,
-          "basicRoleId": 15,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
+          "basicRoleId": 21,
           "additionalRoleIds": [
-            17
+            23
           ],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": false
             }
           ]
@@ -11171,7 +11968,7 @@
       "expectedStatus": 401,
       "httpStatus": 401,
       "passed": true,
-      "elapsedMs": 30,
+      "elapsedMs": 40,
       "response": {
         "statusCode": 401,
         "message": "Authentication required",
@@ -11181,30 +11978,32 @@
     {
       "case": "Reactivate account",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Enabled",
+      "path": "/api/SystemUser/8/Enabled",
       "request": {
         "enabled": true
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 97,
+      "elapsedMs": 211,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
-          "basicRoleId": 15,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
+          "basicRoleId": 21,
           "additionalRoleIds": [
-            17
+            23
           ],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": false
             }
           ]
@@ -11216,19 +12015,19 @@
       "method": "POST",
       "path": "/api/Contractor/Create",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Contractor",
-        "businessUnitId": 12,
+        "name": "EHS-SMOKE-a13cc7f0-Contractor",
+        "businessUnitId": 19,
         "status": 1
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 111,
+      "elapsedMs": 191,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 7
+          "id": 10
         }
       }
     },
@@ -11237,26 +12036,26 @@
       "method": "POST",
       "path": "/api/Contractor/GetList",
       "request": {
-        "businessUnitIds": "12"
+        "businessUnitIds": "19"
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 141,
+      "elapsedMs": 130,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 7,
+              "id": 10,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:14.370929",
+              "createdDate": "2026-09-30T08:52:31.546946",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-Contractor",
-              "contractorName": "EHS-SMOKE-4b09952e-Contractor",
-              "businessUnitId": 12,
+              "name": "EHS-SMOKE-a13cc7f0-Contractor",
+              "contractorName": "EHS-SMOKE-a13cc7f0-Contractor",
+              "businessUnitId": 19,
               "status": 1,
               "contractorCode": null,
               "servicesOffered": null,
@@ -11275,7 +12074,7 @@
               "country": null,
               "state": null,
               "city": null,
-              "businessUnitName": "EHS-SMOKE-4b09952e",
+              "businessUnitName": "EHS-SMOKE-a13cc7f0",
               "createdByName": ""
             }
           ],
@@ -11286,21 +12085,21 @@
     {
       "case": "Edit contractor",
       "method": "PUT",
-      "path": "/api/Contractor/7",
+      "path": "/api/Contractor/10",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Contractor",
-        "businessUnitId": 12,
+        "name": "EHS-SMOKE-a13cc7f0-Contractor",
+        "businessUnitId": 19,
         "status": 1
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 121,
+      "elapsedMs": 178,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 7
+          "id": 10
         }
       }
     },
@@ -11309,24 +12108,25 @@
       "method": "POST",
       "path": "/api/ContractEmployee/Create",
       "request": {
-        "firstName": "EHS-SMOKE-4b09952e",
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "lastName": "Contractor",
         "gender": 1,
-        "userNumber": "EHS-SMOKE-4b09952e-Contract",
-        "organizationUnitId": 12,
-        "designation": 6,
-        "contractorId": 7,
+        "userNumber": "EHS-SMOKE-a13cc7f0-Contract",
+        "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
+        "organizationUnitId": 19,
+        "designation": 8,
+        "contractorId": 10,
         "languageID": 900004,
         "status": 1
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 96,
+      "elapsedMs": 173,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 13
+        "results": 18
       }
     },
     {
@@ -11334,21 +12134,21 @@
       "method": "POST",
       "path": "/api/ContractEmployee/GetList",
       "request": {
-        "businessUnitIds": "12"
+        "businessUnitIds": "19"
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 96,
+      "elapsedMs": 158,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 13,
+              "id": 18,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:14.724802",
+              "createdDate": "2026-09-30T08:52:32.025716",
               "modifiedBy": null,
               "modifiedDate": null,
               "systemAccountId": null,
@@ -11357,24 +12157,24 @@
               "systemUsername": null,
               "systemAccountEnabled": null,
               "countryCode": null,
-              "firstName": "EHS-SMOKE-4b09952e",
+              "firstName": "EHS-SMOKE-a13cc7f0",
               "middleName": null,
               "lastName": "Contractor",
-              "emailAddress": null,
+              "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
               "phoneNumber": null,
               "profilePictureId": null,
               "gender": 1,
               "department": null,
               "dateOfJoining": null,
-              "contractorId": 7,
+              "contractorId": 10,
               "accessFailedCount": null,
-              "designation": 6,
+              "designation": 8,
               "userType": 2,
               "status": 1,
-              "userNumber": "EHS-SMOKE-4b09952e-Contract",
+              "userNumber": "EHS-SMOKE-a13cc7f0-Contract",
               "tenantID": 1,
               "languageID": 900004,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "hasAccess": false,
               "isMobileUser": false,
               "alias": null,
@@ -11384,26 +12184,26 @@
               "isSubscribed": false,
               "userRoleIds": [],
               "organizationUnitIds": [
-                12
+                19
               ],
               "organizationUnitIdsMapped": [
-                12
+                19
               ],
               "organizationUnitListIds": [
-                12
+                19
               ],
               "uploadedFiles": null,
               "password": null,
               "departmentName": null,
-              "designationName": "EHS-SMOKE-4b09952e-Designation",
-              "contractorName": "EHS-SMOKE-4b09952e-Contractor",
-              "organizationUnitNames": "EHS-SMOKE-4b09952e",
+              "designationName": "EHS-SMOKE-a13cc7f0-Designation",
+              "contractorName": "EHS-SMOKE-a13cc7f0-Contractor",
+              "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
               "workerTypeName": "Contract Employee",
               "userRoleNames": "",
               "genderText": null,
               "contractorNameText": null,
-              "fullName": "EHS-SMOKE-4b09952e Contractor (EHS-SMOKE-4b09952e-Contract)",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
+              "fullName": "EHS-SMOKE-a13cc7f0 Contractor (EHS-SMOKE-a13cc7f0-Contract)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
               "countryName": null,
               "profilePictureUrl": null
             }
@@ -11415,26 +12215,27 @@
     {
       "case": "Edit contract employee",
       "method": "PUT",
-      "path": "/api/ContractEmployee/13",
+      "path": "/api/ContractEmployee/18",
       "request": {
-        "firstName": "EHS-SMOKE-4b09952e",
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "lastName": "Contractor",
         "gender": 1,
-        "userNumber": "EHS-SMOKE-4b09952e-Contract",
-        "organizationUnitId": 12,
-        "designation": 6,
-        "contractorId": 7,
+        "userNumber": "EHS-SMOKE-a13cc7f0-Contract",
+        "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
+        "organizationUnitId": 19,
+        "designation": 8,
+        "contractorId": 10,
         "languageID": 900004,
         "status": 1
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 179,
+      "elapsedMs": 221,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 13
+        "results": 18
       }
     },
     {
@@ -11442,9 +12243,9 @@
       "method": "POST",
       "path": "/api/Contractor/Add",
       "request": {
-        "contractorName": "EHS-SMOKE-4b09952e-FullContractor",
-        "contractorCode": "EHS-SMOKE-4b09952e-C",
-        "businessUnitId": 12,
+        "contractorName": "EHS-SMOKE-a13cc7f0-FullContractor",
+        "contractorCode": "EHS-SMOKE-a13cc7f0-C",
+        "businessUnitId": 19,
         "status": 1,
         "servicesOffered": "Safety audit",
         "addressLine1": "Test road",
@@ -11463,7 +12264,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 195,
+      "elapsedMs": 211,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -11477,35 +12278,35 @@
       "request": {
         "sorting": "contractorName",
         "sortingType": "desc",
-        "filter": "EHS-SMOKE-4b09952e-FullContractor",
+        "filter": "EHS-SMOKE-a13cc7f0-FullContractor",
         "filters": [],
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 114,
+      "elapsedMs": 152,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 8,
+              "id": 11,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:15.19216",
+              "createdDate": "2026-09-30T08:52:32.61921",
               "modifiedBy": null,
               "modifiedDate": null,
-              "name": "EHS-SMOKE-4b09952e-FullContractor",
-              "contractorName": "EHS-SMOKE-4b09952e-FullContractor",
-              "businessUnitId": 12,
+              "name": "EHS-SMOKE-a13cc7f0-FullContractor",
+              "contractorName": "EHS-SMOKE-a13cc7f0-FullContractor",
+              "businessUnitId": 19,
               "status": 1,
-              "contractorCode": "EHS-SMOKE-4b09952e-C",
+              "contractorCode": "EHS-SMOKE-a13cc7f0-C",
               "servicesOffered": "Safety audit",
               "addressLine1": "Test road",
               "addressLine2": "Suite 2",
@@ -11522,7 +12323,7 @@
               "country": "Smoke Test Country",
               "state": "Smoke Test State",
               "city": "Smoke Test City",
-              "businessUnitName": "EHS-SMOKE-4b09952e",
+              "businessUnitName": "EHS-SMOKE-a13cc7f0",
               "createdByName": ""
             }
           ],
@@ -11535,13 +12336,14 @@
       "method": "POST",
       "path": "/api/User/CreateEmployee",
       "request": {
-        "firstName": "EHS-SMOKE-4b09952e",
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "lastName": "Contractor",
         "gender": 1,
-        "userNumber": "EHS-SMOKE-4b09952e-Contract2",
-        "organizationUnitId": 12,
-        "designation": 6,
-        "contractorId": 8,
+        "userNumber": "EHS-SMOKE-a13cc7f0-Contract2",
+        "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
+        "organizationUnitId": 19,
+        "designation": 8,
+        "contractorId": 11,
         "languageID": 900004,
         "status": 1,
         "userType": 2,
@@ -11550,11 +12352,11 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 159,
+      "elapsedMs": 113,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 14
+        "results": 19
       }
     },
     {
@@ -11569,23 +12371,23 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 198,
+      "elapsedMs": 170,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 14,
+              "id": 19,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:15.457793",
+              "createdDate": "2026-09-30T08:52:32.878468",
               "modifiedBy": null,
               "modifiedDate": null,
               "systemAccountId": null,
@@ -11594,24 +12396,24 @@
               "systemUsername": null,
               "systemAccountEnabled": null,
               "countryCode": null,
-              "firstName": "EHS-SMOKE-4b09952e",
+              "firstName": "EHS-SMOKE-a13cc7f0",
               "middleName": null,
               "lastName": "Contractor",
-              "emailAddress": null,
+              "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
               "phoneNumber": null,
               "profilePictureId": null,
               "gender": 1,
               "department": 0,
               "dateOfJoining": null,
-              "contractorId": 8,
+              "contractorId": 11,
               "accessFailedCount": null,
-              "designation": 6,
+              "designation": 8,
               "userType": 2,
               "status": 1,
-              "userNumber": "EHS-SMOKE-4b09952e-Contract2",
+              "userNumber": "EHS-SMOKE-a13cc7f0-Contract2",
               "tenantID": 1,
               "languageID": 900004,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "hasAccess": false,
               "isMobileUser": false,
               "alias": null,
@@ -11621,59 +12423,59 @@
               "isSubscribed": false,
               "userRoleIds": [],
               "organizationUnitIds": [
-                12
+                19
               ],
               "organizationUnitIdsMapped": [
-                12
+                19
               ],
               "organizationUnitListIds": [
-                12
+                19
               ],
               "uploadedFiles": null,
               "password": null,
               "departmentName": null,
-              "designationName": "EHS-SMOKE-4b09952e-Designation",
-              "contractorName": "EHS-SMOKE-4b09952e-FullContractor",
-              "organizationUnitNames": "EHS-SMOKE-4b09952e",
+              "designationName": "EHS-SMOKE-a13cc7f0-Designation",
+              "contractorName": "EHS-SMOKE-a13cc7f0-FullContractor",
+              "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
               "workerTypeName": "Contract Employee",
               "userRoleNames": "",
               "genderText": null,
               "contractorNameText": null,
-              "fullName": "EHS-SMOKE-4b09952e Contractor (EHS-SMOKE-4b09952e-Contract2)",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
+              "fullName": "EHS-SMOKE-a13cc7f0 Contractor (EHS-SMOKE-a13cc7f0-Contract2)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
               "countryName": null,
               "profilePictureUrl": null
             },
             {
-              "id": 13,
+              "id": 18,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:14.724802",
+              "createdDate": "2026-09-30T08:52:32.025716",
               "modifiedBy": null,
-              "modifiedDate": "2026-09-30T07:41:14.985127",
+              "modifiedDate": "2026-09-30T08:52:32.38084",
               "systemAccountId": null,
               "basicRoleId": null,
               "additionalRoleIds": null,
               "systemUsername": null,
               "systemAccountEnabled": null,
               "countryCode": null,
-              "firstName": "EHS-SMOKE-4b09952e",
+              "firstName": "EHS-SMOKE-a13cc7f0",
               "middleName": null,
               "lastName": "Contractor",
-              "emailAddress": null,
+              "emailAddress": "ehs-smoke-a13cc7f0-contract@example.com",
               "phoneNumber": null,
               "profilePictureId": null,
               "gender": 1,
               "department": null,
               "dateOfJoining": null,
-              "contractorId": 7,
+              "contractorId": 10,
               "accessFailedCount": null,
-              "designation": 6,
+              "designation": 8,
               "userType": 2,
               "status": 1,
-              "userNumber": "EHS-SMOKE-4b09952e-Contract",
+              "userNumber": "EHS-SMOKE-a13cc7f0-Contract",
               "tenantID": 1,
               "languageID": 900004,
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "hasAccess": false,
               "isMobileUser": false,
               "alias": null,
@@ -11683,26 +12485,26 @@
               "isSubscribed": false,
               "userRoleIds": [],
               "organizationUnitIds": [
-                12
+                19
               ],
               "organizationUnitIdsMapped": [
-                12
+                19
               ],
               "organizationUnitListIds": [
-                12
+                19
               ],
               "uploadedFiles": null,
               "password": null,
               "departmentName": null,
-              "designationName": "EHS-SMOKE-4b09952e-Designation",
-              "contractorName": "EHS-SMOKE-4b09952e-Contractor",
-              "organizationUnitNames": "EHS-SMOKE-4b09952e",
+              "designationName": "EHS-SMOKE-a13cc7f0-Designation",
+              "contractorName": "EHS-SMOKE-a13cc7f0-Contractor",
+              "organizationUnitNames": "EHS-SMOKE-a13cc7f0",
               "workerTypeName": "Contract Employee",
               "userRoleNames": "",
               "genderText": null,
               "contractorNameText": null,
-              "fullName": "EHS-SMOKE-4b09952e Contractor (EHS-SMOKE-4b09952e-Contract)",
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
+              "fullName": "EHS-SMOKE-a13cc7f0 Contractor (EHS-SMOKE-a13cc7f0-Contract)",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
               "countryName": null,
               "profilePictureUrl": null
             }
@@ -11716,7 +12518,7 @@
       "method": "POST",
       "path": "/api/Role/CreateRole",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Admin",
+        "name": "EHS-SMOKE-a13cc7f0-Admin",
         "landingPageId": 1,
         "permissionIds": [
           3302,
@@ -11734,7 +12536,7 @@
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 18,
+          "id": 24,
           "message": "Role created successfully."
         }
       }
@@ -11742,28 +12544,30 @@
     {
       "case": "Grant administration to system user",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Roles",
+      "path": "/api/SystemUser/8/Roles",
       "request": {
-        "basicRoleId": 18
+        "basicRoleId": 24
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 154,
+      "elapsedMs": 107,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
-          "basicRoleId": 18,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
+          "basicRoleId": 24,
           "additionalRoleIds": [],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": false
             }
           ]
@@ -11775,7 +12579,7 @@
       "method": "POST",
       "path": "/api/Role/CreateRole",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-Dynamic",
+        "name": "EHS-SMOKE-a13cc7f0-Dynamic",
         "landingPageId": 1,
         "permissionIds": [
           3342
@@ -11785,12 +12589,12 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 117,
+      "elapsedMs": 158,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 19,
+          "id": 25,
           "message": "Role created successfully."
         }
       }
@@ -11798,9 +12602,9 @@
     {
       "case": "Admin edits role",
       "method": "PUT",
-      "path": "/api/Role/19",
+      "path": "/api/Role/25",
       "request": {
-        "name": "EHS-SMOKE-4b09952e-DynamicEdited",
+        "name": "EHS-SMOKE-a13cc7f0-DynamicEdited",
         "landingPageId": 1,
         "permissionIds": [
           3342
@@ -11810,45 +12614,47 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 124,
+      "elapsedMs": 153,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 19
+          "id": 25
         }
       }
     },
     {
       "case": "Admin assigns role to user",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Roles",
+      "path": "/api/SystemUser/8/Roles",
       "request": {
-        "basicRoleId": 18,
+        "basicRoleId": 24,
         "additionalRoleIds": [
-          19
+          25
         ]
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 129,
+      "elapsedMs": 153,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
-          "basicRoleId": 18,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
+          "basicRoleId": 24,
           "additionalRoleIds": [
-            19
+            25
           ],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": false
             }
           ]
@@ -11861,15 +12667,15 @@
       "path": "/api/User/CreateOrUpdateExternalCollabarator",
       "request": {
         "id": 0,
-        "roleId": 19,
-        "firstName": "EHS-SMOKE-4b09952e",
+        "roleId": 25,
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "middleName": "",
         "lastName": "Auditor",
         "emailAddress": "temporary@example.com",
         "phoneNumber": "9000000000",
         "gender": 1,
         "status": 1,
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "alias": "",
         "country": 900001,
         "companyName": "Audit Company",
@@ -11885,11 +12691,11 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 239,
+      "elapsedMs": 161,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 4
+        "results": 6
       }
     },
     {
@@ -11904,28 +12710,28 @@
         "maxResultCount": 10,
         "skipCount": 0,
         "multiSortMeta": [],
-        "businessUnitIds": "12",
+        "businessUnitIds": "19",
         "userId": 0,
         "isExportToExcel": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 194,
+      "elapsedMs": 184,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "items": [
             {
-              "id": 4,
+              "id": 6,
               "createdBy": null,
-              "createdDate": "2026-09-30T07:41:16.521712",
+              "createdDate": "2026-09-30T08:52:33.885644",
               "modifiedBy": null,
               "modifiedDate": null,
-              "roleId": 19,
-              "organizationUnitId": 12,
-              "firstName": "EHS-SMOKE-4b09952e",
+              "roleId": 25,
+              "organizationUnitId": 19,
+              "firstName": "EHS-SMOKE-a13cc7f0",
               "middleName": "",
               "lastName": "Auditor",
               "emailAddress": "temporary@example.com",
@@ -11941,7 +12747,7 @@
               "dateOfBirth": null,
               "dateOfJoining": null,
               "organizationUnitListIds": [
-                12
+                19
               ],
               "externalDetails": {
                 "companyName": "Audit Company",
@@ -11949,14 +12755,14 @@
                 "status": 1
               },
               "password": null,
-              "organizationUnitName": "EHS-SMOKE-4b09952e",
-              "userRoleName": "EHS-SMOKE-4b09952e-DynamicEdited",
+              "organizationUnitName": "EHS-SMOKE-a13cc7f0",
+              "userRoleName": "EHS-SMOKE-a13cc7f0-DynamicEdited",
               "workerTypeName": "External Collaborator",
-              "fullName": "EHS-SMOKE-4b09952e Auditor ()",
+              "fullName": "EHS-SMOKE-a13cc7f0 Auditor ()",
               "designationName": null,
               "userType": null,
               "userRoleIds": [
-                19
+                25
               ]
             }
           ],
@@ -11969,16 +12775,16 @@
       "method": "POST",
       "path": "/api/User/CreateOrUpdateExternalCollabarator",
       "request": {
-        "id": 4,
-        "roleId": 19,
-        "firstName": "EHS-SMOKE-4b09952e",
+        "id": 6,
+        "roleId": 25,
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "middleName": "",
         "lastName": "Updated",
         "emailAddress": "temporary@example.com",
         "phoneNumber": "9000000000",
         "gender": 1,
         "status": 1,
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "alias": "",
         "country": 900001,
         "companyName": "Audit Company",
@@ -11994,11 +12800,11 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 145,
+      "elapsedMs": 173,
       "response": {
         "statusCode": 200,
         "message": "Successful",
-        "results": 4
+        "results": 6
       }
     },
     {
@@ -12008,14 +12814,14 @@
       "request": {
         "id": 0,
         "roleId": 9223372036854775807,
-        "firstName": "EHS-SMOKE-4b09952e",
+        "firstName": "EHS-SMOKE-a13cc7f0",
         "middleName": "",
         "lastName": "Auditor",
         "emailAddress": "temporary@example.com",
         "phoneNumber": "9000000000",
         "gender": 1,
         "status": 1,
-        "organizationUnitId": 12,
+        "organizationUnitId": 19,
         "alias": "",
         "country": 900001,
         "companyName": "Audit Company",
@@ -12031,7 +12837,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 99,
+      "elapsedMs": 111,
       "response": {
         "statusCode": 400,
         "message": "Unknown role",
@@ -12043,9 +12849,9 @@
       "method": "POST",
       "path": "/api/Contractor/Add",
       "request": {
-        "contractorName": "EHS-SMOKE-4b09952e-FullContractor",
-        "contractorCode": "EHS-SMOKE-4b09952e-C",
-        "businessUnitId": 12,
+        "contractorName": "EHS-SMOKE-a13cc7f0-FullContractor",
+        "contractorCode": "EHS-SMOKE-a13cc7f0-C",
+        "businessUnitId": 19,
         "status": 1,
         "servicesOffered": "Safety audit",
         "addressLine1": "Test road",
@@ -12064,7 +12870,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 167,
+      "elapsedMs": 114,
       "response": {
         "statusCode": 400,
         "message": "Unknown CITY ID: 9223372036854775807",
@@ -12074,28 +12880,30 @@
     {
       "case": "Assign built-in Admin",
       "method": "PUT",
-      "path": "/api/SystemUser/5/Roles",
+      "path": "/api/SystemUser/8/Roles",
       "request": {
         "basicRoleId": 14
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 155,
+      "elapsedMs": 196,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 5,
-          "employeeId": 12,
-          "username": "ehs-smoke-4b09952e",
+          "id": 8,
+          "employeeId": 17,
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "enabled": true,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
           "basicRoleId": 14,
           "additionalRoleIds": [],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": false
             }
           ]
@@ -12110,17 +12918,18 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 127,
+      "elapsedMs": 136,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
           "superAdmin": false,
           "admin": true,
-          "username": "ehs-smoke-4b09952e",
+          "accountType": "ADMIN",
+          "username": "ehs-smoke-a13cc7f0@example.com",
           "tenantId": 1,
           "organizationUnitIds": [
-            12
+            19
           ],
           "permissions": [
             "ActionDashboard",
@@ -12239,16 +13048,18 @@
             "ViewVesselRegister"
           ],
           "account": {
-            "id": 5,
-            "employeeId": 12,
-            "username": "ehs-smoke-4b09952e",
+            "id": 8,
+            "employeeId": 17,
+            "username": "ehs-smoke-a13cc7f0@example.com",
             "tenantId": 1,
             "enabled": true,
+            "mustChangePassword": false,
+            "temporaryPasswordExpiresAt": null,
             "basicRoleId": 14,
             "additionalRoleIds": [],
             "scopes": [
               {
-                "organizationUnitId": 12,
+                "organizationUnitId": 19,
                 "includeDescendants": false
               }
             ]
@@ -12263,16 +13074,16 @@
       "request": {
         "id": 0,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.393948",
+        "createdDate": "2026-09-30T08:52:21.257112",
         "modifiedBy": null,
         "modifiedDate": null,
         "layoutImageUrl": null,
         "latitude": null,
         "longitude": null,
-        "name": "EHS-SMOKE-4b09952e-Child",
+        "name": "EHS-SMOKE-a13cc7f0-Child",
         "description": "Live HTTP verification",
         "tenantId": 1,
-        "parentId": 12,
+        "parentId": 19,
         "status": 1,
         "currency": "TST",
         "line1": "Test address",
@@ -12310,7 +13121,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 210,
+      "elapsedMs": 172,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -12325,21 +13136,21 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 156,
+      "elapsedMs": 137,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": [
           {
-            "id": 12,
+            "id": 19,
             "createdBy": null,
-            "createdDate": "2026-09-30T07:41:05.393948",
+            "createdDate": "2026-09-30T08:52:21.257112",
             "modifiedBy": null,
-            "modifiedDate": "2026-09-30T07:41:11.371485",
+            "modifiedDate": "2026-09-30T08:52:27.69504",
             "layoutImageUrl": null,
             "latitude": null,
             "longitude": null,
-            "name": "EHS-SMOKE-4b09952e",
+            "name": "EHS-SMOKE-a13cc7f0",
             "description": "Live HTTP verification",
             "tenantId": 1,
             "parentId": null,
@@ -12377,18 +13188,18 @@
             "shiftMaster": null,
             "children": [
               {
-                "id": 13,
+                "id": 20,
                 "createdBy": null,
-                "createdDate": "2026-09-30T07:41:05.393948",
+                "createdDate": "2026-09-30T08:52:21.257112",
                 "modifiedBy": null,
                 "modifiedDate": null,
                 "layoutImageUrl": null,
                 "latitude": null,
                 "longitude": null,
-                "name": "EHS-SMOKE-4b09952e-Child",
+                "name": "EHS-SMOKE-a13cc7f0-Child",
                 "description": "Live HTTP verification",
                 "tenantId": 1,
-                "parentId": 12,
+                "parentId": 19,
                 "status": 1,
                 "currency": "TST",
                 "line1": "Test address",
@@ -12435,16 +13246,16 @@
       "request": {
         "id": 0,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.393948",
+        "createdDate": "2026-09-30T08:52:21.257112",
         "modifiedBy": null,
         "modifiedDate": null,
         "layoutImageUrl": null,
         "latitude": null,
         "longitude": null,
-        "name": "EHS-SMOKE-4b09952e-Grandchild",
+        "name": "EHS-SMOKE-a13cc7f0-Grandchild",
         "description": "Live HTTP verification",
         "tenantId": 1,
-        "parentId": 13,
+        "parentId": 20,
         "status": 1,
         "currency": "TST",
         "line1": "Test address",
@@ -12482,7 +13293,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 141,
+      "elapsedMs": 117,
       "response": {
         "statusCode": 200,
         "message": "Successful",
@@ -12496,13 +13307,13 @@
       "request": {
         "id": 0,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.393948",
+        "createdDate": "2026-09-30T08:52:21.257112",
         "modifiedBy": null,
         "modifiedDate": null,
         "layoutImageUrl": null,
         "latitude": null,
         "longitude": null,
-        "name": "EHS-SMOKE-4b09952e-Child",
+        "name": "EHS-SMOKE-a13cc7f0-Child",
         "description": "Live HTTP verification",
         "tenantId": 1,
         "parentId": null,
@@ -12543,7 +13354,7 @@
       "expectedStatus": 403,
       "httpStatus": 403,
       "passed": true,
-      "elapsedMs": 122,
+      "elapsedMs": 85,
       "response": {
         "statusCode": 403,
         "message": "Only Super Admin can create a root organization",
@@ -12557,13 +13368,13 @@
       "request": {
         "id": 0,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.393948",
+        "createdDate": "2026-09-30T08:52:21.257112",
         "modifiedBy": null,
         "modifiedDate": null,
         "layoutImageUrl": null,
         "latitude": null,
         "longitude": null,
-        "name": "EHS-SMOKE-4b09952e-Child",
+        "name": "EHS-SMOKE-a13cc7f0-Child",
         "description": "Live HTTP verification",
         "tenantId": 1,
         "parentId": 0,
@@ -12604,7 +13415,7 @@
       "expectedStatus": 403,
       "httpStatus": 403,
       "passed": true,
-      "elapsedMs": 125,
+      "elapsedMs": 107,
       "response": {
         "statusCode": 403,
         "message": "Only Super Admin can create a root organization",
@@ -12614,17 +13425,17 @@
     {
       "case": "Admin denied root promotion",
       "method": "PUT",
-      "path": "/api/OrganizationUnit/13",
+      "path": "/api/OrganizationUnit/20",
       "request": {
-        "id": 13,
+        "id": 20,
         "createdBy": null,
-        "createdDate": "2026-09-30T07:41:05.393948",
+        "createdDate": "2026-09-30T08:52:21.257112",
         "modifiedBy": null,
         "modifiedDate": null,
         "layoutImageUrl": null,
         "latitude": null,
         "longitude": null,
-        "name": "EHS-SMOKE-4b09952e-Child",
+        "name": "EHS-SMOKE-a13cc7f0-Child",
         "description": "Live HTTP verification",
         "tenantId": 1,
         "parentId": null,
@@ -12665,7 +13476,7 @@
       "expectedStatus": 403,
       "httpStatus": 403,
       "passed": true,
-      "elapsedMs": 153,
+      "elapsedMs": 96,
       "response": {
         "statusCode": 403,
         "message": "Only Super Admin can promote an organization to a root",
@@ -12678,32 +13489,30 @@
       "path": "/api/Department/Create",
       "request": {
         "name": "Child Safety",
-        "businessUnitId": 13,
+        "businessUnitId": 20,
         "status": 1
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 208,
+      "elapsedMs": 120,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 7
+          "id": 10
         }
       }
     },
     {
       "case": "Admin activates employee account",
       "method": "POST",
-      "path": "/api/User/13/ActivateSystemUser",
+      "path": "/api/User/18/ActivateSystemUser",
       "request": {
-        "username": "ehs-smoke-4b09952e-delegated",
-        "password": "[REDACTED]",
         "basicRoleId": 14,
         "scopes": [
           {
-            "organizationUnitId": 12,
+            "organizationUnitId": 19,
             "includeDescendants": true
           }
         ]
@@ -12711,21 +13520,23 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 233,
+      "elapsedMs": 212,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6,
-          "employeeId": 13,
-          "username": "ehs-smoke-4b09952e-delegated",
+          "id": 9,
+          "employeeId": 18,
+          "username": "ehs-smoke-a13cc7f0-contract@example.com",
           "tenantId": 1,
           "enabled": true,
+          "mustChangePassword": true,
+          "temporaryPasswordExpiresAt": "2026-10-01T03:22:35.8281362",
           "basicRoleId": 14,
           "additionalRoleIds": [],
           "scopes": [
             {
-              "organizationUnitId": 12,
+              "organizationUnitId": 19,
               "includeDescendants": true
             }
           ]
@@ -12733,13 +13544,86 @@
       }
     },
     {
+      "case": "Admin resends activation email",
+      "method": "POST",
+      "path": "/api/SystemUser/9/ResendActivation",
+      "request": null,
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 343,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "id": 9,
+          "employeeId": 18,
+          "username": "ehs-smoke-a13cc7f0-contract@example.com",
+          "tenantId": 1,
+          "enabled": true,
+          "mustChangePassword": true,
+          "temporaryPasswordExpiresAt": "2026-10-01T03:22:36.1926852",
+          "basicRoleId": 14,
+          "additionalRoleIds": [],
+          "scopes": [
+            {
+              "organizationUnitId": 19,
+              "includeDescendants": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "Resend invalidates old temporary password",
+      "method": "POST",
+      "path": "/api/Auth/Login",
+      "request": {
+        "username": "ehs-smoke-a13cc7f0-contract@example.com",
+        "password": "[REDACTED]"
+      },
+      "expectedStatus": 401,
+      "httpStatus": 401,
+      "passed": true,
+      "elapsedMs": 109,
+      "response": {
+        "statusCode": 401,
+        "message": "Invalid credentials or account unavailable",
+        "results": null
+      }
+    },
+    {
+      "case": "Delegated Admin sets first password",
+      "method": "POST",
+      "path": "/api/Auth/FirstLoginPasswordReset",
+      "request": {
+        "currentPassword": "[REDACTED]",
+        "newPassword": "[REDACTED]",
+        "confirmPassword": "[REDACTED]"
+      },
+      "expectedStatus": 200,
+      "httpStatus": 200,
+      "passed": true,
+      "elapsedMs": 422,
+      "response": {
+        "statusCode": 200,
+        "message": "Successful",
+        "results": {
+          "mustChangePassword": false,
+          "username": "ehs-smoke-a13cc7f0-contract@example.com",
+          "message": "Password set. Log in with your new password.",
+          "nextAction": "LOGIN"
+        }
+      }
+    },
+    {
       "case": "Admin changes account scope",
       "method": "PUT",
-      "path": "/api/SystemUser/6/Scope",
+      "path": "/api/SystemUser/9/Scope",
       "request": {
         "scopes": [
           {
-            "organizationUnitId": 13,
+            "organizationUnitId": 20,
             "includeDescendants": true
           }
         ]
@@ -12747,21 +13631,23 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 163,
+      "elapsedMs": 123,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6,
-          "employeeId": 13,
-          "username": "ehs-smoke-4b09952e-delegated",
+          "id": 9,
+          "employeeId": 18,
+          "username": "ehs-smoke-a13cc7f0-contract@example.com",
           "tenantId": 1,
           "enabled": true,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
           "basicRoleId": 14,
           "additionalRoleIds": [],
           "scopes": [
             {
-              "organizationUnitId": 13,
+              "organizationUnitId": 20,
               "includeDescendants": true
             }
           ]
@@ -12771,28 +13657,30 @@
     {
       "case": "Admin disables account",
       "method": "PUT",
-      "path": "/api/SystemUser/6/Enabled",
+      "path": "/api/SystemUser/9/Enabled",
       "request": {
         "enabled": false
       },
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 163,
+      "elapsedMs": 173,
       "response": {
         "statusCode": 200,
         "message": "Successful",
         "results": {
-          "id": 6,
-          "employeeId": 13,
-          "username": "ehs-smoke-4b09952e-delegated",
+          "id": 9,
+          "employeeId": 18,
+          "username": "ehs-smoke-a13cc7f0-contract@example.com",
           "tenantId": 1,
           "enabled": false,
+          "mustChangePassword": false,
+          "temporaryPasswordExpiresAt": null,
           "basicRoleId": 14,
           "additionalRoleIds": [],
           "scopes": [
             {
-              "organizationUnitId": 13,
+              "organizationUnitId": 20,
               "includeDescendants": true
             }
           ]
@@ -12813,7 +13701,7 @@
       "expectedStatus": 400,
       "httpStatus": 400,
       "passed": true,
-      "elapsedMs": 90,
+      "elapsedMs": 144,
       "response": {
         "statusCode": 400,
         "message": "Admin and Super Admin are reserved built-in roles",
@@ -12828,7 +13716,7 @@
       "expectedStatus": 200,
       "httpStatus": 200,
       "passed": true,
-      "elapsedMs": 1367,
+      "elapsedMs": 1257,
       "response": {
         "openapi": "3.0.1",
         "info": {
@@ -13686,6 +14574,37 @@
               }
             }
           },
+          "/api/SystemUser/{id}/ResendActivation": {
+            "post": {
+              "tags": [
+                "account-controller"
+              ],
+              "operationId": "resend",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "/api/Role/CreateRole": {
             "post": {
               "tags": [
@@ -14267,6 +15186,66 @@
                   "application/json": {
                     "schema": {
                       "$ref": "#/components/schemas/EmployeeDto"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Auth/Login": {
+            "post": {
+              "tags": [
+                "login-controller"
+              ],
+              "operationId": "login",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/Login"
+                    }
+                  }
+                },
+                "required": true
+              },
+              "responses": {
+                "200": {
+                  "description": "OK",
+                  "content": {
+                    "*/*": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ApiResponseObject"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "/api/Auth/FirstLoginPasswordReset": {
+            "post": {
+              "tags": [
+                "account-controller"
+              ],
+              "operationId": "firstLoginReset",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/FirstLoginReset"
                     }
                   }
                 },
@@ -15955,21 +16934,10 @@
             "Activate": {
               "required": [
                 "basicRoleId",
-                "password",
-                "scopes",
-                "username"
+                "scopes"
               ],
               "type": "object",
               "properties": {
-                "username": {
-                  "pattern": "[a-zA-Z0-9._@-]{3,100}",
-                  "type": "string"
-                },
-                "password": {
-                  "maxLength": 72,
-                  "minLength": 12,
-                  "type": "string"
-                },
                 "basicRoleId": {
                   "type": "integer",
                   "format": "int64"
@@ -16256,6 +17224,50 @@
                   "format": "int32"
                 }
               }
+            },
+            "Login": {
+              "required": [
+                "password",
+                "username"
+              ],
+              "type": "object",
+              "properties": {
+                "username": {
+                  "maxLength": 254,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "password": {
+                  "maxLength": 200,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
+            },
+            "FirstLoginReset": {
+              "required": [
+                "confirmPassword",
+                "currentPassword",
+                "newPassword"
+              ],
+              "type": "object",
+              "properties": {
+                "currentPassword": {
+                  "maxLength": 200,
+                  "minLength": 0,
+                  "type": "string"
+                },
+                "newPassword": {
+                  "maxLength": 72,
+                  "minLength": 12,
+                  "type": "string"
+                },
+                "confirmPassword": {
+                  "maxLength": 72,
+                  "minLength": 0,
+                  "type": "string"
+                }
+              }
             }
           }
         }
@@ -16263,6 +17275,10 @@
     }
   ],
   "checks": [
+    {
+      "check": "temporary credentials restricted to reset",
+      "passed": true
+    },
     {
       "check": "users persisted and business-unit filtered",
       "passed": true
