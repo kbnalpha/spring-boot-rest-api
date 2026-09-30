@@ -23,13 +23,15 @@ public class AccountService {
         this.accounts=accounts;this.employees=employees;this.roles=roles;this.organizations=organizations;this.encoder=encoder;this.identities=identities;this.access=access;
     }
     @Transactional public Map<String,Object> activate(Long employeeId,AccountRequests.Activate dto) {
-        access.superAdmin();
+        access.administrator();
         Employee employee=employees.findById(employeeId).orElseThrow(() -> ApiException.notFound("Employee not found"));
+        access.organization(employee.organizationUnitId);
         if(accounts.findByEmployeeId(employeeId).isPresent()) throw ApiException.badRequest("Employee already has a system account; use account management");
         if(identities.reservedUsername(dto.username())) throw ApiException.badRequest("Reserved system username");
         if(dto.password().getBytes(java.nio.charset.StandardCharsets.UTF_8).length>72) throw ApiException.badRequest("Password exceeds BCrypt's 72-byte limit");
         OrganizationUnit unit=organizations.findById(employee.organizationUnitId).orElseThrow(() -> ApiException.badRequest("Employee organization is missing"));
         UserAccount account=new UserAccount();account.employeeId=employeeId;account.tenantId=unit.tenantId;
+        access.tenant(account.tenantId);
         if(account.tenantId==null) throw ApiException.badRequest("Set the organization tenant before activating a user");
         account.username=dto.username();account.passwordHash=encoder.encode(dto.password());account.enabled=true;
         assignRoles(account,dto.basicRoleId(),dto.additionalRoleIds());assignScopes(account,dto.scopes());
@@ -39,21 +41,21 @@ public class AccountService {
     }
     @Transactional public Map<String,Object> roles(Long id,AccountRequests.Roles dto) {
         access.require("ManageRoleUsers");UserAccount account=account(id);
-        access.tenant(account.tenantId);
-        access.organization(employees.findById(account.employeeId).orElseThrow().organizationUnitId);
+        manageable(account);
         assignRoles(account,dto.basicRoleId(),dto.additionalRoleIds());
         Employee employee=employees.findById(account.employeeId).orElseThrow();employee.userRoleIds=new ArrayList<>();employee.userRoleIds.add(account.basicRoleId);employee.userRoleIds.addAll(account.additionalRoleIds);
         return response(account);
     }
     @Transactional public Map<String,Object> scopes(Long id,AccountRequests.Scopes dto) {
-        access.superAdmin();UserAccount account=account(id);assignScopes(account,dto.scopes());return response(account);
+        access.administrator();UserAccount account=account(id);manageable(account);assignScopes(account,dto.scopes());return response(account);
     }
     @Transactional public Map<String,Object> enabled(Long id,boolean enabled) {
-        access.superAdmin();UserAccount account=account(id);account.enabled=enabled;
+        access.administrator();UserAccount account=account(id);manageable(account);account.enabled=enabled;
         employees.findById(account.employeeId).orElseThrow().hasAccess=enabled;return response(account);
     }
     public Map<String,Object> me() {
         Map<String,Object> result=new LinkedHashMap<>();result.put("superAdmin",access.isSuperAdmin());
+        result.put("admin",access.isAdmin());
         var authentication=org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
         result.put("username",authentication.getName());result.put("tenantId",access.isSuperAdmin()?null:access.principal().tenantId);
         result.put("organizationUnitIds",access.organizationIds());
@@ -68,11 +70,21 @@ public class AccountService {
         result.put("scopes",new HashSet<>(account.scopes));return result;
     }
     private UserAccount account(Long id) { return accounts.findById(id).orElseThrow(() -> ApiException.notFound("System account not found")); }
+    private void manageable(UserAccount account) {
+        access.tenant(account.tenantId);
+        access.organization(employees.findById(account.employeeId).orElseThrow().organizationUnitId);
+        if(access.isSuperAdmin()) return;
+        Set<Long> ids=new HashSet<>(account.additionalRoleIds);ids.add(account.basicRoleId);
+        boolean targetAdmin=roles.findAllById(ids).stream().anyMatch(r -> r.builtInAdmin);
+        if(targetAdmin) access.administrator();
+        for(var scope:account.scopes) access.requireScopeWithinAccess(scope.organizationUnitId,scope.includeDescendants||targetAdmin);
+    }
     private void assignRoles(UserAccount account,Long basic,Set<Long> additional) {
         Set<Long> all=new HashSet<>(additional==null?Set.of():additional);all.add(basic);
         for(Long id:all) {
             Role role=roles.findById(id).orElseThrow(() -> ApiException.badRequest("Unknown role: "+id));
-            if(role.systemRole||!Objects.equals(role.tenantId,account.tenantId)||!Integer.valueOf(1).equals(role.status)) throw ApiException.badRequest("Role must be active and belong to the user's instance");
+            if(role.builtInAdmin) access.administrator();
+            if((role.systemRole&&!role.builtInAdmin)||(!role.builtInAdmin&&!Objects.equals(role.tenantId,account.tenantId))||!Integer.valueOf(1).equals(role.status)) throw ApiException.badRequest("Role must be active and assignable in the user's instance");
         }
         account.basicRoleId=basic;account.additionalRoleIds.clear();all.remove(basic);account.additionalRoleIds.addAll(all);
     }
@@ -81,6 +93,7 @@ public class AccountService {
         for(var scope:scopes) {
             OrganizationUnit unit=organizations.findById(scope.organizationUnitId()).orElseThrow(() -> ApiException.badRequest("Unknown organization scope"));
             if(!Objects.equals(unit.tenantId,account.tenantId)) throw ApiException.badRequest("Organization scope belongs to another instance");
+            access.requireScopeWithinAccess(unit.id,scope.includeDescendants());
             if(!normalized.add(new OrganizationScope(unit.id,scope.includeDescendants()))) throw ApiException.badRequest("Duplicate organization scope");
         }
         account.scopes.clear();account.scopes.addAll(normalized);

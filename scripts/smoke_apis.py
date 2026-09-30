@@ -273,6 +273,32 @@ def main():
         call('Invalid temporary user role rejected', '/api/User/CreateOrUpdateExternalCollabarator',
              dict(temporary_body, roleId=9223372036854775807), expected=400)
         call('Invalid contractor geography rejected', '/api/Contractor/Add', dict(contractor_body, cityId=9223372036854775807), expected=400)
+        built_in_admin = next(r['id'] for r in roles if r.get('builtInAdmin'))
+        call('Assign built-in Admin', f'/api/SystemUser/{account["id"]}/Roles',
+             {'basicRoleId': built_in_admin}, method='PUT')
+        admin_me = call('Built-in Admin current access', '/api/Auth/Me', auth=normal_auth)
+        check('Admin is not Super Admin', admin_me['admin'] and not admin_me['superAdmin'])
+        child_body = dict(unit_dto, id=0, name=prefix + '-Child', parentId=organization, children=[])
+        call('Admin creates child organization', '/api/OrganizationUnit', child_body, auth=normal_auth)
+        admin_tree = call('Admin lists its tree', '/api/OrganizationUnit/GetAllOrganizations', auth=normal_auth)
+        child = next(c['id'] for r in admin_tree if r['id'] == organization for c in r['children'] if c['name'] == prefix + '-Child')
+        call('Admin creates grandchild organization', '/api/OrganizationUnit',
+             dict(child_body, name=prefix + '-Grandchild', parentId=child), auth=normal_auth)
+        call('Admin denied root creation', '/api/OrganizationUnit', dict(child_body, parentId=None), auth=normal_auth, expected=403)
+        call('Admin denied zero parent', '/api/OrganizationUnit', dict(child_body, parentId=0), auth=normal_auth, expected=403)
+        call('Admin denied root promotion', f'/api/OrganizationUnit/{child}',
+             dict(child_body, id=child, parentId=None), auth=normal_auth, method='PUT', expected=403)
+        call('Admin creates department in new child', '/api/Department/Create',
+             {'name': 'Child Safety', 'businessUnitId': child, 'status': 1}, auth=normal_auth)
+        admin_created_account = call('Admin activates employee account', f'/api/User/{contract_employee}/ActivateSystemUser',
+             {'username': prefix.lower() + '-delegated', 'password': 'Smoke-test-password-123', 'basicRoleId': built_in_admin,
+              'scopes': [{'organizationUnitId': organization, 'includeDescendants': True}]}, auth=normal_auth)
+        call('Admin changes account scope', f'/api/SystemUser/{admin_created_account["id"]}/Scope',
+             {'scopes': [{'organizationUnitId': child, 'includeDescendants': True}]}, method='PUT', auth=normal_auth)
+        call('Admin disables account', f'/api/SystemUser/{admin_created_account["id"]}/Enabled',
+             {'enabled': False}, method='PUT', auth=normal_auth)
+        call('Admin cannot create Super Admin role', '/api/Role/CreateRole',
+             {'name': 'Super Admin', 'landingPageId': 1, 'permissionIds': [3342]}, auth=normal_auth, expected=400)
         api = call('OpenAPI endpoint coverage', '/v3/api-docs', envelope=False)
         covered = {(c['method'].lower(), c['path']) for c in calls if c['httpStatus'] == 200}
         documented = {(method, path) for path, ops in api['paths'].items() for method in ops if method in ['get', 'post', 'put', 'patch', 'delete']}

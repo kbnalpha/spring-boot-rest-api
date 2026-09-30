@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController @RequestMapping("/api/User")
-@PreAuthorize("hasAuthority('ManageExternalCollaborators') or hasRole('SUPER_ADMIN')")
+@PreAuthorize("hasAuthority('ManageExternalCollaborators') or hasAnyRole('SUPER_ADMIN','ADMIN')")
 public class ExternalCollaboratorController {
     private final ExternalCollaboratorService service;
     public ExternalCollaboratorController(ExternalCollaboratorService service) {this.service=service;}

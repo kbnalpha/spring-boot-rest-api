@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController @RequestMapping("/api/ContractEmployee")
-@PreAuthorize("hasAuthority('ManageContractEmployees') or hasRole('SUPER_ADMIN')")
+@PreAuthorize("hasAuthority('ManageContractEmployees') or hasAnyRole('SUPER_ADMIN','ADMIN')")
 public class ContractEmployeeController {
     private final EmployeeService service;
     @PutMapping("/{id}") public ApiResponse<?> update(@PathVariable Long id,@Valid @RequestBody EmployeeDto dto) { dto.userType=2;return ApiResponse.success(service.update(id,dto)); }

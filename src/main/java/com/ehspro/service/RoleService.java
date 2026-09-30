@@ -36,7 +36,7 @@ public class RoleService {
         return repository.saveAndFlush(entity).id;
     }
     private Role validated(RoleDto dto) {
-        if(dto.systemRole || "super admin".equalsIgnoreCase(dto.name.trim())) throw ApiException.badRequest("Super Admin is a reserved system role");
+        if(dto.systemRole || Set.of("super admin","admin").contains(dto.name.trim().toLowerCase(Locale.ROOT))) throw ApiException.badRequest("Admin and Super Admin are reserved built-in roles");
         if((dto.roleOrganizationUnits!=null&&!dto.roleOrganizationUnits.isEmpty())||(dto.userRoles!=null&&!dto.userRoles.isEmpty()))
             throw ApiException.badRequest("Assign user roles and organizational scope through their separate APIs");
         lookups.require("LANDING_PAGE",dto.landingPageId);
@@ -48,7 +48,7 @@ public class RoleService {
             PermissionDefinition p=permissions.findById(id).orElseThrow(() -> ApiException.badRequest("Unknown permission: "+id));
             if(!p.businessAction || p.superAdminOnly) throw ApiException.badRequest("Permission cannot be granted to a customer role: "+p.code);
         }
-        Role entity=mapper.map(dto,Role.class); entity.tenantId=access.tenant(dto.tenantId);entity.systemRole=false;
+        Role entity=mapper.map(dto,Role.class); entity.tenantId=access.tenant(dto.tenantId);entity.systemRole=false;entity.builtInAdmin=false;
         entity.permissionIds=ids;entity.permissions=new ArrayList<>();entity.roleOrganizationUnits=new ArrayList<>();entity.userRoles=new ArrayList<>();
         if(entity.status==null) entity.status=1;
         return entity;
@@ -76,11 +76,11 @@ public class RoleService {
     }
     public List<RoleDto> list() {
         return repository.findAll(Sort.by("id")).stream()
-            .filter(r -> access.isSuperAdmin() || (!r.systemRole&&Objects.equals(r.tenantId,access.tenant(null))))
+            .filter(r -> access.isSuperAdmin() || (access.isAdmin()&&r.builtInAdmin) || (!r.systemRole&&Objects.equals(r.tenantId,access.tenant(null))))
             .map(this::response).toList();
     }
     private RoleDto response(Role role) {
-        RoleDto dto=mapper.map(role,RoleDto.class);dto.createBy=role.createdBy;
+        RoleDto dto=mapper.map(role,RoleDto.class);dto.createBy=role.createdBy;dto.builtInAdmin=role.builtInAdmin;
         dto.permissions=new ArrayList<>();
         for(PermissionDefinition p:permissions.findAll()) {
             if(!p.businessAction || (!role.systemRole&&!role.permissionIds.contains(p.id))) continue;

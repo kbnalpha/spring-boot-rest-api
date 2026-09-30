@@ -172,6 +172,60 @@ class RbacIntegrationTest {
         request("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,manager.username,password,400);
         temp.put("roleId",role).putNull("firstName");admin("POST","/api/User/CreateOrUpdateExternalCollabarator",temp,400);
     }
+    @Test void builtInAdminManagesDescendantsAndUsersButCannotCreateRootsOrSuperAdmin() throws Exception {
+        long root=organization(null,tenant),other=organization(null,tenant),foreign=organization(null,tenant+1);
+        long adminRole=0;
+        for(var r:admin("GET","/api/Role/GetAllRoles",null,200)) if(r.path("builtInAdmin").asBoolean()) adminRole=r.path("id").asLong();
+        assertThat(adminRole).isPositive();
+        var user=activate(employee(root),adminRole,List.of(scope(root,false)));
+        var me=request("GET","/api/Auth/Me",null,user.username,password,200);
+        assertThat(me.path("admin").asBoolean()).isTrue();assertThat(me.path("superAdmin").asBoolean()).isFalse();
+        ObjectNode rootBody=organizationBody(null,tenant);
+        request("POST","/api/OrganizationUnit",rootBody,user.username,password,403);
+        rootBody.putNull("parentId");request("POST","/api/OrganizationUnit",rootBody,user.username,password,403);
+        rootBody.put("parentId",0);request("POST","/api/OrganizationUnit",rootBody,user.username,password,403);
+        request("POST","/api/OrganizationUnit",organizationBody(other,tenant),user.username,password,403);
+        request("POST","/api/OrganizationUnit",organizationBody(foreign,tenant+1),user.username,password,403);
+        ObjectNode childBody=organizationBody(root,tenant);
+        request("POST","/api/OrganizationUnit",childBody,user.username,password,200);
+        long child=findUnit(request("GET","/api/OrganizationUnit/GetAllOrganizations",null,user.username,password,200),childBody.path("name").asText());
+        assertThat(child).isPositive();
+        request("POST","/api/OrganizationUnit",organizationBody(child,tenant),user.username,password,200);
+        request("POST","/api/OrganizationUnit",organizationBody(root,tenant),user.username,password,200);
+        childBody.putNull("parentId");request("PUT","/api/OrganizationUnit/"+child,childBody,user.username,password,403);
+        childBody.put("parentId",other);request("PUT","/api/OrganizationUnit/"+child,childBody,user.username,password,403);
+        childBody.put("parentId",root);request("PUT","/api/OrganizationUnit/"+child,childBody,user.username,password,200);
+        // All master controllers admit Admin, while their scoped queries still filter results.
+        for(String path:List.of("/api/Department/GetList","/api/Designation/GetList","/api/Equipment/List",
+                "/api/Location/GetAllLocations","/api/OperationActivity/list","/api/ObservationType/GetAll",
+                "/api/Contractor/GetAllContractors","/api/User/GetAllEmployees","/api/User/GetAllContractEmployees",
+                "/api/User/GetAllExternalCollabarator","/api/User/GetUsers")) request("POST",path,Map.of(),user.username,password,200);
+        request("PUT","/api/Lookup/LANGUAGE/50004",Map.of("name","Test Language","countryId",50001),user.username,password,200);
+        long custom=request("POST","/api/Role/CreateRole",Map.of("name","Child Manager","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,200).path("id").asLong();
+        ObjectNode body=employeeBody(child);body.put("hasAccess",true);
+        long employee=request("POST","/api/User/CreateEmployee",body,user.username,password,200).asLong();
+        String name="child-admin-"+UUID.randomUUID();
+        var account=request("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("username",name,"password",password,"basicRoleId",adminRole,"scopes",List.of(scope(child,true))),user.username,password,200);
+        long accountId=account.path("id").asLong();
+        request("POST","/api/OrganizationUnit",organizationBody(child,tenant),name,password,200);
+        request("POST","/api/OrganizationUnit",organizationBody(root,tenant),name,password,403);
+        request("PUT","/api/SystemUser/"+accountId+"/Scope",Map.of("scopes",List.of(scope(other,true))),user.username,password,403);
+        request("PUT","/api/SystemUser/"+accountId+"/Scope",Map.of("scopes",List.of(scope(child,true))),user.username,password,200);
+        request("PUT","/api/SystemUser/"+accountId+"/Enabled",Map.of("enabled",false),user.username,password,200);
+        request("GET","/api/Auth/Me",null,name,password,401);
+        request("PUT","/api/SystemUser/"+accountId+"/Enabled",Map.of("enabled",true),user.username,password,200);
+        request("PUT","/api/SystemUser/"+accountId+"/Roles",Map.of("basicRoleId",custom),user.username,password,200);
+        request("POST","/api/OrganizationUnit",organizationBody(child,tenant),name,password,403);
+        request("PUT","/api/SystemUser/"+accountId+"/Roles",Map.of("basicRoleId",adminRole),name,password,403);
+        request("POST","/api/Role/CreateRole",Map.of("name","Super Admin","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,400);
+        request("PUT","/api/Role/-1",Map.of("name","Super Admin","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,400);
+        request("PUT","/api/Role/"+adminRole,Map.of("name","Admin","landingPageId",1,"permissionIds",List.of(3342)),user.username,password,400);
+        request("PUT","/api/SystemUser/"+accountId+"/Roles",Map.of("basicRoleId",-1),user.username,password,400);
+        long foreignEmployee=employee(foreign);
+        request("POST","/api/User/"+foreignEmployee+"/ActivateSystemUser",Map.of("username","forbidden-user","password",password,"basicRoleId",adminRole,"scopes",List.of(scope(foreign,true))),user.username,password,403);
+        var limited=activate(employee(root),role(tenant,List.of(3274L)),List.of(scope(root,true)));
+        request("PUT","/api/SystemUser/"+limited.id+"/Roles",Map.of("basicRoleId",adminRole),limited.username,password,403);
+    }
     private ObjectNode organizationBody(Long parent,long tenantId) {
         ObjectNode node=mapper.createObjectNode();node.put("name","BU-"+UUID.randomUUID().toString().substring(0,12));node.put("tenantId",tenantId);if(parent!=null)node.put("parentId",parent);
         node.put("line1","Test address").put("country",50001).put("state",50002).put("city",50003).put("languageID",50004).put("timeZoneID",50005);

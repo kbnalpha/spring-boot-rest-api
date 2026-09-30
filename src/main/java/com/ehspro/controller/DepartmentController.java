@@ -4,7 +4,7 @@ import com.ehspro.service.DepartmentService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageDepartment') or hasRole('SUPER_ADMIN')")
+@org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageDepartment') or hasAnyRole('SUPER_ADMIN','ADMIN')")
 @RequestMapping("/api/Department")
 public class DepartmentController {
     private final DepartmentService service;

@@ -21,7 +21,12 @@ public class OrganizationUnitService {
     }
     @Transactional
     public Long create(OrganizationUnitDto dto) {
-        access.superAdmin();
+        access.administrator();
+        if(!access.isSuperAdmin()) {
+            if(dto.parentId==null||dto.parentId<=0) throw new org.springframework.security.access.AccessDeniedException("Only Super Admin can create a root organization");
+            access.organization(dto.parentId);
+            dto.tenantId=access.tenant(dto.tenantId);
+        }
         ReferenceService.creating(dto.id);
         lookups.organization(dto);
         if (dto.parentId != null && dto.parentId != 0) {
@@ -60,11 +65,20 @@ public class OrganizationUnitService {
     }
     @Transactional
     public Long update(Long id, OrganizationUnitDto dto) {
-        access.superAdmin();
+        access.administrator();access.organization(id);
         OrganizationUnit old=repository.findById(id).orElseThrow(() -> ApiException.notFound("Organization not found"));
         if(dto.tenantId!=null&&!Objects.equals(dto.tenantId,old.tenantId)) throw ApiException.badRequest("Organization instance cannot be changed");
         dto.tenantId=old.tenantId;
         if(dto.parentId!=null&&dto.parentId==0) dto.parentId=null;
+        if(!access.isSuperAdmin()) {
+            access.tenant(old.tenantId);
+            if(!Objects.equals(old.parentId,dto.parentId)) {
+                if(dto.parentId==null) throw new org.springframework.security.access.AccessDeniedException("Only Super Admin can promote an organization to a root");
+                // Scope anchors cannot be moved: that could move another account's whole tree.
+                if(old.parentId==null) throw new org.springframework.security.access.AccessDeniedException("Only Super Admin can reparent a root organization");
+                access.organization(dto.parentId);
+            }
+        }
         Set<Long> visited=new HashSet<>(Set.of(id));
         Long parentId=dto.parentId;
         while(parentId!=null) {

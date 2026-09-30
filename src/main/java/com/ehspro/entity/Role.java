@@ -10,6 +10,7 @@ import com.ehspro.persistence.JsonConverters;
 public class Role extends BaseEntity {
     public Long tenantId = 1L;
     public boolean systemRole;
+    public boolean builtInAdmin;
     @ElementCollection
     @CollectionTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id"))
     @Column(name = "permission_id") public Set<Long> permissionIds = new HashSet<>();

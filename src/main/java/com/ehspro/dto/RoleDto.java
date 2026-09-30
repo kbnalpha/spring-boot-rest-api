@@ -9,6 +9,8 @@ import com.ehspro.model.*;
 public class RoleDto extends BaseDto {
     @Positive public Long tenantId;
     public boolean systemRole;
+    @com.fasterxml.jackson.annotation.JsonProperty(access=com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY)
+    public boolean builtInAdmin;
     public Set<@NotNull @Positive Long> permissionIds = new HashSet<>();
     @NotBlank @Size(max = 2000) public String name;
     @Size(max = 2000) public String displayName;

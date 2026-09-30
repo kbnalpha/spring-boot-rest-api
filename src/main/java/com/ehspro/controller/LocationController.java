@@ -4,7 +4,7 @@ import com.ehspro.service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageLocations') or hasRole('SUPER_ADMIN')")
+@org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageLocations') or hasAnyRole('SUPER_ADMIN','ADMIN')")
 @RequestMapping("/api/Location")
 public class LocationController {
     private final LocationService service;

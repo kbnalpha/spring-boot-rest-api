@@ -34,12 +34,12 @@ Organization descriptions and address lines use `TEXT` to keep the utf8mb4 table
 For example, if a future feature adds a nullable `code` field to Location:
 
 1. Add the entity field and any DTO/service changes.
-2. Create `src/main/resources/db/changelog/changes/007-location-code.sql` (003 through 006 implement the workbook, RBAC, and complete master contracts):
+2. Create `src/main/resources/db/changelog/changes/008-location-code.sql` (003 through 007 implement the workbook, RBAC, and complete master contracts):
 
 ```sql
 --liquibase formatted sql
 
---changeset ehspro:007-location-code dbms:mysql,h2
+--changeset ehspro:008-location-code dbms:mysql,h2
 ALTER TABLE location ADD COLUMN code VARCHAR(50) NULL;
 --rollback ALTER TABLE location DROP COLUMN code;
 ```
@@ -48,7 +48,7 @@ ALTER TABLE location ADD COLUMN code VARCHAR(50) NULL;
 
 ```yaml
   - include:
-      file: changes/007-location-code.sql
+      file: changes/008-location-code.sql
       relativeToChangelogFile: true
 ```
 
@@ -69,7 +69,7 @@ SELECT ID, LOCKED, LOCKGRANTED, LOCKEDBY
 FROM DATABASECHANGELOGLOCK;
 ```
 
-The original baseline records 20 changesets: 12 tables and 8 indexes. The master-field/RBAC additions bring the total to 37 changesets and 24 tables, including Liquibase's two tables. See [the master/RBAC guide](master-fields-rbac.md) for the new schema. Later startups validate checksums and skip changesets already applied. History tracks migration execution, not row edits or arbitrary manual DDL. Hibernate validation catches missing/incompatible mapped columns but is not a complete database drift audit.
+The original baseline records 20 changesets: 12 tables and 8 indexes. The master-field/RBAC additions bring the total to 38 changesets and 24 tables, including Liquibase's two tables. See [the master/RBAC guide](master-fields-rbac.md) for the new schema. Later startups validate checksums and skip changesets already applied. History tracks migration execution, not row edits or arbitrary manual DDL. Hibernate validation catches missing/incompatible mapped columns but is not a complete database drift audit.
 
 Some earlier migrations supply rollback SQL; migration 005 is forward-only. Use reviewed compensating migrations for later changes. Table rollback removes data; normal application startup only migrates forward and never executes rollback. MySQL DDL commits implicitly, so failed multi-step DDL cannot be assumed to roll back transactionally. Each initial changeset creates one table, and each index changeset creates one index to limit partial execution.
 

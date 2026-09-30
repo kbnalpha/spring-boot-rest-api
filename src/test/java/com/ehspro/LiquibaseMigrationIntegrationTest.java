@@ -18,7 +18,7 @@ class LiquibaseMigrationIntegrationTest {
     @Test
     void schemaChangesAreRecordedAndSecondUpdateDoesNotReapplyThem() throws Exception {
         var before = jdbc.queryForList("SELECT ID, AUTHOR, FILENAME, MD5SUM, DATEEXECUTED, ORDEREXECUTED FROM DATABASECHANGELOG ORDER BY ORDEREXECUTED");
-        assertThat(before).hasSize(37);
+        assertThat(before).hasSize(38);
         assertThat(before).allSatisfy(row -> assertThat(row.get("MD5SUM")).isNotNull());
         liquibase.afterPropertiesSet();
         var after = jdbc.queryForList("SELECT ID, AUTHOR, FILENAME, MD5SUM, DATEEXECUTED, ORDEREXECUTED FROM DATABASECHANGELOG ORDER BY ORDEREXECUTED");

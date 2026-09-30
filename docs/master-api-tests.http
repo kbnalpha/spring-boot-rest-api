@@ -501,6 +501,7 @@ Authorization: Basic {{username}} {{password}}
 
 > {%
     client.test("HTTP 200", function () { client.assert(response.status === 200); });
+    client.global.set("adminRoleId", response.body.results.find(x => x.builtInAdmin).id);
 %}
 
 ### List operation activities
@@ -810,6 +811,84 @@ Content-Type: application/json
 ### Super Admin current access
 GET {{baseUrl}}/api/Auth/Me
 Authorization: Basic {{username}} {{password}}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Assign built-in Admin
+PUT {{baseUrl}}/api/SystemUser/{{accountId}}/Roles
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "basicRoleId": {{adminRoleId}}
+}
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Built-in Admin current access
+GET {{baseUrl}}/api/Auth/Me
+Authorization: Basic {{runName}} Example-password-123
+
+> {%
+    client.test("HTTP 200", function () { client.assert(response.status === 200); });
+%}
+
+### Admin creates child organization
+POST {{baseUrl}}/api/OrganizationUnit
+Authorization: Basic {{runName}} Example-password-123
+Content-Type: application/json
+
+{
+  "id": 0,
+  "createdBy": null,
+  "createdDate": "2026-09-30T07:41:05.393948",
+  "modifiedBy": null,
+  "modifiedDate": null,
+  "layoutImageUrl": null,
+  "latitude": null,
+  "longitude": null,
+  "name": "{{runName}}-Child",
+  "description": "Live HTTP verification",
+  "tenantId": 1,
+  "parentId": {{organizationId}},
+  "status": 1,
+  "currency": "TST",
+  "line1": "Test address",
+  "line2": "",
+  "city": 900003,
+  "state": 900002,
+  "country": 900001,
+  "countryCode": "99",
+  "symbol": "T",
+  "timeZone": "UTC",
+  "timeZoneId": 900005,
+  "languageId": 900004,
+  "keyContactName": "Smoke Test",
+  "phoneNumber": "9000000000",
+  "emailAddress": "smoke@example.com",
+  "isAnonymous": true,
+  "isObservationProofRequired": true,
+  "attachments": null,
+  "shifts": [
+    {
+      "name": "Night",
+      "startTime": "22:00",
+      "endTime": "06:00"
+    }
+  ],
+  "buImage": null,
+  "cityName": "Smoke Test City",
+  "stateName": "Smoke Test State",
+  "countryName": "Smoke Test Country",
+  "timeZoneName": "Smoke UTC",
+  "languageName": "Smoke Test Language",
+  "shiftMaster": null,
+  "children": []
+}
 
 > {%
     client.test("HTTP 200", function () { client.assert(response.status === 200); });

@@ -33,7 +33,8 @@ public class ExternalCollaboratorService {
         }
         var unit=references.organization(dto.organizationUnitId);
         var role=roles.findById(dto.roleId).orElseThrow(() -> ApiException.badRequest("Unknown role"));
-        if(role.systemRole||!Objects.equals(role.tenantId,unit.tenantId)||!Integer.valueOf(1).equals(role.status)) throw ApiException.badRequest("Role must be active and belong to this instance");
+        if(role.builtInAdmin) access.administrator();
+        if((role.systemRole&&!role.builtInAdmin)||(!role.builtInAdmin&&!Objects.equals(role.tenantId,unit.tenantId))||!Integer.valueOf(1).equals(role.status)) throw ApiException.badRequest("Role must be active and assignable in this instance");
         if(old==null||!Objects.equals(old.roleId,dto.roleId)) access.require("ManageRoleUsers");
         if(dto.country!=null) lookups.require("COUNTRY",dto.country);
         if(dto.externalDetails!=null) {

@@ -39,7 +39,7 @@ public class EmployeeService {
         references.organization(old.organizationUnitId);
         access.require(Integer.valueOf(2).equals(old.userType) ? "ManageContractEmployees" : "ManageEmployees");
         if(!Objects.equals(old.organizationUnitId,dto.organizationUnitId)) throw ApiException.badRequest("Employee cannot be moved between organizations");
-        if(!Objects.equals(old.hasAccess,dto.hasAccess)) access.superAdmin();
+        if(!Objects.equals(old.hasAccess,dto.hasAccess)) access.administrator();
         Employee entity=validated(dto, old);entity.id=id;entity.createdBy=old.createdBy;entity.createdDate=old.createdDate;
         entity.modifiedDate=java.time.LocalDateTime.now();
         return repository.saveAndFlush(entity).id;
@@ -58,7 +58,7 @@ public class EmployeeService {
             if(!contractor.businessUnitId.equals(dto.organizationUnitId)) throw ApiException.badRequest("Contractor belongs to another organization");
         }
                 boolean rolesSupplied=dto.userRoleIds!=null&&!dto.userRoleIds.isEmpty();
-        if(old==null && (Boolean.TRUE.equals(dto.hasAccess)||rolesSupplied)) access.superAdmin();
+        if(old==null && (Boolean.TRUE.equals(dto.hasAccess)||rolesSupplied)) access.administrator();
         if(old!=null && !Objects.equals(old.userRoleIds,dto.userRoleIds)) throw ApiException.badRequest("Change system user roles through the dedicated Roles API");
         references.checkDepartment(dto.department, dto.organizationUnitId);
         references.checkDesignation(dto.designation, dto.organizationUnitId);
@@ -80,7 +80,8 @@ public class EmployeeService {
         if (entity.userRoleIds == null) entity.userRoleIds = new ArrayList<>();
                 entity.userRoleIds.forEach(id -> {
             var role=roles.findById(id).orElseThrow(() -> ApiException.badRequest("Role not found"));
-            if(role.systemRole||!Objects.equals(role.tenantId,unit.tenantId)) throw ApiException.badRequest("Role is not assignable in this instance");
+            if(role.builtInAdmin) access.administrator();
+            if((role.systemRole&&!role.builtInAdmin)||(!role.builtInAdmin&&!Objects.equals(role.tenantId,unit.tenantId))) throw ApiException.badRequest("Role is not assignable in this instance");
         });
         return entity;
     }

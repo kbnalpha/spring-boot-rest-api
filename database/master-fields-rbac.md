@@ -24,9 +24,9 @@ Every profile now requires authentication, including local H2. HTTP Basic uses B
 
 Customer roles contain predefined business permissions. A user's required basic role plus optional additional roles determine their available actions. Independently, `account_organization_scope` determines their allowed organizational units. Each scope can include descendants, and additional units can be assigned explicitly. Expansion stays within the user's instance. Disabling an account, disabling its employee, changing its roles, or changing its scope takes effect on the next authenticated request.
 
-`ManageRoles` and `ManageRoleUsers` are selectable permissions for customer administrators. `ManageBusinessUnits` remains Super Admin-only and disabled for selection; the system Super Admin role is immutable and cannot be assigned through application APIs.
+`ManageRoles` and `ManageRoleUsers` are selectable permissions for customer administrators. `ManageBusinessUnits` remains disabled for custom-role selection; built-in Admin manages child organizations through its protected authority; the system Super Admin role is immutable and cannot be assigned through application APIs.
 
-A customer admin with `CreateRole` can create roles; `ManageRoles` allows editing roles in the same tenant, and `ManageRoleUsers` allows assigning roles to users in that tenant and within the admin's organizational scope. Only Super Admin can assign scopes or activate/deactivate system accounts. `ViewRoles` grants instance-limited role listing. No predefined customer role named Admin is required. There are no individual permission overrides; the document leaves those for later review, so additional access is granted through additional roles.
+A customer admin with `CreateRole` can create roles; `ManageRoles` allows editing roles in the same tenant, and `ManageRoleUsers` allows assigning roles to users in that tenant and within the admin's organizational scope. Built-in Admin can assign scopes and activate/deactivate accounts within its own tree; Super Admin can do so across instances. `ViewRoles` grants instance-limited role listing. Migration 007 seeds a protected global Admin role identified by `builtInAdmin: true`; ordinary roles named Admin from older databases are not automatically promoted. There are no individual permission overrides; the document leaves those for later review, so additional access is granted through additional roles.
 
 Setup actions have business permissions such as `ManageDepartment`, `ManageEmployees`, and `ManageLocations`. Reads are scoped in the database before pagination/counting. Writes validate both the existing record's organization and the submitted organization. Existing master records cannot be moved into another organization through PUT. A request's `userId` or employee membership fields never establish security scope.
 
@@ -42,7 +42,7 @@ Applied migrations 001 and 002 remain unchanged. New migrations are:
 
 Legacy JSON role and employee membership columns remain for compatibility. Authorization reads only the new validated relational grants and account scopes. Existing roles' unverified JSON permissions do not automatically become authorization grants; review/save those roles and explicitly activate accounts. Existing employee `hasAccess` alone does not create credentials or bypass activation.
 
-After these migrations there are 22 application tables and 2 Liquibase history/lock tables, with 37 recorded changesets.
+After these migrations there are 22 application tables and 2 Liquibase history/lock tables, with 38 recorded changesets.
 
 ## Reference dropdowns
 
@@ -103,8 +103,8 @@ Use the actual generated IDs. Passwords require 12–72 characters and at most 7
 | `GET /api/Permission/GetAll` | Predefined module/action catalog and selection flags |
 | `PUT /api/Role/{id}` | Admin with ManageRoles or Super Admin edits a customer role |
 | `PUT /api/SystemUser/{id}/Roles` | Admin with ManageRoleUsers or Super Admin sets basic/additional roles |
-| `PUT /api/SystemUser/{id}/Scope` | Super Admin replaces explicit organization scopes |
-| `PUT /api/SystemUser/{id}/Enabled` | Super Admin enables/disables an account |
+| `PUT /api/SystemUser/{id}/Scope` | Admin within its tree or Super Admin replaces organization scopes |
+| `PUT /api/SystemUser/{id}/Enabled` | Admin within its tree or Super Admin enables/disables an account |
 | `POST /api/ContractEmployee/Create` | Create an employee of type contract |
 | `POST /api/ContractEmployee/GetList` | Scoped contract-employee list |
 | `PUT /api/ContractEmployee/{id}` | Edit a contract employee |
@@ -121,3 +121,5 @@ The existing 19 endpoint paths remain. PUT endpoints are also available at `/api
 The complete master API payloads and ordered executable test data are in [API test payloads](../docs/api-test-payloads.md) and [master-api-tests.http](../docs/master-api-tests.http). Temporary users are separate master records; their source `hasAccess` field does not create a login account.
 
 Permission catalogs expose `sourceAliases` for the document's IDs/names. Use returned canonical `id` values in `permissionIds`. Legacy `permissionLookupHierarchyDto` entries resolve using their source ID and name, because several source IDs collide with existing canonical IDs. Migration 006 retains both definitions without reinterpreting existing grants. All listed source business actions can be selected except reserved organization administration; definitions for modules without supplied workflow APIs do not invent those APIs.
+
+Migration `007-built-in-admin.sql` adds `role.built_in_admin` and seeds the Admin role. Its authentication authority is `ROLE_ADMIN`, never `ROLE_SUPER_ADMIN`. Admin scopes always include descendants, even if the stored includeDescendants flag is false. Admin cannot create root organizations using null, omitted, or zero parent IDs, promote children to roots, or assign/create/edit Super Admin. See [setup examples](../docs/admin-role.md).

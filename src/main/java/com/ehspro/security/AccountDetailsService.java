@@ -33,11 +33,16 @@ public class AccountDetailsService implements UserDetailsService {
         Employee employee=employees.findById(account.employeeId).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
         Set<Long> roleIds=new HashSet<>(account.additionalRoleIds); roleIds.add(account.basicRoleId);
         Set<Long> permissionIds=new HashSet<>();
+        boolean admin=false;
         for (Role role:roles.findAllById(roleIds)) {
+            if(role.systemRole&&role.builtInAdmin&&Integer.valueOf(1).equals(role.status)) admin=true;
             if (!role.systemRole && Objects.equals(role.tenantId,account.tenantId) && Integer.valueOf(1).equals(role.status)) permissionIds.addAll(role.permissionIds);
         }
-        var authorities=permissions.findAllById(permissionIds).stream().filter(p -> p.businessAction && !p.superAdminOnly)
-            .map(p -> new SimpleGrantedAuthority(p.code)).toList();
+        var authorities=new ArrayList<SimpleGrantedAuthority>();
+        if(admin) authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        for(var permission:admin?permissions.findAll():permissions.findAllById(permissionIds)) {
+            if(permission.businessAction&&(admin||!permission.superAdminOnly)) authorities.add(new SimpleGrantedAuthority(permission.code));
+        }
         boolean active=account.enabled && Integer.valueOf(1).equals(employee.status) && Boolean.TRUE.equals(employee.hasAccess);
         return new EhsPrincipal(username,account.passwordHash,active,account.id,account.tenantId,authorities);
     }

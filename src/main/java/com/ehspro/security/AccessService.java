@@ -17,6 +17,11 @@ public class AccessService {
         return auth!=null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"));
     }
     public void superAdmin() { if (!isSuperAdmin()) throw new AccessDeniedException("Only Super Admin can perform this action"); }
+    public boolean isAdmin() {
+        var auth=SecurityContextHolder.getContext().getAuthentication();
+        return auth!=null&&auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+    public void administrator() { if(!isSuperAdmin()&&!isAdmin()) throw new AccessDeniedException("Admin or Super Admin is required"); }
     public EhsPrincipal principal() {
         var auth=SecurityContextHolder.getContext().getAuthentication();
         if (auth==null || !(auth.getPrincipal() instanceof EhsPrincipal p)) throw new AccessDeniedException("Authenticated system account required");
@@ -30,7 +35,7 @@ public class AccessService {
     }
     public boolean hasPermission(String code) {
         var auth=SecurityContextHolder.getContext().getAuthentication();
-        return isSuperAdmin() || (auth!=null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(code)));
+        return isSuperAdmin() || isAdmin() || (auth!=null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(code)));
     }
     public void require(String code) { if (!hasPermission(code)) throw new AccessDeniedException("Permission required: "+code); }
     @Transactional(readOnly=true)
@@ -44,7 +49,7 @@ public class AccessService {
         for (OrganizationScope scope:account.scopes) {
             if (!eligible.containsKey(scope.organizationUnitId)) continue;
             result.add(scope.organizationUnitId);
-            if (scope.includeDescendants) {
+            if (scope.includeDescendants || isAdmin()) {
                 Set<Long> descendants=new HashSet<>(Set.of(scope.organizationUnitId));
                 boolean changed;
                 do { changed=false; for (OrganizationUnit unit:eligible.values()) {
@@ -57,5 +62,18 @@ public class AccessService {
     }
     public void organization(Long id) {
         if (!isSuperAdmin() && !organizationIds().contains(id)) throw new AccessDeniedException("Organization is outside your assigned scope");
+    }
+    @Transactional(readOnly=true)
+    public void requireScopeWithinAccess(Long id,boolean descendants) {
+        if(isSuperAdmin()) return;
+        Set<Long> requested=new HashSet<>(Set.of(id));
+        if(descendants) {
+            var units=organizations.findAll();boolean changed;
+            do {changed=false;for(var unit:units) {
+                if(Objects.equals(unit.tenantId,principal().tenantId)&&Integer.valueOf(1).equals(unit.status)
+                        &&requested.contains(unit.parentId)&&requested.add(unit.id)) changed=true;
+            }} while(changed);
+        }
+        if(!organizationIds().containsAll(requested)) throw new AccessDeniedException("Cannot grant scope outside your organization tree");
     }
 }

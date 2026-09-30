@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 @RestController @RequestMapping("/api/Contractor")
-@PreAuthorize("hasAuthority('ManageContractors') or hasRole('SUPER_ADMIN')")
+@PreAuthorize("hasAuthority('ManageContractors') or hasAnyRole('SUPER_ADMIN','ADMIN')")
 public class ContractorController {
     private final ContractorService service;
     public ContractorController(ContractorService service) { this.service=service; }

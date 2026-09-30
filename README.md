@@ -43,8 +43,9 @@ mvn spring-boot:run
 - `changes/002-list-query-indexes.sql` adds eight indexes as a separate migration.
 - `changes/003-master-fields-rbac.sql` aligns master fields and adds reference data, contractors, accounts, role grants, and scopes.
 - `changes/004-permission-catalog.sql` seeds business permissions and the immutable system Super Admin role. Migration 005 extends this catalog for delegated role administration.
-- `changes/005-complete-master-contract.sql` adds contractor contact/address fields, temporary users and memberships, and selectable admin permissions. The final schema has 22 application tables plus 2 Liquibase tables, with 37 changesets.
+- `changes/005-complete-master-contract.sql` adds contractor contact/address fields, temporary users and memberships, and selectable admin permissions. The final schema has 22 application tables plus 2 Liquibase tables, with 38 changesets.
 - `changes/006-source-permission-catalog.sql` adds all source permission definitions and maps 129 source IDs/names to canonical permissions without changing existing grants.
+- `changes/007-built-in-admin.sql` adds the protected built-in Admin role. Admin receives all actions within its assigned organization tree, including future descendants; root creation remains Super Admin-only.
 - `DATABASECHANGELOG` stores each applied changeset's ID, author, filename, execution time, order, and checksum. `DATABASECHANGELOGLOCK` prevents concurrent migration runs.
 - `spring.jpa.hibernate.ddl-auto=validate` and `spring.sql.init.mode=never` leave schema writes to Liquibase. Do not switch Hibernate to `update`.
 
@@ -141,8 +142,10 @@ The script calls every OpenAPI operation, checks expected success/error response
 
 ## Dynamic roles and temporary users
 
-Admins select `permissionIds` from `GET /api/Permission/GetAll`. Grant `CreateRole` (3302) to create roles, `ManageRoles` (3272) to edit roles, and `ManageRoleUsers` (3274) to assign basic/additional roles to system users. The admin role can have any name. Role definitions stay within the admin's tenant; user assignment also checks the target employee's organizational scope. Super Admin can perform all these actions. Scope assignment and account activation remain separate Super Admin operations.
+Admins select `permissionIds` from `GET /api/Permission/GetAll`. Grant `CreateRole` (3302) to create roles, `ManageRoles` (3272) to edit roles, and `ManageRoleUsers` (3274) to assign basic/additional roles to system users. Custom roles can have any non-reserved name; Admin and Super Admin are protected built-in roles. Role definitions stay within the admin's tenant; user assignment also checks the target employee's organizational scope. Super Admin can perform all these actions. The built-in Admin can also activate/deactivate accounts and assign scope within its own tree; Super Admin can do so across instances.
 
 Temporary users require `ManageExternalCollaborators` (3357); creation or a role change additionally requires `ManageRoleUsers`. Their `roleId` must refer to an active, non-system role in the same tenant. `externalDetails` company/designation/status are persisted and returned. `hasAccess` is source metadata: temporary-user creation does not provision credentials or bypass the employee-backed account activation model. Passwords are always returned as null.
 
 The exact source spelling `Collabarator` is preserved in routes. Existing `/api/Contractor/Create`, `/api/Contractor/GetList`, and `/api/ContractEmployee/*` endpoints remain available. Contractor `name` remains a compatible alias for `contractorName`; conflicting names are rejected. Geography IDs must exist and agree. Source IDs and display values are examples; generated IDs and persisted values are returned.
+
+See [Admin setup and child-organization examples](docs/admin-role.md) for assigning the built-in Admin role.

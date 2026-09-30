@@ -12,7 +12,7 @@ public class LookupController {
     public ApiResponse<?> list(@PathVariable String kind,@RequestParam(required=false) Long countryId,@RequestParam(required=false) Long stateId) {
         return ApiResponse.success(service.list(kind.toUpperCase(),countryId,stateId));
     }
-    @PutMapping("/{kind}/{id}") @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PutMapping("/{kind}/{id}") @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ApiResponse<?> save(@PathVariable String kind,@PathVariable Long id,@Valid @RequestBody ReferenceItemDto dto) {
         return ApiResponse.success(service.save(kind.toUpperCase(),id,dto));
     }

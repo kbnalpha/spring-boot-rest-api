@@ -12,7 +12,7 @@ selected=[
     'List operation activities','List observation types','List equipment','List designations','List departments',
     'Document contractor create','Document contractor list','Document contract employee create','Document contract employee list',
     'Predefined permission catalog','Document temporary user create','Document temporary user list','Update temporary user',
-    'Super Admin current access',
+    'Super Admin current access','Assign built-in Admin','Built-in Admin current access','Admin creates child organization',
 ]
 prefix=report['recordPrefix']
 identifiers={
@@ -23,6 +23,8 @@ identifiers={
     'employeeId':calls['Create employee']['response']['results'],
     'contractorId':calls['Document contractor list']['response']['results']['items'][0]['id'],
     'temporaryId':calls['Document temporary user create']['response']['results'],
+    'accountId':calls['Activate employee as system user']['response']['results']['id'],
+    'adminRoleId':next(r['id'] for r in calls['List roles']['response']['results'] if r.get('builtInAdmin')),
 }
 field_vars={'organizationUnitId':'organizationId','businessUnitId':'organizationId','department':'departmentId',
     'designation':'designationId','contractorId':'contractorId','roleId':'roleId','basicRoleId':'roleId',
@@ -53,13 +55,17 @@ capture={'Create department':('departmentId','response.body.results.id'),
 for i,label in enumerate(selected):
     c=calls[label];path=c['path']
     if label=='Activate employee as system user':path='/api/User/{{employeeId}}/ActivateSystemUser'
+    if label=='Assign built-in Admin':path='/api/SystemUser/{{accountId}}/Roles'
     body=transform(c['request'])
     if label=='Update temporary user':body['id']='{{temporaryId}}'
     # Use the earlier observer role; no dependency on smoke-only admin test roles.
     if label=='Document temporary user create':body['roleId']='{{roleId}}'
+    if label=='Assign built-in Admin':body['basicRoleId']='{{adminRoleId}}'
+    if label=='Admin creates child organization':body['parentId']='{{organizationId}}'
     lines.extend(['### '+label])
     if i==0:lines.extend(['< {%','    client.global.set("runName", "EHS-TEST-" + Date.now());','%}'])
-    lines.extend([c['method']+' {{baseUrl}}'+path,'Authorization: Basic {{username}} {{password}}'])
+    auth='Authorization: Basic {{runName}} Example-password-123' if label in ['Built-in Admin current access','Admin creates child organization'] else 'Authorization: Basic {{username}} {{password}}'
+    lines.extend([c['method']+' {{baseUrl}}'+path,auth])
     if body is not None:
         text=json.dumps(body,indent=2,ensure_ascii=False)
         # Numeric ID variables must not be quoted; runName/businessUnitIds remain strings.
@@ -70,6 +76,7 @@ for i,label in enumerate(selected):
     lines.extend(['','> {%','    client.test("HTTP 200", function () { client.assert(response.status === 200); });'])
     if label=='List organizations':lines.append('    client.global.set("organizationId", response.body.results.find(x => x.name === client.global.get("runName")).id);')
     if label=='Document contractor list':lines.append('    client.global.set("contractorId", response.body.results.items[0].id);')
+    if label=='List roles':lines.append('    client.global.set("adminRoleId", response.body.results.find(x => x.builtInAdmin).id);')
     if label in capture:
         name,expr=capture[label];lines.append(f'    client.global.set("{name}", {expr});')
     lines.extend(['%}',''])
@@ -79,6 +86,7 @@ Path('docs/master-api-tests.http').write_text('\n'.join(lines),encoding='utf-8')
 # Every operation (including backward-compatible aliases and updates) has a concrete example.
 seen=set();md=['# API URLs and sample payloads','',
     'Run the ordered [IntelliJ HTTP collection](master-api-tests.http) to create fresh sample data and capture IDs automatically.',
+    'For the built-in Admin role, account activation, and child-organization restrictions, see [Admin setup](admin-role.md). The HTTP collection also assigns Admin and creates a child using that account.',
     'The examples below are successful requests from the MySQL verification run. Replace IDs with your own records when testing separately; use unique employee numbers and equipment UIDs for new records.',
     'Base URL: `http://127.0.0.1:8080`. HTTP Basic: `ehs-api` / `ehs-api-local` (or your configured API credentials).',
     'Responses use `{statusCode,message,results}`. All operations below expect HTTP 200. Account password examples are synthetic.', '']

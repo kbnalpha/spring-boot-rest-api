@@ -4,7 +4,7 @@ import com.ehspro.service.OperationActivityService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageOperationalActivities') or hasRole('SUPER_ADMIN')")
+@org.springframework.security.access.prepost.PreAuthorize("hasAuthority('ManageOperationalActivities') or hasAnyRole('SUPER_ADMIN','ADMIN')")
 @RequestMapping("/api/OperationActivity")
 public class OperationActivityController {
     private final OperationActivityService service;
