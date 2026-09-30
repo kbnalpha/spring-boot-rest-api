@@ -35,7 +35,7 @@ public class ApiExceptionHandler {
     }
     @ExceptionHandler({HttpMessageNotReadableException.class, ConstraintViolationException.class})
     public ResponseEntity<ApiResponse<Void>> malformed(Exception e) { return error(HttpStatus.BAD_REQUEST, "Invalid request body or field value"); }
-    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ExceptionHandler({DataIntegrityViolationException.class, org.hibernate.exception.ConstraintViolationException.class})
     public ResponseEntity<ApiResponse<Void>> conflict(Exception e) { return error(HttpStatus.CONFLICT, "A duplicate record or invalid reference was supplied"); }
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiResponse<Void>> missing(Exception e) { return error(HttpStatus.NOT_FOUND, "Endpoint not found"); }

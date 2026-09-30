@@ -1,0 +1,63 @@
+# Run individually against disposable test records, not as a full collection.
+# All DELETE requests require Admin/Super Admin; Admin is limited to assigned scope.
+# Replace REPLACE_WITH_UNUSED_TEST_ID before executing a request.
+@baseUrl = http://127.0.0.1:8080
+@username = ehs-api
+@password = REPLACE_WITH_API_PASSWORD
+@recordId = REPLACE_WITH_UNUSED_TEST_ID
+
+### Delete OrganizationUnit (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/OrganizationUnit/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete Department (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/Department/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete Designation (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/Designation/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete Location (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/Location/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete OperationActivity (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/OperationActivity/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete ObservationType (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/ObservationType/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete Equipment (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/Equipment/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete Contractor (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/Contractor/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete Role (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/Role/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete User (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/User/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete ContractEmployee (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/ContractEmployee/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete ExternalCollaborator (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/ExternalCollaborator/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete SystemUser (permanent; dependencies return 409)
+DELETE {{baseUrl}}/api/SystemUser/{{recordId}}
+Authorization: Basic {{username}} {{password}}
+
+### Delete an unused lookup (replace kind and ID)
+DELETE {{baseUrl}}/api/Lookup/LANGUAGE/{{recordId}}
+Authorization: Basic {{username}} {{password}}

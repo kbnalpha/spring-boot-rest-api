@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class ExternalCollaboratorController {
     private final ExternalCollaboratorService service;
     public ExternalCollaboratorController(ExternalCollaboratorService service) {this.service=service;}
+    @PutMapping("/ExternalCollaborator/{id}")
+    public ApiResponse<?> update(@PathVariable Long id,@Valid @RequestBody ExternalCollaboratorDto dto) {
+        if(id<=0) throw com.ehspro.exception.ApiException.badRequest("ID must be positive");
+        dto.id=id;return ApiResponse.success(service.save(dto));
+    }
     // Preserve the spelling in the supplied contract.
     @PostMapping("/GetAllExternalCollabarator")
     public ApiResponse<?> list(@Valid @RequestBody ListRequest request) {return ApiResponse.success(service.list(request));}

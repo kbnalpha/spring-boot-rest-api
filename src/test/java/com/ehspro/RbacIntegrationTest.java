@@ -290,6 +290,46 @@ class RbacIntegrationTest {
         assertThat(login(email,password,200).path("mustChangePassword").asBoolean()).isFalse();
         assertThat(login(superUser,superPassword,200).path("accountType").asText()).isEqualTo("SUPER_ADMIN");
     }
+    @Test void elevatedDeletesEnforceScopeDependenciesAndRevokeLogin() throws Exception {
+        long unit=organization(null,tenant),other=organization(null,tenant),child=organization(unit,tenant);
+        long adminRole=0;
+        for(var r:admin("GET","/api/Role/GetAllRoles",null,200)) if(r.path("builtInAdmin").asBoolean()) adminRole=r.path("id").asLong();
+        var manager=activate(employee(unit),adminRole,List.of(scope(unit,true)));
+        long unusedDepartment=department(child),foreignDepartment=department(other);
+        request("DELETE","/api/Department/"+foreignDepartment,null,manager.username,password,403);
+        request("DELETE","/api/Department/"+unusedDepartment,null,manager.username,password,200);
+        request("DELETE","/api/Department/"+unusedDepartment,null,manager.username,password,404);
+        request("DELETE","/api/Department/"+department(unit),null,manager.username,password,409);
+        long role=role(tenant,List.of(3342L)),person=employee(unit);
+        var user=activate(person,role,List.of(scope(unit,false)));
+        request("DELETE","/api/Department/"+foreignDepartment,null,user.username,password,403);
+        admin("DELETE","/api/User/"+person,null,409);
+        admin("DELETE","/api/Role/"+role,null,409);
+        request("DELETE","/api/SystemUser/"+user.id,null,manager.username,password,200);
+        assertThat(employees.findById(person).orElseThrow().hasAccess).isFalse();
+        login(user.username,password,401);
+        request("DELETE","/api/User/"+person,null,manager.username,password,200);
+        request("DELETE","/api/Role/"+role,null,manager.username,password,200);
+        admin("DELETE","/api/Role/"+adminRole,null,409);
+        admin("DELETE","/api/OrganizationUnit/"+unit,null,409);
+        admin("DELETE","/api/Lookup/COUNTRY/50001",null,409);
+        admin("DELETE","/api/Lookup/LANGUAGE/50004",null,409);
+        admin("DELETE","/api/OrganizationUnit/"+child,null,200);
+    }
+    @Test void locationDeleteRemovesOwnedChildrenAndLookupDeleteChecksTranslations() throws Exception {
+        long unit=organization(null,tenant);
+        long language=tenant;
+        admin("PUT","/api/Lookup/LANGUAGE/"+language,Map.of("name","Disposable language"),200);
+        long location=admin("POST","/api/Location/add",Map.of("name","Workshop","organizationUnitId",unit,"status",1,
+            "newSublocations",List.of(Map.of("name","Bay 1","status",1)),
+            "translations",List.of(Map.of("languageId",language,"name","Workshop"))),200).asLong();
+        admin("DELETE","/api/Lookup/LANGUAGE/"+language,null,409);
+        admin("PUT","/api/Location/"+location,Map.of("name","Renamed workshop","organizationUnitId",unit,"status",1,
+            "newSublocations",List.of(Map.of("name","Bay 2","status",1))),200);
+        admin("DELETE","/api/Location/"+location,null,200);
+        admin("DELETE","/api/Lookup/LANGUAGE/"+language,null,200);
+        admin("DELETE","/api/OrganizationUnit/"+unit,null,200);
+    }
     private JsonNode login(String username,String secret,int expected) throws Exception {
         var response=mvc.perform(post("/api/Auth/Login").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))
             .andExpect(status().is(expected)).andReturn();

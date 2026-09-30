@@ -1220,3 +1220,148 @@ Expected `results`: `6`.
 `POST http://127.0.0.1:8080/api/SystemUser/9/ResendActivation`
 
 No payload.
+# Starter organization, employee, and system user (seeded India data)
+
+For update/delete routes, authorization, dependency rules, and example requests, see [Update and delete APIs](update-delete-apis.md).
+
+Run these requests in order. Base URL: `http://localhost:8080` (or your Render HTTPS URL).
+Use `Content-Type: application/json` and your configured **Super Admin HTTP Basic credentials** for steps 1–6. Root organization creation requires Super Admin.
+Replace the example email with a real inbox you control **before creating the employee**. Configure SMTP before activation; it emails the temporary password and rolls back activation if sending fails. These are payload examples, not records already created.
+
+1. **Create organization:** `POST /api/OrganizationUnit`
+
+```json
+{
+  "name": "Hyderabad Operations",
+  "description": "Hyderabad head office",
+  "tenantId": 1,
+  "parentId": null,
+  "status": 1,
+  "line1": "Plot 10, HITEC City",
+  "city": 1201,
+  "state": 1101,
+  "country": 1001,
+  "languageId": 1301,
+  "timeZoneId": 1401,
+  "keyContactName": "Ravi Kumar",
+  "phoneNumber": "+919876543210",
+  "emailAddress": "ravi@example.com",
+  "isAnonymous": false,
+  "isObservationProofRequired": true,
+  "shifts": []
+}
+```
+
+Country code, INR currency, rupee symbol, and Asia/Kolkata time zone are populated from the seeded lookups. The create response is a success message; call `GET /api/OrganizationUnit/GetAllOrganizations` and copy the new organization's `id` as `organizationId`. Replace all `{{...}}` placeholders below with actual numeric IDs before sending JSON.
+
+2. **Create department:** `POST /api/Department/Create`
+
+```json
+{
+  "name": "Operations",
+  "description": "Operations department",
+  "businessUnitId": {{organizationId}},
+  "status": 1,
+  "translations": []
+}
+```
+
+Save `results.id` as `departmentId`. If you already ran the organization starter SQL, reuse its department and designation IDs instead of creating duplicates.
+
+3. **Create designation:** `POST /api/Designation/Create`
+
+```json
+{
+  "name": "Safety Officer",
+  "description": "Site safety officer",
+  "businessUnitId": {{organizationId}},
+  "status": 1,
+  "translations": []
+}
+```
+
+Save `results.id` as `designationId`.
+
+4. **Create an ordinary user role:** `POST /api/Role/CreateRole`
+
+```json
+{
+  "name": "Employee Coordinator",
+  "displayName": "Employee Coordinator",
+  "tenantId": 1,
+  "status": 1,
+  "landingPageId": 1,
+  "permissionIds": [3334]
+}
+```
+
+Save `results.id` as `roleId`. Permission `3334` is `ManageEmployees`; this example permits employee management within the assigned organization. It creates a USER role, not Admin. Use `GET /api/Permission/GetAll` to choose other selectable permissions.
+
+5. **Create employee:** `POST /api/User/CreateEmployee`
+
+```json
+{
+  "firstName": "Ravi",
+  "lastName": "Kumar",
+  "emailAddress": "ravi@example.com",
+  "phoneNumber": "+919876543210",
+  "gender": 1,
+  "userNumber": "EMP-HYD-001",
+  "userType": 1,
+  "status": 1,
+  "department": {{departmentId}},
+  "designation": {{designationId}},
+  "organizationUnitId": {{organizationId}},
+  "country": 1001,
+  "languageID": 1301,
+  "hasAccess": false,
+  "isMobileUser": false,
+  "userRoleIds": []
+}
+```
+
+Save the numeric `results` as `employeeId`. `userNumber` must be unique. Department and designation must belong to this organization. Creating the employee does not create a login.
+
+6. **Enable system user:** `POST /api/User/{{employeeId}}/ActivateSystemUser`
+
+```json
+{
+  "basicRoleId": {{roleId}},
+  "additionalRoleIds": [],
+  "scopes": [
+    {
+      "organizationUnitId": {{organizationId}},
+      "includeDescendants": false
+    }
+  ]
+}
+```
+
+The API sets `hasAccess=true`, creates the account, uses the employee email as username, and emails a generated temporary password. `results.id` is the system-account ID (different from employee ID); `results.mustChangePassword` is true. Do not send username/password fields in this activation request.
+
+7. **First login:** `POST /api/Auth/Login` (no Basic header)
+
+```json
+{
+  "username": "ravi@example.com",
+  "password": "REPLACE_WITH_EMAILED_TEMPORARY_PASSWORD"
+}
+```
+
+The response indicates `RESET_PASSWORD`. Business APIs remain blocked until reset.
+
+8. **Reset password:** `POST /api/Auth/FirstLoginPasswordReset`
+
+Use **employee email + emailed temporary password** as HTTP Basic credentials, not Super Admin credentials.
+
+```json
+{
+  "currentPassword": "REPLACE_WITH_EMAILED_TEMPORARY_PASSWORD",
+  "newPassword": "REPLACE_WITH_YOUR_NEW_STRONG_PASSWORD",
+  "confirmPassword": "REPLACE_WITH_YOUR_NEW_STRONG_PASSWORD"
+}
+```
+
+Choose a new password of 12–72 characters (at most 72 UTF-8 bytes), with matching confirmation. Then call `/api/Auth/Login` using the employee email and new password. Subsequent business requests use HTTP Basic with those same credentials; no bearer token is issued. `GET /api/Auth/Me` confirms `accountType: "USER"` and the assigned permissions.
+
+---
