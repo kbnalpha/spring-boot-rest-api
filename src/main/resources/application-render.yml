@@ -5,9 +5,21 @@ server:
   forward-headers-strategy: framework
   shutdown: graceful
 spring:
+  mail:
+    host: ${SMTP_HOST:smtp-relay.brevo.com}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:bbd299001@smtp-brevo.com}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail.smtp.auth: ${SMTP_AUTH:true}
+      mail.smtp.starttls.enable: ${SMTP_STARTTLS:true}
+      mail.smtp.starttls.required: ${SMTP_STARTTLS:true}
   lifecycle:
     timeout-per-shutdown-phase: 20s
   security:
     user:
-      name: ${API_USERNAME}
+      name: ${API_USERNAME:ehs-api}
       password: ${API_PASSWORD}
+ehs:
+  mail:
+    from: ${SMTP_FROM:kbnalpha@gmail.com}
