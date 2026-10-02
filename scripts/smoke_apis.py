@@ -122,13 +122,13 @@ def main():
             'scopes': [{'organizationUnitId': organization, 'includeDescendants': True}]})
         email=account['username']
         temporary=temporary_password(email)
-        first_login=call('First login requires reset', '/api/Auth/Login', {'username': email, 'password': temporary}, auth='none')
+        first_login=call('First login requires reset', '/api/Auth/authenticate', {'username': email, 'password': temporary}, auth='none')
         check('temporary credentials restricted to reset', first_login['mustChangePassword'] and first_login['nextAction']=='RESET_PASSWORD')
         call('Pending user cannot access permissions', '/api/Permission/GetAll', auth=(email,temporary), expected=403)
         call('Set first permanent password', '/api/Auth/FirstLoginPasswordReset',
              {'currentPassword':temporary,'newPassword':'Smoke-test-password-123','confirmPassword':'Smoke-test-password-123'},auth=(email,temporary))
-        call('Temporary password invalid after reset', '/api/Auth/Login', {'username':email,'password':temporary},auth='none',expected=401)
-        call('Login with permanent password', '/api/Auth/Login', {'username':email,'password':'Smoke-test-password-123'},auth='none')
+        call('Temporary password invalid after reset', '/api/Auth/authenticate', {'username':email,'password':temporary},auth='none',expected=401)
+        call('Login with permanent password', '/api/Auth/authenticate', {'username':email,'password':'Smoke-test-password-123'},auth='none')
         location_body = {'name': prefix + '-Location', 'locationSupervisor': '', 'locationDescription': 'Live verification',
             'organizationUnitId': organization, 'status': 1, 'createdBy': employee, 'supervisorIds': [employee],
             'subLocationNames': 'Zone A, Zone B', 'newSublocations': [
@@ -317,7 +317,7 @@ def main():
         delegated_email=admin_created_account['username'];old_temp=temporary_password(delegated_email)
         call('Admin resends activation email', f'/api/SystemUser/{admin_created_account["id"]}/ResendActivation', method='POST', auth=normal_auth)
         new_temp=temporary_password(delegated_email)
-        call('Resend invalidates old temporary password','/api/Auth/Login',{'username':delegated_email,'password':old_temp},auth='none',expected=401)
+        call('Resend invalidates old temporary password','/api/Auth/authenticate',{'username':delegated_email,'password':old_temp},auth='none',expected=401)
         call('Delegated Admin sets first password','/api/Auth/FirstLoginPasswordReset',
              {'currentPassword':new_temp,'newPassword':'Smoke-test-password-123','confirmPassword':'Smoke-test-password-123'},auth=(delegated_email,new_temp))
         call('Admin changes account scope', f'/api/SystemUser/{admin_created_account["id"]}/Scope',

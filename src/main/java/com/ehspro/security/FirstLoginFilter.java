@@ -14,7 +14,7 @@ public class FirstLoginFilter extends OncePerRequestFilter {
     @Override protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain) throws ServletException,IOException {
         var authentication=SecurityContextHolder.getContext().getAuthentication();
         String path=request.getRequestURI().substring(request.getContextPath().length());
-        boolean onboarding="POST".equals(request.getMethod())&&(path.equals("/api/Auth/Login")||path.equals("/api/Auth/FirstLoginPasswordReset"));
+        boolean onboarding="POST".equals(request.getMethod())&&(path.equals("/api/Auth/authenticate")||path.equals("/api/Auth/FirstLoginPasswordReset"));
         if(authentication!=null&&authentication.getPrincipal() instanceof EhsPrincipal p&&p.mustChangePassword&&!onboarding) {
             response.setStatus(403);response.setContentType("application/json");
             mapper.writeValue(response.getOutputStream(),new ApiResponse<>(403,"Password change required",Map.of("mustChangePassword",true,"nextAction","RESET_PASSWORD","resetPasswordEndpoint","/api/Auth/FirstLoginPasswordReset")));

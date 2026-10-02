@@ -18,7 +18,7 @@ CORS_ALLOWED_ORIGINS=https://your-frontend.example.com,http://localhost:3000,htt
 
 Use the **frontend** origin (scheme, hostname, and port), without a path or trailing slash. This list replaces the defaults. Wildcard `*` is rejected because credentialed requests are enabled. Other origins are denied by browser CORS handling; Postman/backend access still depends on authentication and authorization rather than CORS.
 
-Preflight OPTIONS requests for allowed origins are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, and `Accept` headers. Business requests still require HTTP Basic credentials and appropriate permissions; first-login password reset rules remain enforced. Login does not issue a bearer token. No network/IP allowlisting is needed solely because another developer uses a different network.
+Preflight OPTIONS requests for allowed origins are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, `Accept`, `Accept-Language`, `Accept-Org-Language`, and `Accept-Nav-Language` headers. Business requests still require HTTP Basic credentials and appropriate permissions; first-login password reset rules remain enforced. Login does not issue a bearer token. No network/IP allowlisting is needed solely because another developer uses a different network.
 
 
 For container deployment, use the root `Dockerfile` and `render.yaml`. Follow the [Render deployment guide](docs/render-deployment.md) for environment variables, SMTP configuration, health checks, and local Docker commands.
@@ -167,4 +167,24 @@ The exact source spelling `Collabarator` is preserved in routes. Existing `/api/
 
 See [Admin setup and child-organization examples](docs/admin-role.md) for assigning the built-in Admin role.
 
-Account types are SUPER_ADMIN, ADMIN, and USER. The new `/api/Auth/Login`, `/api/Auth/FirstLoginPasswordReset`, and `/api/SystemUser/{id}/ResendActivation` APIs implement email onboarding without UI code. Activation no longer accepts a username or password. See [the complete flow and SMTP configuration](docs/account-onboarding.md).
+Account types are SUPER_ADMIN, ADMIN, and USER. The new `/api/Auth/authenticate`, `/api/Auth/FirstLoginPasswordReset`, and `/api/SystemUser/{id}/ResendActivation` APIs implement email onboarding without UI code. Activation no longer accepts a username or password. See [the complete flow and SMTP configuration](docs/account-onboarding.md).
+
+Frontend clients may send all three language headers:
+
+```javascript
+config.headers["Accept-Language"] = defaultLanguage;
+config.headers["Accept-Org-Language"] = orgLanguage;
+config.headers["Accept-Nav-Language"] = language;
+```
+
+Authenticate with `POST /api/Auth/authenticate` and JSON `{"username":"employee@example.com","password":"your-password"}`. This replaces `/api/Auth/Login`; update frontend callers. These headers are allowed by CORS but do not change response localization by themselves.
+
+## Authentication response
+
+`POST /api/Auth/authenticate` returns the standard `statusCode`, `message`, and `results` envelope. Results now include `id` (system-account ID), `organizationUnitId` (employee primary organization), `userName` (display name), `email`, `token`, `roles`, `permissions`, `landingPage`, `resetPassword`, `userType`, `contractorCompanyId`, `clientId` (tenant), `languageCode`, and `buLanguageCode`.
+
+Permissions use frontend names such as `BusinessUnit(BU).ManageEmployees` and `Administration.ManageRoles`, mapped from the existing permission catalog and source aliases. Parent names are included with granted children. Admin/Super Admin receive the full catalog; users receive only their effective grants. These display strings do not change backend permission checks or organization scope. Catalog entries for future modules do not imply that module APIs are implemented.
+
+`token` is `null`: authentication remains HTTP Basic, not Bearer. Existing `username` (login identifier), `accountType`, `authenticationType`, `mustChangePassword`, `nextAction`, and conditional `resetPasswordEndpoint` fields remain available. Pending first-login users receive `resetPassword: true` and an empty permissions list until reset.
+
+The configured Super Admin has no employee/account row: `id`, `email`, `organizationUnitId`, and language codes are null, `userName` is the configured login, and `clientId` is its existing system tenant value (0). Employee language codes come from reference data (for example `en`, not a fabricated `en-US`). Unknown/unconfigured values remain null. Non-contract employees have `contractorCompanyId: 0`. Role names include `User` plus assigned active role names (`Admin`/`SuperAdmin` for built-ins).

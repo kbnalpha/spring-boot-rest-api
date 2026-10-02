@@ -238,7 +238,7 @@ class RbacIntegrationTest {
         assertThat(activation.toString()).doesNotContain(temporary,"passwordHash");
         assertThat(accounts.findById(activation.path("id").asLong()).orElseThrow().passwordHash).isNotEqualTo(temporary);
         var login=login(email,temporary,200);assertThat(login.path("nextAction").asText()).isEqualTo("RESET_PASSWORD");
-        assertThat(login.path("accountType").asText()).isEqualTo("USER");assertThat(login.has("permissions")).isFalse();
+        assertThat(login.path("accountType").asText()).isEqualTo("USER");assertThat(login.path("permissions").isEmpty()).isTrue();
         for(String path:List.of("/api/Auth/Me","/api/Permission/GetAll","/api/OrganizationUnit/GetAllOrganizations","/v3/api-docs"))
             request("GET",path,null,email,temporary,403);
         request("POST","/api/Department/GetList",Map.of(),email,temporary,403);
@@ -330,8 +330,29 @@ class RbacIntegrationTest {
         admin("DELETE","/api/Lookup/LANGUAGE/"+language,null,200);
         admin("DELETE","/api/OrganizationUnit/"+unit,null,200);
     }
+    @Test void authenticationReturnsProfileAndScopedFrontendPermissionNames() throws Exception {
+        long unit=organization(null,tenant),role=role(tenant,List.of(3334L));
+        long person=employee(unit);var user=activate(person,role,List.of(scope(unit,false)));
+        var response=login(user.username,password,200);
+        assertThat(response.path("id").asLong()).isEqualTo(user.id);
+        assertThat(response.path("organizationUnitId").asLong()).isEqualTo(unit);
+        assertThat(response.path("userName").asText()).isEqualTo("Test Employee");
+        assertThat(response.path("email").asText()).isEqualTo(user.username);
+        assertThat(response.path("token").isNull()).isTrue();
+        assertThat(response.path("clientId").asLong()).isEqualTo(tenant);
+        assertThat(response.path("landingPage").asText()).isEqualTo("Dashboard");
+        assertThat(response.path("resetPassword").asBoolean()).isFalse();
+        Set<String> codes=new HashSet<>();response.path("permissions").forEach(v -> codes.add(v.asText()));
+        assertThat(codes).containsExactlyInAnyOrder("BusinessUnit(BU)","BusinessUnit(BU).ManageEmployees");
+        var adminResponse=login(superUser,superPassword,200);
+        Set<String> adminCodes=new HashSet<>();adminResponse.path("permissions").forEach(v -> adminCodes.add(v.asText()));
+        assertThat(adminCodes).contains("BusinessUnit(BU).EditBusinessUnit","BusinessUnit(BU).ContractorMaster",
+            "BusinessUnit(BU).ManageTemporaryUsers","Administration.ManageRoles","GEMBAWalk.ViewGEMBAWalk",
+            "PTW.Approve/ClosePermit","ShiftInspectionLog.CreateShiftInspectionChecklist","Home");
+        assertThat(adminResponse.path("id").isNull()).isTrue();
+    }
     private JsonNode login(String username,String secret,int expected) throws Exception {
-        var response=mvc.perform(post("/api/Auth/Login").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))
+        var response=mvc.perform(post("/api/Auth/authenticate").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))
             .andExpect(status().is(expected)).andReturn();
         return mapper.readTree(response.getResponse().getContentAsString()).path("results");
     }

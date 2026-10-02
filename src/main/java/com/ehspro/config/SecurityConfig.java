@@ -20,7 +20,7 @@ public class SecurityConfig {
         if(allowed.contains("*")) throw new IllegalArgumentException("CORS_ALLOWED_ORIGINS must list explicit frontend origins, not *");
         config.setAllowedOrigins(allowed);
         config.setAllowedMethods(java.util.List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        config.setAllowedHeaders(java.util.List.of("Authorization","Content-Type","Accept"));
+        config.setAllowedHeaders(java.util.List.of("Authorization","Content-Type","Accept","Accept-Language","Accept-Org-Language","Accept-Nav-Language"));
         config.setExposedHeaders(java.util.List.of("WWW-Authenticate"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
@@ -46,7 +46,7 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a
                 .requestMatchers(org.springframework.http.HttpMethod.GET,"/actuator/health").permitAll()
-                .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/Auth/Login").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/Auth/authenticate").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(new com.ehspro.security.FirstLoginFilter(mapper),org.springframework.security.web.access.intercept.AuthorizationFilter.class)
             .httpBasic(b -> b.authenticationEntryPoint(unauthorized))

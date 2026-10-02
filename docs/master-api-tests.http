@@ -290,7 +290,7 @@ Content-Type: application/json
 %}
 
 ### First login requires reset
-POST {{baseUrl}}/api/Auth/Login
+POST {{baseUrl}}/api/Auth/authenticate
 Content-Type: application/json
 
 {
@@ -318,7 +318,7 @@ Content-Type: application/json
 %}
 
 ### Login with permanent password
-POST {{baseUrl}}/api/Auth/Login
+POST {{baseUrl}}/api/Auth/authenticate
 Content-Type: application/json
 
 {

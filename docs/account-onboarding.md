@@ -1,6 +1,6 @@
 # Employee activation and first login APIs
 
-Account types are `SUPER_ADMIN`, `ADMIN`, and `USER`. Super Admin is the configured backend identity. An active built-in Admin role gives organization-scoped administration. All other system accounts are Users, whose actions come from their assigned roles and permissions. `GET /api/Auth/Me` and `POST /api/Auth/Login` expose the effective account type.
+Account types are `SUPER_ADMIN`, `ADMIN`, and `USER`. Super Admin is the configured backend identity. An active built-in Admin role gives organization-scoped administration. All other system accounts are Users, whose actions come from their assigned roles and permissions. `GET /api/Auth/Me` and `POST /api/Auth/authenticate` expose the effective account type.
 
 No UI is implemented. APIs return a `nextAction` value for the caller to decide what to show; they do not issue browser redirects. Authentication remains stateless HTTP Basic. Login validates credentials and reports the next step; it does not issue a session cookie or token. Use HTTPS when deploying.
 
@@ -52,7 +52,7 @@ Admin can activate accounts only in its assigned organization tree and grant sco
 No Authorization header is needed for the login endpoint:
 
 ```http
-POST /api/Auth/Login
+POST /api/Auth/authenticate
 Content-Type: application/json
 
 {
@@ -99,7 +99,7 @@ The new password must match its confirmation, differ from the temporary password
 
 ## 4. Log in again
 
-Call `/api/Auth/Login` with the email and new password. Successful login returns `nextAction: LOGIN_SUCCESS`, `mustChangePassword: false`, account type, and effective authorities. Use that email/new password as HTTP Basic credentials for subsequent API requests. User roles and organizational scope are still enforced.
+Call `/api/Auth/authenticate` with the email and new password. Successful login returns `nextAction: LOGIN_SUCCESS`, `mustChangePassword: false`, account type, and effective authorities. Use that email/new password as HTTP Basic credentials for subsequent API requests. User roles and organizational scope are still enforced.
 
 ## Resend an expired or missing activation email
 

@@ -20,6 +20,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("security-test")
 class SecurityIntegrationTest {
     @Autowired MockMvc mvc;
+    @Test void loginPreflightAllowsFrontendLanguageHeader() throws Exception {
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options("/api/Auth/authenticate")
+            .header("Origin","http://localhost:3000")
+            .header("Access-Control-Request-Method","POST")
+            .header("Access-Control-Request-Headers","content-type,accept-language,accept-org-language,accept-nav-language"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"))
+            .andExpect(header().string("Access-Control-Allow-Headers",org.hamcrest.Matchers.containsString("accept-nav-language")))
+            .andExpect(header().string("Access-Control-Allow-Headers",org.hamcrest.Matchers.containsString("accept-org-language")))
+            .andExpect(header().string("Access-Control-Allow-Headers",org.hamcrest.Matchers.containsString("accept-language")));
+    }
     @Test void corsPreflightWorksWithoutLoginAndRejectsUnknownOrigins() throws Exception {
         for(String method:java.util.List.of("GET","POST","PUT","PATCH","DELETE")) {
             mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options("/api/User/1")

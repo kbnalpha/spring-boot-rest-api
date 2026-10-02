@@ -247,7 +247,7 @@ Expected `results`: `17`.
 
 ## First login requires reset
 
-`POST http://127.0.0.1:8080/api/Auth/Login`
+`POST http://127.0.0.1:8080/api/Auth/authenticate`
 
 ```json
 {
@@ -1339,7 +1339,7 @@ Save the numeric `results` as `employeeId`. `userNumber` must be unique. Departm
 
 The API sets `hasAccess=true`, creates the account, uses the employee email as username, and emails a generated temporary password. `results.id` is the system-account ID (different from employee ID); `results.mustChangePassword` is true. Do not send username/password fields in this activation request.
 
-7. **First login:** `POST /api/Auth/Login` (no Basic header)
+7. **First login:** `POST /api/Auth/authenticate` (no Basic header)
 
 ```json
 {
@@ -1362,6 +1362,8 @@ Use **employee email + emailed temporary password** as HTTP Basic credentials, n
 }
 ```
 
-Choose a new password of 12–72 characters (at most 72 UTF-8 bytes), with matching confirmation. Then call `/api/Auth/Login` using the employee email and new password. Subsequent business requests use HTTP Basic with those same credentials; no bearer token is issued. `GET /api/Auth/Me` confirms `accountType: "USER"` and the assigned permissions.
+Choose a new password of 12–72 characters (at most 72 UTF-8 bytes), with matching confirmation. Then call `/api/Auth/authenticate` using the employee email and new password. Subsequent business requests use HTTP Basic with those same credentials; no bearer token is issued. `GET /api/Auth/Me` confirms `accountType: "USER"` and the assigned permissions.
 
 ---
+
+Authentication response fields and permission formatting are documented in [README](../README.md#authentication-response). The `token` field is null while HTTP Basic authentication is used.
