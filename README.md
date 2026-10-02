@@ -8,6 +8,19 @@ See [master fields, RBAC, and account setup](database/master-fields-rbac.md) for
 
 ## Run with MySQL
 
+### Browser access (CORS)
+
+API routes under `/api/**` accept cross-origin browser requests from the exact origins in `CORS_ALLOWED_ORIGINS`. Defaults support local frontends on `localhost` and `127.0.0.1`, ports `3000` and `5173`. On Render, set the variable in **Environment** and redeploy, for example:
+
+```properties
+CORS_ALLOWED_ORIGINS=https://your-frontend.example.com,http://localhost:3000,http://localhost:5173
+```
+
+Use the **frontend** origin (scheme, hostname, and port), without a path or trailing slash. This list replaces the defaults. Wildcard `*` is rejected because credentialed requests are enabled. Other origins are denied by browser CORS handling; Postman/backend access still depends on authentication and authorization rather than CORS.
+
+Preflight OPTIONS requests for allowed origins are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, and `Accept` headers. Business requests still require HTTP Basic credentials and appropriate permissions; first-login password reset rules remain enforced. Login does not issue a bearer token. No network/IP allowlisting is needed solely because another developer uses a different network.
+
+
 For container deployment, use the root `Dockerfile` and `render.yaml`. Follow the [Render deployment guide](docs/render-deployment.md) for environment variables, SMTP configuration, health checks, and local Docker commands.
 
 Requires Java 21, Maven 3.9+, and access to the configured Aiven MySQL service. The mysql profile imports the project-root `.env` file; `.env.example` provides a template.

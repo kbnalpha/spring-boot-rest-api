@@ -13,6 +13,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
+    @Bean org.springframework.web.cors.UrlBasedCorsConfigurationSource corsConfigurationSource(
+            @org.springframework.beans.factory.annotation.Value("${ehs.cors.allowed-origins}") String origins) {
+        var config=new org.springframework.web.cors.CorsConfiguration();
+        var allowed=java.util.Arrays.stream(origins.split(",")).map(String::trim).filter(s -> !s.isEmpty()).toList();
+        if(allowed.contains("*")) throw new IllegalArgumentException("CORS_ALLOWED_ORIGINS must list explicit frontend origins, not *");
+        config.setAllowedOrigins(allowed);
+        config.setAllowedMethods(java.util.List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+        config.setAllowedHeaders(java.util.List.of("Authorization","Content-Type","Accept"));
+        config.setExposedHeaders(java.util.List.of("WWW-Authenticate"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
+        var source=new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**",config);
+        return source;
+    }
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
     @Bean org.springframework.security.authentication.AuthenticationManager authenticationManager(com.ehspro.security.AccountDetailsService identities,PasswordEncoder encoder) {
         var provider=new org.springframework.security.authentication.dao.DaoAuthenticationProvider();
@@ -27,6 +42,7 @@ public class SecurityConfig {
             mapper.writeValue(response.getOutputStream(),new ApiResponse<>(401,"Authentication required",null));
         };
         return http.csrf(csrf -> csrf.disable())
+            .cors(org.springframework.security.config.Customizer.withDefaults())
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a
                 .requestMatchers(org.springframework.http.HttpMethod.GET,"/actuator/health").permitAll()
