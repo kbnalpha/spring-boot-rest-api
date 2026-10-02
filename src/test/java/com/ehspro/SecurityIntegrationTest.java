@@ -45,19 +45,34 @@ class SecurityIntegrationTest {
             .andExpect(header().string("Access-Control-Allow-Headers",org.hamcrest.Matchers.containsString("accept-org-language")))
             .andExpect(header().string("Access-Control-Allow-Headers",org.hamcrest.Matchers.containsString("accept-language")));
     }
-    @Test void corsPreflightWorksWithoutLoginAndRejectsUnknownOrigins() throws Exception {
-        for(String method:java.util.List.of("GET","POST","PUT","PATCH","DELETE")) {
-            mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options("/api/User/1")
-                .header("Origin","http://localhost:3000")
-                .header("Access-Control-Request-Method",method)
-                .header("Access-Control-Request-Headers","authorization,content-type"))
-                .andExpect(status().isOk())
-                .andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"))
-                .andExpect(header().string("Access-Control-Allow-Credentials","true"));
+    @Test void corsPreflightWorksWithoutLoginForAllOrigins() throws Exception {
+        for(String path:java.util.List.of("/api/User/1","/api/Auth/authenticate","/api/OrganizationUnit/GetAllOrganizations","/actuator/health","/v3/api-docs")) {
+            for(String method:java.util.List.of("GET","POST","PUT","PATCH","DELETE")) {
+                mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options(path)
+                    .header("Origin","https://frontend.example")
+                    .header("Access-Control-Request-Method",method)
+                    .header("Access-Control-Request-Headers","authorization,content-type,accept,accept-language,accept-org-language,accept-nav-language,x-custom-client-header"))
+                    .andExpect(status().isOk())
+                    .andExpect(header().string("Access-Control-Allow-Origin","https://frontend.example"))
+                    .andExpect(header().string("Access-Control-Allow-Credentials","true"))
+                    .andExpect(header().string("Access-Control-Allow-Headers",org.hamcrest.Matchers.containsString("x-custom-client-header")));
+            }
         }
         mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options("/api/User/1")
             .header("Origin","https://untrusted.example").header("Access-Control-Request-Method","DELETE"))
-            .andExpect(status().isForbidden()).andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
+            .andExpect(status().isOk())
+            .andExpect(header().string("Access-Control-Allow-Origin","https://untrusted.example"))
+            .andExpect(header().string("Access-Control-Allow-Credentials","true"));
+    }
+    @Test void allOriginsCoverSuccessAndErrorResponsesAcrossRoutes() throws Exception {
+        for(String origin:java.util.List.of("https://frontend.example","https://admin.example","https://untrusted.example")) {
+            mvc.perform(get("/api/Role/GetAllRoles").header("Origin",origin))
+                .andExpect(status().isUnauthorized()).andExpect(header().string("Access-Control-Allow-Origin",origin));
+            mvc.perform(get("/api/Role/GetAllRoles").header("Origin",origin).with(httpBasic("test-api","test-password")))
+                .andExpect(status().isOk()).andExpect(header().string("Access-Control-Allow-Origin",origin));
+            mvc.perform(get("/api/User/9223372036854775807").header("Origin",origin).with(httpBasic("test-api","test-password")))
+                .andExpect(status().isNotFound()).andExpect(header().string("Access-Control-Allow-Origin",origin));
+        }
     }
     @Test void corsDoesNotBypassAuthenticationAndErrorsHaveCorsHeaders() throws Exception {
         mvc.perform(get("/api/Role/GetAllRoles").header("Origin","http://localhost:3000"))

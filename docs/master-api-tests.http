@@ -294,7 +294,7 @@ POST {{baseUrl}}/api/Auth/authenticate
 Content-Type: application/json
 
 {
-  "username": "{{accountEmail}}",
+  "email": "{{accountEmail}}",
   "password": "{{temporaryPassword}}"
 }
 
@@ -322,7 +322,7 @@ POST {{baseUrl}}/api/Auth/authenticate
 Content-Type: application/json
 
 {
-  "username": "{{accountEmail}}",
+  "email": "{{accountEmail}}",
   "password": "Example-password-123"
 }
 

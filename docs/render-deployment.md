@@ -14,7 +14,9 @@ The root `Dockerfile` builds and tests the application using Maven and Java 21, 
    | `API_PASSWORD` | Your chosen Super Admin password |
    | `SMTP_PASSWORD` | Your SMTP password or provider app password |
 
-   Set `API_PASSWORD` in Render Environment for Super Admin login. All three passwords use `sync: false`, preserving dashboard-managed values on subsequent Blueprint syncs. Brevo host/login and sender `kbnalpha@gmail.com` are configured in both the Blueprint and Render profile.
+   The API allows browser requests from all origins, including credentialed requests. No CORS environment variable is required.
+
+   Set `API_PASSWORD` in Render Environment for Super Admin login. Password variables use `sync: false`, preserving dashboard-managed values on subsequent Blueprint syncs. Brevo host/login and sender `kbnalpha@gmail.com` are configured in both the Blueprint and Render profile.
 
    The Blueprint already specifies the Aiven host, port `15129`, database `ehs_db`, user `avnadmin`, and Super Admin username `ehs-api`. SMTP defaults to port `587` with authentication and required STARTTLS; adjust these values to match your provider. Database and API passwords are separate.
 4. Review the service plan and create the Blueprint. The configured **Starter plan is paid**. It supports the existing SMTP workflow; [Render Free services block outbound ports 25, 465, and 587](https://render.com/docs/free#other-limitations). Switching to Free requires a supported alternative email transport/provider port before employee activation can work.
@@ -35,6 +37,7 @@ For the reported `Could not resolve placeholder 'API_PASSWORD'` failure, set `AP
 - The app binds to `0.0.0.0` and Render's `PORT` (fallback `10000`). HTTPS terminates at Render; forwarded headers are honored.
 - TLS is required for Aiven. The dedicated Liquibase session retains the existing primary-key bootstrap configuration. Existing applied migrations are skipped; never clear migration history when redeploying.
 - `API_USERNAME` defaults to `ehs-api`. `API_PASSWORD`, `DB_PASSWORD`, and `SMTP_PASSWORD` remain required secrets. For a manually created Docker service, set all three in Render Environment settings; deploying a Dockerfile alone does not apply `render.yaml`. For a Blueprint-managed service, sync the Blueprint. New `sync: false` secrets on an existing service must be added manually.
+- CORS allows all origins and credentials on every route, including preflight requests, health/docs routes, and authentication/authorization errors. No frontend-origin configuration is needed.
 - `/actuator/health` is public, checks database connectivity, and hides component details. Other management endpoints are not exposed. Business APIs retain authentication and RBAC. SMTP availability is excluded from service health so an email-provider outage does not repeatedly restart the API; activation still reports delivery failures.
 - The JVM uses a maximum heap of 65% of container memory. Adjust `JAVA_TOOL_OPTIONS` and/or the service size if workload requires more memory.
 - Shutdown is graceful with a 20-second request completion window. Data stays in Aiven across deployments.

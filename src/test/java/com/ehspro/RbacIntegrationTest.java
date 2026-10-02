@@ -288,7 +288,7 @@ class RbacIntegrationTest {
         org.mockito.Mockito.doThrow(new org.springframework.mail.MailSendException("Synthetic SMTP failure")).when(mail).send(org.mockito.ArgumentMatchers.any(org.springframework.mail.SimpleMailMessage.class));
         admin("POST","/api/SystemUser/"+account.path("id").asLong()+"/ResendActivation",null,503);
         assertThat(login(email,password,200).path("mustChangePassword").asBoolean()).isFalse();
-        assertThat(login(superUser,superPassword,200).path("accountType").asText()).isEqualTo("SUPER_ADMIN");
+        assertThat(login("kbnalpha@gmail.com",superPassword,200).path("accountType").asText()).isEqualTo("SUPER_ADMIN");
     }
     @Test void elevatedDeletesEnforceScopeDependenciesAndRevokeLogin() throws Exception {
         long unit=organization(null,tenant),other=organization(null,tenant),child=organization(unit,tenant);
@@ -335,6 +335,7 @@ class RbacIntegrationTest {
         long person=employee(unit);var user=activate(person,role,List.of(scope(unit,false)));
         var response=login(user.username,password,200);
         assertThat(response.path("id").asLong()).isEqualTo(user.id);
+        assertThat(response.path("username").isMissingNode()).isTrue();
         assertThat(response.path("organizationUnitId").asLong()).isEqualTo(unit);
         assertThat(response.path("userName").asText()).isEqualTo("Test Employee");
         assertThat(response.path("email").asText()).isEqualTo(user.username);
@@ -344,7 +345,7 @@ class RbacIntegrationTest {
         assertThat(response.path("resetPassword").asBoolean()).isFalse();
         Set<String> codes=new HashSet<>();response.path("permissions").forEach(v -> codes.add(v.asText()));
         assertThat(codes).containsExactlyInAnyOrder("BusinessUnit(BU)","BusinessUnit(BU).ManageEmployees");
-        var adminResponse=login(superUser,superPassword,200);
+        var adminResponse=login("kbnalpha@gmail.com",superPassword,200);
         Set<String> adminCodes=new HashSet<>();adminResponse.path("permissions").forEach(v -> adminCodes.add(v.asText()));
         assertThat(adminCodes).contains("BusinessUnit(BU).EditBusinessUnit","BusinessUnit(BU).ContractorMaster",
             "BusinessUnit(BU).ManageTemporaryUsers","Administration.ManageRoles","GEMBAWalk.ViewGEMBAWalk",
@@ -353,6 +354,9 @@ class RbacIntegrationTest {
         assertThat(adminResponse.path("email").asText()).isEqualTo("kbnalpha@gmail.com");
         assertThat(adminResponse.path("languageCode").asText()).isEqualTo("en-US");
         assertThat(adminResponse.path("buLanguageCode").asText()).isEqualTo("en-US");
+        mvc.perform(post("/api/Auth/authenticate").contentType("application/json")
+            .content("{\"username\":\"employee@example.com\",\"password\":\"not-a-password\"}"))
+            .andExpect(status().isBadRequest());
     }
     @Test void bearerTokensRespectPasswordResetRevocationAndCurrentRoles() throws Exception {
         long unit=organization(null,tenant),role=role(tenant,List.of(3342L)),person=employee(unit);
@@ -376,7 +380,7 @@ class RbacIntegrationTest {
         admin("PUT","/api/SystemUser/"+activated.path("id").asLong()+"/Enabled",Map.of("enabled",false),200);
         mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+token)).andExpect(status().isUnauthorized());
         mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer invalid.token.value")).andExpect(status().isUnauthorized());
-        String superToken=login(superUser,superPassword,200).path("token").asText();
+        String superToken=login("kbnalpha@gmail.com",superPassword,200).path("token").asText();
         mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+superToken)).andExpect(status().isOk());
     }
     @Test void userDetailsAndOrganizationMembershipsAreScoped() throws Exception {
@@ -392,13 +396,26 @@ class RbacIntegrationTest {
         var memberships=request("GET","/api/User/GetUserOrganizationUnit/"+person,null,user.username,password,200);
         assertThat(memberships.get(0).path("userId").asLong()).isEqualTo(person);
         assertThat(memberships.get(0).path("organizationUnitId").asLong()).isEqualTo(unit);
+        assertThat(memberships.get(0).path("roles").toString()).contains("User");
+        assertThat(memberships.get(0).path("permissions").toString()).contains("ManageEmployees");
         request("GET","/api/User/"+foreign,null,user.username,password,403);
         request("GET","/api/User/GetUserOrganizationUnit/"+foreign,null,user.username,password,403);
+        var superOrganizations=admin("GET","/api/User/GetUserOrganizationUnit/-1",null,200);
+        assertThat(superOrganizations.findValuesAsText("userId")).contains("-1");
+        assertThat(superOrganizations.get(0).path("roles").toString()).contains("SuperAdmin");
+        request("GET","/api/User/GetUserOrganizationUnit/-1",null,user.username,password,403);
+        long child=organization(unit,tenant),adminRole=0;
+        for(JsonNode item:admin("GET","/api/Role/GetAllRoles",null,200))
+            if(item.path("builtInAdmin").asBoolean()) adminRole=item.path("id").asLong();
+        long adminEmployee=employee(unit);
+        var adminAccount=activate(adminEmployee,adminRole,List.of(scope(unit,false)));
+        var adminOrganizations=request("GET","/api/User/GetUserOrganizationUnit/"+adminEmployee,null,adminAccount.username,password,200);
+        assertThat(adminOrganizations.findValuesAsText("organizationUnitId")).contains(Long.toString(child));
         admin("GET","/api/User/9223372036854775807",null,404);
         mvc.perform(get("/api/User/"+person)).andExpect(status().isUnauthorized());
     }
-    private JsonNode login(String username,String secret,int expected) throws Exception {
-        var response=mvc.perform(post("/api/Auth/authenticate").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))
+    private JsonNode login(String email,String secret,int expected) throws Exception {
+        var response=mvc.perform(post("/api/Auth/authenticate").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("email",email,"password",secret))))
             .andExpect(status().is(expected)).andReturn();
         return mapper.readTree(response.getResponse().getContentAsString()).path("results");
     }

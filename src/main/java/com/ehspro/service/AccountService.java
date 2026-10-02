@@ -89,7 +89,7 @@ public class AccountService {
         if(encoder.matches(dto.newPassword(),account.passwordHash)) throw ApiException.badRequest("Choose a different password from the temporary password");
         account.passwordHash=encoder.encode(dto.newPassword());account.mustChangePassword=false;
         account.temporaryPasswordExpiresAt=null;account.passwordChangedAt=now;
-        return Map.of("username",account.username,"mustChangePassword",false,"nextAction","LOGIN","message","Password set. Log in with your new password.");
+        return Map.of("email",account.username,"mustChangePassword",false,"nextAction","LOGIN","message","Password set. Log in with your new password.");
     }
     @Transactional public Map<String,Object> roles(Long id,AccountRequests.Roles dto) {
         access.require("ManageRoleUsers");UserAccount account=account(id);
@@ -110,7 +110,7 @@ public class AccountService {
         result.put("admin",access.isAdmin());
         result.put("accountType",access.isSuperAdmin()?"SUPER_ADMIN":access.isAdmin()?"ADMIN":"USER");
         var authentication=org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
-        result.put("username",authentication.getName());result.put("tenantId",access.isSuperAdmin()?null:access.principal().tenantId);
+        result.put("email",authentication.getName());result.put("tenantId",access.isSuperAdmin()?null:access.principal().tenantId);
         result.put("organizationUnitIds",access.organizationIds());
         result.put("permissions",authentication.getAuthorities().stream().map(a -> a.getAuthority()).toList());
         if(!access.isSuperAdmin()) result.put("account",response(account(access.principal().accountId)));

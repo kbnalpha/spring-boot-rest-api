@@ -15,19 +15,24 @@ public class AccountDetailsService implements UserDetailsService {
     private final EmployeeRepository employees;
     private final RoleRepository roles;
     private final PermissionDefinitionRepository permissions;
-    private final String superUsername;
+    private final String superEmail;
+    private final String superBasicUsername;
     private final String superPasswordHash;
     public AccountDetailsService(UserAccountRepository accounts, EmployeeRepository employees, RoleRepository roles,
             PermissionDefinitionRepository permissions, PasswordEncoder encoder,
-            @Value("${spring.security.user.name:ehs-api}") String username,
+            @Value("${ehs.super-admin.email:kbnalpha@gmail.com}") String email,
+            @Value("${spring.security.user.name:ehs-api}") String basicUsername,
             @Value("${spring.security.user.password:ehs-api-local}") String password) {
         this.accounts=accounts; this.employees=employees; this.roles=roles; this.permissions=permissions;
-        superUsername=username; superPasswordHash=encoder.encode(password);
+        superEmail=email.trim().toLowerCase(Locale.ROOT); superBasicUsername=basicUsername; superPasswordHash=encoder.encode(password);
     }
-    public boolean reservedUsername(String name) { return superUsername.equalsIgnoreCase(name); }
+    public boolean reservedUsername(String name) {
+        return superEmail.equalsIgnoreCase(name) || superBasicUsername.equalsIgnoreCase(name);
+    }
     @Override @Transactional(readOnly=true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if (superUsername.equals(username)) return new EhsPrincipal(username,superPasswordHash,true,null,0L,
+        if (superEmail.equalsIgnoreCase(username.trim()) || superBasicUsername.equalsIgnoreCase(username.trim()))
+            return new EhsPrincipal(superEmail,superPasswordHash,true,null,0L,
             List.of(new SimpleGrantedAuthority("ROLE_SUPER_ADMIN")));
         UserAccount account=accounts.findByUsernameIgnoreCase(username.trim()).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
         Employee employee=employees.findById(account.employeeId).orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));

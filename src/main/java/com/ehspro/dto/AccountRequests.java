@@ -12,7 +12,7 @@ public final class AccountRequests {
     public record Roles(@NotNull @Positive Long basicRoleId, Set<@NotNull @Positive Long> additionalRoleIds) {}
     public record Scopes(@NotEmpty List<@NotNull @Valid Scope> scopes) {}
     public record Enabled(boolean enabled) {}
-    public record Login(@NotBlank @Size(max=254) String username, @NotBlank @Size(max=200) String password) {}
+    public record Login(@NotBlank @Email @Size(max=254) String email, @NotBlank @Size(max=200) String password) {}
     public record FirstLoginReset(@NotBlank @Size(max=200) String currentPassword,
         @NotBlank @Size(min=12,max=72) String newPassword, @NotBlank @Size(max=72) String confirmPassword) {}
 }

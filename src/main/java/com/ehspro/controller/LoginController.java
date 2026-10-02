@@ -13,7 +13,7 @@ public class LoginController {
     public LoginController(AuthenticationManager authentication,com.ehspro.service.AuthenticationResponseService responses) {this.authentication=authentication;this.responses=responses;}
     @PostMapping("/authenticate")
     public ApiResponse<?> login(@Valid @RequestBody AccountRequests.Login dto) {
-        var result=authentication.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(dto.username(),dto.password()));
+        var result=authentication.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(dto.email(),dto.password()));
         var p=(EhsPrincipal)result.getPrincipal();
         return ApiResponse.success(responses.response(p));
     }

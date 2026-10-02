@@ -10,15 +10,9 @@ See [master fields, RBAC, and account setup](database/master-fields-rbac.md) for
 
 ### Browser access (CORS)
 
-All HTTP routes (`/**`), including APIs, Swagger/OpenAPI, and health checks, accept cross-origin browser requests from the exact origins in `CORS_ALLOWED_ORIGINS`. Defaults support local frontends on `localhost` and `127.0.0.1`, ports `3000` and `5173`. On Render, set the variable in **Environment** and redeploy, for example:
+All HTTP routes (`/**`), including APIs, Swagger/OpenAPI, and health checks, accept cross-origin browser requests from every origin. Credentials are allowed, and preflight OPTIONS requests are handled before authentication. GET, HEAD, POST, PUT, PATCH, DELETE, and OPTIONS are supported, with requested headers allowed. Business requests still require authentication and appropriate permissions; CORS does not bypass API authorization. This permissive policy means any website can make browser requests to the API, so use it only when that exposure is intended.
 
-```properties
-CORS_ALLOWED_ORIGINS=https://your-frontend.example.com,http://localhost:3000,http://localhost:5173
-```
-
-Use the **frontend** origin (scheme, hostname, and port), without a path or trailing slash. This list replaces the defaults. Wildcard `*` is rejected because credentialed requests are enabled. Other origins are denied by browser CORS handling; Postman/backend access still depends on authentication and authorization rather than CORS.
-
-Preflight OPTIONS requests for allowed origins are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, `Accept`, `Accept-Language`, `Accept-Org-Language`, and `Accept-Nav-Language` headers. Business requests require a Bearer JWT (or legacy HTTP Basic credentials) and appropriate permissions; first-login password reset rules remain enforced. Login issues a signed Bearer JWT. No network/IP allowlisting is needed solely because another developer uses a different network.
+Preflight OPTIONS requests from any origin are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, `Accept`, `Accept-Language`, `Accept-Org-Language`, and `Accept-Nav-Language` headers. Business requests require a Bearer JWT (or legacy HTTP Basic credentials) and appropriate permissions; first-login password reset rules remain enforced. Login issues a signed Bearer JWT. No network/IP allowlisting is needed solely because another developer uses a different network.
 
 
 For container deployment, use the root `Dockerfile` and `render.yaml`. Follow the [Render deployment guide](docs/render-deployment.md) for environment variables, SMTP configuration, health checks, and local Docker commands.
@@ -177,7 +171,7 @@ config.headers["Accept-Org-Language"] = orgLanguage;
 config.headers["Accept-Nav-Language"] = language;
 ```
 
-Authenticate with `POST /api/Auth/authenticate` and JSON `{"username":"employee@example.com","password":"your-password"}`. This replaces `/api/Auth/Login`; update frontend callers. These headers are allowed by CORS but do not change response localization by themselves.
+Authenticate with `POST /api/Auth/authenticate` and JSON `{"email":"employee@example.com","password":"your-password"}`. This replaces `/api/Auth/Login`; update frontend callers. The login identifier is the employee email; the old `username` request property is no longer accepted. These headers are allowed by CORS but do not change response localization by themselves.
 
 ## Authentication response
 
@@ -185,9 +179,9 @@ Authenticate with `POST /api/Auth/authenticate` and JSON `{"username":"employee@
 
 Permissions use frontend names such as `BusinessUnit(BU).ManageEmployees` and `Administration.ManageRoles`, mapped from the existing permission catalog and source aliases. Parent names are included with granted children. Admin/Super Admin receive the full catalog; users receive only their effective grants. These display strings do not change backend permission checks or organization scope. Catalog entries for future modules do not imply that module APIs are implemented.
 
-`token` is a signed JWT; send `Authorization: Bearer <token>`. `authenticationType` is `BEARER` and `expiresIn` is the lifetime in seconds. HTTP Basic remains supported for existing clients. Existing `username` (login identifier), `accountType`, `authenticationType`, `mustChangePassword`, `nextAction`, and conditional `resetPasswordEndpoint` fields remain available. Pending first-login users receive `resetPassword: true` and an empty permissions list until reset.
+`token` is a signed JWT; send `Authorization: Bearer <token>`. `authenticationType` is `BEARER` and `expiresIn` is the lifetime in seconds. HTTP Basic remains supported for existing clients. `email` (login identifier), `accountType`, `authenticationType`, `mustChangePassword`, `nextAction`, and conditional `resetPasswordEndpoint` fields remain available. Pending first-login users receive `resetPassword: true` and an empty permissions list until reset.
 
-The configured Super Admin uses reserved ID `-1` (not an employee/account table ID), `email` from `SUPER_ADMIN_EMAIL` (default `kbnalpha@gmail.com`), null `organizationUnitId`, and system `clientId: 0`. Employees use their real system-account IDs and email addresses. Both `languageCode` and `buLanguageCode` are `en-US` as required by the client contract. Non-contract employees have `contractorCompanyId: 0`.
+The configured Super Admin authenticates by `SUPER_ADMIN_EMAIL` (default `kbnalpha@gmail.com`) and is represented in the user API by reserved ID `-1`, `email`, null `organizationUnitId`, and system `clientId: 0`. Admin and regular system users are employee-backed accounts; their login email is the employee email. Both `languageCode` and `buLanguageCode` are `en-US` as required by the client contract. Non-contract employees have `contractorCompanyId: 0`.
 
 ### JWT deployment
 
@@ -204,6 +198,6 @@ Authorization: Bearer <results.token>
 
 - `GET /api/Common/getLanguages`: public static response: `{"statusCode":200,"message":"Successful","results":[{"id":1,"name":"English (US)","code":"en-US"}]}`. This UI language ID is independent of the database `LANGUAGE` lookup IDs used for organization/employee writes.
 - `GET /api/User/{id}`: authenticated employee detail, with `password: null` and `organizationUnitIdsMapped` represented as `[{"organizationUnitId":123,"isChecked":true}]`. Other fields come from the stored employee and related masters. Write payloads continue to use numeric organization-ID arrays.
-- `GET /api/User/GetUserOrganizationUnit/{id}`: organization memberships with `userId`, `buImage`, `organizationUnitId`, `organizationUnitName`, `isAnonymous`, `isObservationProofRequired`, `languageId`, and `currency`.
+- `GET /api/User/GetUserOrganizationUnit/{id}`: organizations accessible to the employee-backed system account, with the organization detail fields plus that account's `roleIds`, `roles`, and effective permission codes. A regular employee without a system account continues to receive employee memberships. Reserved user ID `-1` returns organizations accessible to Super Admin.
 
-Both user routes use **employee IDs**, not the account ID returned by authenticate. An ordinary user can read their own employee profile. Reading another employee requires the corresponding employee-management permission plus organization scope; Admin/Super Admin keep elevated access. Membership organization details enforce account scope. These endpoints never grant additional access. Missing employees return 404; disallowed reads return 403. The configured Super Admin is not an employee; its reserved login ID `-1` has no employee detail record.
+Both user routes use **employee IDs**, not the account ID returned by authenticate, except the reserved Super Admin ID `-1` on the organization route. An ordinary user can read their own employee profile. Reading another employee requires the corresponding employee-management permission plus organization scope; Admin/Super Admin keep elevated access. System-user organization details come from the assigned account scopes (Admin scopes include descendants); ordinary employee memberships are unchanged. These endpoints never grant additional access. Missing employees return 404; disallowed reads return 403.

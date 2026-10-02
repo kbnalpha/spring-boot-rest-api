@@ -251,7 +251,7 @@ Expected `results`: `17`.
 
 ```json
 {
-  "username": "ehs-smoke-a13cc7f0@example.com",
+  "email": "ehs-smoke-a13cc7f0@example.com",
   "password": "TEMPORARY_PASSWORD_FROM_EMAIL"
 }
 ```
@@ -1343,7 +1343,7 @@ The API sets `hasAccess=true`, creates the account, uses the employee email as u
 
 ```json
 {
-  "username": "ravi@example.com",
+  "email": "ravi@example.com",
   "password": "REPLACE_WITH_EMAILED_TEMPORARY_PASSWORD"
 }
 ```

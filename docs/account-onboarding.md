@@ -1,6 +1,6 @@
 # Employee activation and first login APIs
 
-Account types are `SUPER_ADMIN`, `ADMIN`, and `USER`. Super Admin is the configured backend identity. An active built-in Admin role gives organization-scoped administration. All other system accounts are Users, whose actions come from their assigned roles and permissions. `GET /api/Auth/Me` and `POST /api/Auth/authenticate` expose the effective account type.
+Account types are `SUPER_ADMIN`, `ADMIN`, and `USER`. The configured Super Admin is represented by reserved user ID `-1`; Admin and regular system users are employee-backed accounts. An active built-in Admin role gives organization-scoped administration. User actions come from assigned roles and permissions. `GET /api/Auth/Me` and `POST /api/Auth/authenticate` expose the effective account type.
 
 No UI is implemented. APIs return a `nextAction` value for the caller to decide what to show; they do not issue browser redirects. Authentication supports stateless Bearer JWTs and legacy HTTP Basic. Login issues a token and reports the next step; it does not issue a session cookie. Use HTTPS when deploying.
 
@@ -56,7 +56,7 @@ POST /api/Auth/authenticate
 Content-Type: application/json
 
 {
-  "username": "employee@example.com",
+  "email": "employee@example.com",
   "password": "TEMPORARY_PASSWORD_FROM_EMAIL"
 }
 ```
@@ -68,7 +68,7 @@ HTTP 200, abbreviated response:
   "statusCode": 200,
   "message": "Successful",
   "results": {
-    "username": "employee@example.com",
+    "email": "employee@example.com",
     "accountType": "USER",
     "mustChangePassword": true,
     "nextAction": "RESET_PASSWORD",

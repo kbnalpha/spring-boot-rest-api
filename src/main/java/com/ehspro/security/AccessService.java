@@ -43,13 +43,17 @@ public class AccessService {
         if (isSuperAdmin()) return organizations.findAll().stream().map(o -> o.id).collect(java.util.stream.Collectors.toSet());
         EhsPrincipal principal=principal();
         UserAccount account=accounts.findById(principal.accountId).orElseThrow(() -> new AccessDeniedException("System account unavailable"));
+        return organizationIds(account,isAdmin());
+    }
+    @Transactional(readOnly=true)
+    public Set<Long> organizationIds(UserAccount account,boolean targetAdmin) {
         Map<Long,OrganizationUnit> eligible=new HashMap<>();
-        organizations.findAll().stream().filter(o -> Objects.equals(o.tenantId,principal.tenantId) && Integer.valueOf(1).equals(o.status)).forEach(o -> eligible.put(o.id,o));
+        organizations.findAll().stream().filter(o -> Objects.equals(o.tenantId,account.tenantId) && Integer.valueOf(1).equals(o.status)).forEach(o -> eligible.put(o.id,o));
         Set<Long> result=new HashSet<>();
         for (OrganizationScope scope:account.scopes) {
             if (!eligible.containsKey(scope.organizationUnitId)) continue;
             result.add(scope.organizationUnitId);
-            if (scope.includeDescendants || isAdmin()) {
+            if (scope.includeDescendants || targetAdmin) {
                 Set<Long> descendants=new HashSet<>(Set.of(scope.organizationUnitId));
                 boolean changed;
                 do { changed=false; for (OrganizationUnit unit:eligible.values()) {

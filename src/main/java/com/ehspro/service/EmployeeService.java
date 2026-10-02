@@ -20,13 +20,19 @@ public class EmployeeService {
     private final ContractorRepository contractors;
     private final UserAccountRepository accounts;
     private final RoleRepository roles;
+    private final com.ehspro.security.AccountDetailsService identities;
+    private final com.ehspro.repository.PermissionDefinitionRepository permissions;
     private final DtoMapper mapper;
     private final ListQueryService queries;
     private final ReferenceService references;
     public EmployeeService(EmployeeRepository repository, RoleRepository roles, DtoMapper mapper,
-            ListQueryService queries, ReferenceService references, com.ehspro.security.AccessService access, ReferenceDataService lookups, ContractorRepository contractors, UserAccountRepository accounts) {
+            ListQueryService queries, ReferenceService references, com.ehspro.security.AccessService access,
+            ReferenceDataService lookups, ContractorRepository contractors,
+            UserAccountRepository accounts, com.ehspro.security.AccountDetailsService identities,
+            com.ehspro.repository.PermissionDefinitionRepository permissions) {
         this.repository = repository; this.roles = roles; this.mapper = mapper;
         this.queries = queries; this.references = references; this.access=access; this.lookups=lookups; this.contractors=contractors; this.accounts=accounts;
+        this.identities=identities;this.permissions=permissions;
     }
     @Transactional
     public Long create(EmployeeDto dto) {
@@ -92,13 +98,14 @@ public class EmployeeService {
         request.systemUsersOnly=true;
         return list(request);
     }
-    private Employee readableEmployee(Long id) {
+    private Employee readableEmployee(Long id) { return readableEmployee(id,true); }
+    private Employee readableEmployee(Long id,boolean enforceMembershipAccess) {
         Employee employee=repository.findById(id).orElseThrow(() -> ApiException.notFound("Employee not found"));
         boolean self=!access.isSuperAdmin()&&accounts.findById(access.principal().accountId).map(a -> a.employeeId.equals(id)).orElse(false);
         if(!self) {
             access.require(Integer.valueOf(2).equals(employee.userType)?"ManageContractEmployees":"ManageEmployees");
             references.organization(employee.organizationUnitId);
-            employee.organizationUnitIds.forEach(access::organization);
+            if(enforceMembershipAccess) employee.organizationUnitIds.forEach(access::organization);
         }
         return employee;
     }
@@ -113,18 +120,58 @@ public class EmployeeService {
         return result;
     }
     public List<Map<String,Object>> organizations(Long id) {
-        Employee employee=readableEmployee(id);
+        if(Long.valueOf(-1).equals(id)) {
+            if(!access.isSuperAdmin()) throw new org.springframework.security.access.AccessDeniedException("Only Super Admin can read the reserved user");
+            List<Map<String,Object>> result=new ArrayList<>();
+            Set<String> superPermissions=permissions.findAll().stream().filter(p -> p.businessAction).map(p -> p.code)
+                .collect(Collectors.toCollection(TreeSet::new));
+            for(Long unitId:new TreeSet<>(access.organizationIds())) {
+                var unit=references.organization(unitId);
+                result.add(organizationRow(-1L,unit,Set.of("User","SuperAdmin"),superPermissions,Set.of()));
+            }
+            return result;
+        }
+        Employee employee=readableEmployee(id,false);
+        var account=accounts.findByEmployeeId(employee.id);
+        if(account.isPresent()) {
+            var target=account.get();
+            if(!target.enabled||target.mustChangePassword||!Boolean.TRUE.equals(employee.hasAccess)||!Integer.valueOf(1).equals(employee.status))
+                return List.of();
+            Set<Long> roleIds=new HashSet<>(target.additionalRoleIds);roleIds.add(target.basicRoleId);
+            var activeRoles=roles.findAllById(roleIds).stream().filter(r -> Integer.valueOf(1).equals(r.status))
+                .filter(r -> r.builtInAdmin||(!r.systemRole&&Objects.equals(r.tenantId,target.tenantId))).toList();
+            boolean admin=activeRoles.stream().anyMatch(r -> r.builtInAdmin);
+            Set<String> roleNames=activeRoles.stream().map(r -> r.builtInAdmin?"Admin":r.name)
+                .filter(Objects::nonNull).collect(Collectors.toCollection(TreeSet::new));
+            roleNames.add("User");
+            Set<String> permissionCodes=identities.loadUserByUsername(target.username).getAuthorities().stream()
+                .map(org.springframework.security.core.GrantedAuthority::getAuthority)
+                .filter(code -> !code.startsWith("ROLE_")&&!code.equals("PASSWORD_CHANGE_REQUIRED"))
+                .collect(Collectors.toCollection(TreeSet::new));
+            List<Map<String,Object>> result=new ArrayList<>();
+            for(Long unitId:new TreeSet<>(access.organizationIds(target,admin))) {
+                var unit=references.organization(unitId);
+                result.add(organizationRow(employee.id,unit,roleNames,permissionCodes,roleIds));
+            }
+            return result;
+        }
         List<Map<String,Object>> result=new ArrayList<>();
         for(Long unitId:new LinkedHashSet<>(employee.organizationUnitIds)) {
             // Returning memberships does not grant account scope or permissions.
             var unit=references.organization(unitId);
-            Map<String,Object> row=new LinkedHashMap<>();
-            row.put("userId",employee.id);row.put("buImage",unit.buImage);
-            row.put("organizationUnitId",unit.id);row.put("organizationUnitName",unit.name);
-            row.put("isAnonymous",unit.isAnonymous);row.put("isObservationProofRequired",unit.isObservationProofRequired);
-            row.put("languageId",unit.languageId);row.put("currency",unit.currency);result.add(row);
+            result.add(organizationRow(employee.id,unit,null,null,null));
         }
         return result;
+    }
+    private Map<String,Object> organizationRow(Long userId,com.ehspro.entity.OrganizationUnit unit,
+            Set<String> roleNames,Set<String> permissionCodes,Set<Long> roleIds) {
+        Map<String,Object> row=new LinkedHashMap<>();
+        row.put("userId",userId);row.put("buImage",unit.buImage);
+        row.put("organizationUnitId",unit.id);row.put("organizationUnitName",unit.name);
+        row.put("isAnonymous",unit.isAnonymous);row.put("isObservationProofRequired",unit.isObservationProofRequired);
+        row.put("languageId",unit.languageId);row.put("currency",unit.currency);
+        if(roleNames!=null) {row.put("roleIds",new TreeSet<>(roleIds));row.put("roles",roleNames);row.put("permissions",permissionCodes);}
+        return row;
     }
     private EmployeeDto response(Employee entity) {
         EmployeeDto dto = mapper.map(entity, EmployeeDto.class);

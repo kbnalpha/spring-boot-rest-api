@@ -13,14 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    @Bean org.springframework.web.cors.UrlBasedCorsConfigurationSource corsConfigurationSource(
-            @org.springframework.beans.factory.annotation.Value("${ehs.cors.allowed-origins}") String origins) {
+    @Bean org.springframework.web.cors.UrlBasedCorsConfigurationSource corsConfigurationSource() {
         var config=new org.springframework.web.cors.CorsConfiguration();
-        var allowed=java.util.Arrays.stream(origins.split(",")).map(String::trim).filter(s -> !s.isEmpty()).toList();
-        if(allowed.contains("*")) throw new IllegalArgumentException("CORS_ALLOWED_ORIGINS must list explicit frontend origins, not *");
-        config.setAllowedOrigins(allowed);
-        config.setAllowedMethods(java.util.List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-        config.setAllowedHeaders(java.util.List.of("Authorization","Content-Type","Accept","Accept-Language","Accept-Org-Language","Accept-Nav-Language"));
+        config.setAllowedOriginPatterns(java.util.List.of("*"));
+        config.setAllowedMethods(java.util.List.of("GET","HEAD","POST","PUT","PATCH","DELETE","OPTIONS"));
+        config.setAllowedHeaders(java.util.List.of("*"));
         config.setExposedHeaders(java.util.List.of("WWW-Authenticate"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);

@@ -43,7 +43,7 @@ public class AuthenticationResponseService {
         result.put("id",superAdmin?Long.valueOf(-1):p.accountId);
         result.put("organizationUnitId",employee==null?null:employee.organizationUnitId);
         result.put("userName",employee==null?p.getUsername():java.util.stream.Stream.of(employee.firstName,employee.middleName,employee.lastName).filter(s -> s!=null&&!s.isBlank()).collect(java.util.stream.Collectors.joining(" ")));
-        result.put("email",employee==null?superEmail:employee.emailAddress);
+        result.put("email",account==null?superEmail:account.username);
         result.put("token",jwt.issue(p));
         result.put("expiresIn",jwt.expiresIn());
         result.put("roles",roleNames);
@@ -55,8 +55,7 @@ public class AuthenticationResponseService {
         result.put("clientId",p.tenantId);
         result.put("languageCode","en-US");
         result.put("buLanguageCode","en-US");
-        // Preserve existing clients and mandatory first-login instructions.
-        result.put("username",p.getUsername());result.put("accountType",p.accountType);
+        result.put("accountType",p.accountType);
         result.put("mustChangePassword",p.mustChangePassword);
         result.put("nextAction",p.mustChangePassword?"RESET_PASSWORD":"LOGIN_SUCCESS");
         result.put("authenticationType","BEARER");
