@@ -379,6 +379,24 @@ class RbacIntegrationTest {
         String superToken=login(superUser,superPassword,200).path("token").asText();
         mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+superToken)).andExpect(status().isOk());
     }
+    @Test void userDetailsAndOrganizationMembershipsAreScoped() throws Exception {
+        mvc.perform(get("/api/Common/getLanguages")).andExpect(status().isOk())
+            .andExpect(jsonPath("$.results[0].id").value(1)).andExpect(jsonPath("$.results[0].code").value("en-US"));
+        long unit=organization(null,tenant),other=organization(null,tenant),person=employee(unit),foreign=employee(other);
+        long role=role(tenant,List.of(3334L));var user=activate(person,role,List.of(scope(unit,false)));
+        var detail=request("GET","/api/User/"+person,null,user.username,password,200);
+        assertThat(detail.path("id").asLong()).isEqualTo(person);
+        assertThat(detail.path("password").isNull()).isTrue();
+        assertThat(detail.at("/organizationUnitIdsMapped/0/organizationUnitId").asLong()).isEqualTo(unit);
+        assertThat(detail.at("/organizationUnitIdsMapped/0/isChecked").asBoolean()).isTrue();
+        var memberships=request("GET","/api/User/GetUserOrganizationUnit/"+person,null,user.username,password,200);
+        assertThat(memberships.get(0).path("userId").asLong()).isEqualTo(person);
+        assertThat(memberships.get(0).path("organizationUnitId").asLong()).isEqualTo(unit);
+        request("GET","/api/User/"+foreign,null,user.username,password,403);
+        request("GET","/api/User/GetUserOrganizationUnit/"+foreign,null,user.username,password,403);
+        admin("GET","/api/User/9223372036854775807",null,404);
+        mvc.perform(get("/api/User/"+person)).andExpect(status().isUnauthorized());
+    }
     private JsonNode login(String username,String secret,int expected) throws Exception {
         var response=mvc.perform(post("/api/Auth/authenticate").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))
             .andExpect(status().is(expected)).andReturn();

@@ -92,6 +92,40 @@ public class EmployeeService {
         request.systemUsersOnly=true;
         return list(request);
     }
+    private Employee readableEmployee(Long id) {
+        Employee employee=repository.findById(id).orElseThrow(() -> ApiException.notFound("Employee not found"));
+        boolean self=!access.isSuperAdmin()&&accounts.findById(access.principal().accountId).map(a -> a.employeeId.equals(id)).orElse(false);
+        if(!self) {
+            access.require(Integer.valueOf(2).equals(employee.userType)?"ManageContractEmployees":"ManageEmployees");
+            references.organization(employee.organizationUnitId);
+            employee.organizationUnitIds.forEach(access::organization);
+        }
+        return employee;
+    }
+    public com.fasterxml.jackson.databind.node.ObjectNode get(Long id) {
+        Employee employee=readableEmployee(id);
+        // GET has the frontend's checked-membership objects; write DTOs retain their numeric ID lists.
+        var json=new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules();
+        json.disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        com.fasterxml.jackson.databind.node.ObjectNode result=json.valueToTree(response(employee));
+        var mapped=result.putArray("organizationUnitIdsMapped");
+        employee.organizationUnitIds.stream().distinct().forEach(unit -> mapped.addObject().put("organizationUnitId",unit).put("isChecked",true));
+        return result;
+    }
+    public List<Map<String,Object>> organizations(Long id) {
+        Employee employee=readableEmployee(id);
+        List<Map<String,Object>> result=new ArrayList<>();
+        for(Long unitId:new LinkedHashSet<>(employee.organizationUnitIds)) {
+            // Returning memberships does not grant account scope or permissions.
+            var unit=references.organization(unitId);
+            Map<String,Object> row=new LinkedHashMap<>();
+            row.put("userId",employee.id);row.put("buImage",unit.buImage);
+            row.put("organizationUnitId",unit.id);row.put("organizationUnitName",unit.name);
+            row.put("isAnonymous",unit.isAnonymous);row.put("isObservationProofRequired",unit.isObservationProofRequired);
+            row.put("languageId",unit.languageId);row.put("currency",unit.currency);result.add(row);
+        }
+        return result;
+    }
     private EmployeeDto response(Employee entity) {
         EmployeeDto dto = mapper.map(entity, EmployeeDto.class);
         dto.password = null;

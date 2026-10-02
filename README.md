@@ -199,3 +199,11 @@ Tokens validate signature, issuer and expiry, and reload the account/roles for e
 GET /api/Auth/Me
 Authorization: Bearer <results.token>
 ```
+
+## User detail and language APIs
+
+- `GET /api/Common/getLanguages`: public static response: `{"statusCode":200,"message":"Successful","results":[{"id":1,"name":"English (US)","code":"en-US"}]}`. This UI language ID is independent of the database `LANGUAGE` lookup IDs used for organization/employee writes.
+- `GET /api/User/{id}`: authenticated employee detail, with `password: null` and `organizationUnitIdsMapped` represented as `[{"organizationUnitId":123,"isChecked":true}]`. Other fields come from the stored employee and related masters. Write payloads continue to use numeric organization-ID arrays.
+- `GET /api/User/GetUserOrganizationUnit/{id}`: organization memberships with `userId`, `buImage`, `organizationUnitId`, `organizationUnitName`, `isAnonymous`, `isObservationProofRequired`, `languageId`, and `currency`.
+
+Both user routes use **employee IDs**, not the account ID returned by authenticate. An ordinary user can read their own employee profile. Reading another employee requires the corresponding employee-management permission plus organization scope; Admin/Super Admin keep elevated access. Membership organization details enforce account scope. These endpoints never grant additional access. Missing employees return 404; disallowed reads return 403. The configured Super Admin is not an employee; its reserved login ID `-1` has no employee detail record.

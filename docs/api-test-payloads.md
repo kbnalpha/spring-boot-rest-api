@@ -1367,3 +1367,21 @@ Choose a new password of 12–72 characters (at most 72 UTF-8 bytes), with match
 ---
 
 Authentication response fields and permission formatting are documented in [README](../README.md#authentication-response). The `token` field contains a signed Bearer JWT.
+
+### Read language choices and employee details
+
+```http
+GET {{baseUrl}}/api/Common/getLanguages
+```
+
+```http
+GET {{baseUrl}}/api/User/{{employeeId}}
+Authorization: Bearer {{token}}
+```
+
+```http
+GET {{baseUrl}}/api/User/GetUserOrganizationUnit/{{employeeId}}
+Authorization: Bearer {{token}}
+```
+
+Use the employee ID returned by CreateEmployee, not the system-account ID from authentication. `organizationUnitIdsMapped` in the GET response contains checked-membership objects; use numeric ID lists when updating the employee.

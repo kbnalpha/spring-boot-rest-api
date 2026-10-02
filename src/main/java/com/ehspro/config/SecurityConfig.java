@@ -46,6 +46,7 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(a -> a
                 .requestMatchers(org.springframework.http.HttpMethod.GET,"/actuator/health").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,"/api/Common/getLanguages").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/Auth/authenticate").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(new com.ehspro.security.FirstLoginFilter(mapper),org.springframework.security.web.access.intercept.AuthorizationFilter.class)
