@@ -1362,8 +1362,8 @@ Use **employee email + emailed temporary password** as HTTP Basic credentials, n
 }
 ```
 
-Choose a new password of 12–72 characters (at most 72 UTF-8 bytes), with matching confirmation. Then call `/api/Auth/authenticate` using the employee email and new password. Subsequent business requests use HTTP Basic with those same credentials; no bearer token is issued. `GET /api/Auth/Me` confirms `accountType: "USER"` and the assigned permissions.
+Choose a new password of 12–72 characters (at most 72 UTF-8 bytes), with matching confirmation. Then call `/api/Auth/authenticate` using the employee email and new password. Subsequent business requests can use `Authorization: Bearer <results.token>` from the new login response; legacy HTTP Basic still works. `GET /api/Auth/Me` confirms `accountType: "USER"` and the assigned permissions.
 
 ---
 
-Authentication response fields and permission formatting are documented in [README](../README.md#authentication-response). The `token` field is null while HTTP Basic authentication is used.
+Authentication response fields and permission formatting are documented in [README](../README.md#authentication-response). The `token` field contains a signed Bearer JWT.

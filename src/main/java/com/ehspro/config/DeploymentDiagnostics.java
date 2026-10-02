@@ -20,6 +20,7 @@ public class DeploymentDiagnostics implements ApplicationContextInitializer<Conf
         checks.put("DB_PASSWORD","spring.datasource.password");
         checks.put("LIQUIBASE_DB_URL","spring.liquibase.url");
         checks.put("API_USERNAME","spring.security.user.name");
+        checks.put("JWT_SECRET","ehs.jwt.secret");
         checks.put("API_PASSWORD","spring.security.user.password");
         checks.put("SMTP_HOST","spring.mail.host");
         checks.put("SMTP_PORT","spring.mail.port");

@@ -60,3 +60,5 @@ curl.exe http://localhost:10000/actuator/health
 This connects to the database specified in `.env` and applies pending migrations. To use another host port, change the left side of `-p`, for example `-p 18080:10000`.
 
 References: [Docker on Render](https://render.com/docs/docker), [Blueprint configuration](https://render.com/docs/blueprint-spec), and [health checks](https://render.com/docs/health-checks).
+
+JWT authentication requires `JWT_SECRET`, a base64-encoded random key of at least 32 bytes. Blueprint sync generates it if absent; manually created Docker services must set it in Environment. `SUPER_ADMIN_EMAIL` defaults to `kbnalpha@gmail.com`.

@@ -338,7 +338,7 @@ class RbacIntegrationTest {
         assertThat(response.path("organizationUnitId").asLong()).isEqualTo(unit);
         assertThat(response.path("userName").asText()).isEqualTo("Test Employee");
         assertThat(response.path("email").asText()).isEqualTo(user.username);
-        assertThat(response.path("token").isNull()).isTrue();
+        assertThat(response.path("token").asText()).contains(".");
         assertThat(response.path("clientId").asLong()).isEqualTo(tenant);
         assertThat(response.path("landingPage").asText()).isEqualTo("Dashboard");
         assertThat(response.path("resetPassword").asBoolean()).isFalse();
@@ -349,7 +349,35 @@ class RbacIntegrationTest {
         assertThat(adminCodes).contains("BusinessUnit(BU).EditBusinessUnit","BusinessUnit(BU).ContractorMaster",
             "BusinessUnit(BU).ManageTemporaryUsers","Administration.ManageRoles","GEMBAWalk.ViewGEMBAWalk",
             "PTW.Approve/ClosePermit","ShiftInspectionLog.CreateShiftInspectionChecklist","Home");
-        assertThat(adminResponse.path("id").isNull()).isTrue();
+        assertThat(adminResponse.path("id").asLong()).isEqualTo(-1);
+        assertThat(adminResponse.path("email").asText()).isEqualTo("kbnalpha@gmail.com");
+        assertThat(adminResponse.path("languageCode").asText()).isEqualTo("en-US");
+        assertThat(adminResponse.path("buLanguageCode").asText()).isEqualTo("en-US");
+    }
+    @Test void bearerTokensRespectPasswordResetRevocationAndCurrentRoles() throws Exception {
+        long unit=organization(null,tenant),role=role(tenant,List.of(3342L)),person=employee(unit);
+        var activated=admin("POST","/api/User/"+person+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),200);
+        String email=activated.path("username").asText();
+        String pendingToken=login(email,TestMail.temporaryPassword(mail,email),200).path("token").asText();
+        mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+pendingToken)).andExpect(status().isForbidden());
+        String temporary=TestMail.temporaryPassword(mail,email);
+        mvc.perform(post("/api/Auth/FirstLoginPasswordReset").header("Authorization","Bearer "+pendingToken)
+            .contentType("application/json").content(mapper.writeValueAsBytes(Map.of("currentPassword",temporary,"newPassword",password,"confirmPassword",password))))
+            .andExpect(status().isOk());
+        mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+pendingToken)).andExpect(status().isUnauthorized());
+        String token=login(email,password,200).path("token").asText();
+        mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+token)).andExpect(status().isOk());
+        mvc.perform(post("/api/Department/GetList").header("Authorization","Bearer "+token).contentType("application/json").content("{}"))
+            .andExpect(status().isOk());
+        long otherRole=role(tenant,List.of(3335L));
+        admin("PUT","/api/SystemUser/"+activated.path("id").asLong()+"/Roles",Map.of("basicRoleId",otherRole,"additionalRoleIds",List.of()),200);
+        mvc.perform(post("/api/Department/GetList").header("Authorization","Bearer "+token).contentType("application/json").content("{}"))
+            .andExpect(status().isForbidden());
+        admin("PUT","/api/SystemUser/"+activated.path("id").asLong()+"/Enabled",Map.of("enabled",false),200);
+        mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+token)).andExpect(status().isUnauthorized());
+        mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer invalid.token.value")).andExpect(status().isUnauthorized());
+        String superToken=login(superUser,superPassword,200).path("token").asText();
+        mvc.perform(get("/api/Auth/Me").header("Authorization","Bearer "+superToken)).andExpect(status().isOk());
     }
     private JsonNode login(String username,String secret,int expected) throws Exception {
         var response=mvc.perform(post("/api/Auth/authenticate").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("username",username,"password",secret))))

@@ -18,7 +18,7 @@ CORS_ALLOWED_ORIGINS=https://your-frontend.example.com,http://localhost:3000,htt
 
 Use the **frontend** origin (scheme, hostname, and port), without a path or trailing slash. This list replaces the defaults. Wildcard `*` is rejected because credentialed requests are enabled. Other origins are denied by browser CORS handling; Postman/backend access still depends on authentication and authorization rather than CORS.
 
-Preflight OPTIONS requests for allowed origins are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, `Accept`, `Accept-Language`, `Accept-Org-Language`, and `Accept-Nav-Language` headers. Business requests still require HTTP Basic credentials and appropriate permissions; first-login password reset rules remain enforced. Login does not issue a bearer token. No network/IP allowlisting is needed solely because another developer uses a different network.
+Preflight OPTIONS requests for allowed origins are handled before authentication. GET, POST, PUT, PATCH, and DELETE requests support `Authorization`, `Content-Type`, `Accept`, `Accept-Language`, `Accept-Org-Language`, and `Accept-Nav-Language` headers. Business requests require a Bearer JWT (or legacy HTTP Basic credentials) and appropriate permissions; first-login password reset rules remain enforced. Login issues a signed Bearer JWT. No network/IP allowlisting is needed solely because another developer uses a different network.
 
 
 For container deployment, use the root `Dockerfile` and `render.yaml`. Follow the [Render deployment guide](docs/render-deployment.md) for environment variables, SMTP configuration, health checks, and local Docker commands.
@@ -185,6 +185,17 @@ Authenticate with `POST /api/Auth/authenticate` and JSON `{"username":"employee@
 
 Permissions use frontend names such as `BusinessUnit(BU).ManageEmployees` and `Administration.ManageRoles`, mapped from the existing permission catalog and source aliases. Parent names are included with granted children. Admin/Super Admin receive the full catalog; users receive only their effective grants. These display strings do not change backend permission checks or organization scope. Catalog entries for future modules do not imply that module APIs are implemented.
 
-`token` is `null`: authentication remains HTTP Basic, not Bearer. Existing `username` (login identifier), `accountType`, `authenticationType`, `mustChangePassword`, `nextAction`, and conditional `resetPasswordEndpoint` fields remain available. Pending first-login users receive `resetPassword: true` and an empty permissions list until reset.
+`token` is a signed JWT; send `Authorization: Bearer <token>`. `authenticationType` is `BEARER` and `expiresIn` is the lifetime in seconds. HTTP Basic remains supported for existing clients. Existing `username` (login identifier), `accountType`, `authenticationType`, `mustChangePassword`, `nextAction`, and conditional `resetPasswordEndpoint` fields remain available. Pending first-login users receive `resetPassword: true` and an empty permissions list until reset.
 
-The configured Super Admin has no employee/account row: `id`, `email`, `organizationUnitId`, and language codes are null, `userName` is the configured login, and `clientId` is its existing system tenant value (0). Employee language codes come from reference data (for example `en`, not a fabricated `en-US`). Unknown/unconfigured values remain null. Non-contract employees have `contractorCompanyId: 0`. Role names include `User` plus assigned active role names (`Admin`/`SuperAdmin` for built-ins).
+The configured Super Admin uses reserved ID `-1` (not an employee/account table ID), `email` from `SUPER_ADMIN_EMAIL` (default `kbnalpha@gmail.com`), null `organizationUnitId`, and system `clientId: 0`. Employees use their real system-account IDs and email addresses. Both `languageCode` and `buLanguageCode` are `en-US` as required by the client contract. Non-contract employees have `contractorCompanyId: 0`.
+
+### JWT deployment
+
+Set `JWT_SECRET` to a base64-encoded random key of at least 32 bytes in Render. Blueprint sync generates it when absent; a manually created service needs the variable added manually. Keep the same key across instances and deployments. Never use an API password or SMTP key for JWT signing. `JWT_TTL_SECONDS` defaults to 3600 (allowed 60?86400). Development without a key uses an ephemeral key, invalidating tokens on restart.
+
+Tokens validate signature, issuer and expiry, and reload the account/roles for each request. Disabled/deleted accounts cannot use their tokens; password reset or resend invalidates previous tokens. Pending first-login tokens can only authenticate/reset the password, not access business APIs. After reset, authenticate again for a new token. There is no refresh-token endpoint; authenticate again when expired. Configured Super Admin tokens are invalidated when its configured password changes.
+
+```http
+GET /api/Auth/Me
+Authorization: Bearer <results.token>
+```

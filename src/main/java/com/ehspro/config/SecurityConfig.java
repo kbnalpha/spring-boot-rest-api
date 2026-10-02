@@ -34,7 +34,7 @@ public class SecurityConfig {
         provider.setUserDetailsService(identities);provider.setPasswordEncoder(encoder);
         return new org.springframework.security.authentication.ProviderManager(provider);
     }
-    @Bean SecurityFilterChain secured(HttpSecurity http, ObjectMapper mapper) throws Exception {
+    @Bean SecurityFilterChain secured(HttpSecurity http, ObjectMapper mapper,com.ehspro.security.JwtService jwt) throws Exception {
         org.springframework.security.web.AuthenticationEntryPoint unauthorized = (request,response,exception) -> {
             response.setStatus(401);
             response.setHeader("WWW-Authenticate", "Basic realm=\"EHS Pro API\"");
@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .requestMatchers(org.springframework.http.HttpMethod.POST,"/api/Auth/authenticate").permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(new com.ehspro.security.FirstLoginFilter(mapper),org.springframework.security.web.access.intercept.AuthorizationFilter.class)
+            .addFilterBefore(new com.ehspro.security.JwtAuthenticationFilter(jwt,mapper),org.springframework.security.web.authentication.www.BasicAuthenticationFilter.class)
             .httpBasic(b -> b.authenticationEntryPoint(unauthorized))
             .exceptionHandling(e -> e.authenticationEntryPoint(unauthorized).accessDeniedHandler((request,response,exception) -> {
                 response.setStatus(403); response.setContentType("application/json");

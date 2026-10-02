@@ -24,7 +24,7 @@ class RenderConfigurationTest {
         return context;
     }
     @Test void standaloneRenderResolvesDatabaseAndMailWithoutPrintingSecrets(CapturedOutput output) {
-        try(var context=context(Map.of("DB_PASSWORD","db-secret-test","API_PASSWORD","api-secret-test","SMTP_PASSWORD","smtp-secret-test"))) {
+        try(var context=context(Map.of("DB_PASSWORD","db-secret-test","API_PASSWORD","api-secret-test","SMTP_PASSWORD","smtp-secret-test","JWT_SECRET","abcdefghijklmnopqrstuvwxyz0123456789abcdefgh"))) {
             new DeploymentDiagnostics().initialize(context);
             var env=context.getEnvironment();
             assertThat(env.getActiveProfiles()).containsExactly("render");

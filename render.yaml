@@ -7,6 +7,12 @@ services:
     dockerContext: .
     healthCheckPath: /actuator/health
     envVars:
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_TTL_SECONDS
+        value: "3600"
+      - key: SUPER_ADMIN_EMAIL
+        value: kbnalpha@gmail.com
       - key: SPRING_PROFILES_ACTIVE
         value: render
       - key: DB_HOST

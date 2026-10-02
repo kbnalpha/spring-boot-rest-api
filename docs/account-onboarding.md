@@ -2,7 +2,7 @@
 
 Account types are `SUPER_ADMIN`, `ADMIN`, and `USER`. Super Admin is the configured backend identity. An active built-in Admin role gives organization-scoped administration. All other system accounts are Users, whose actions come from their assigned roles and permissions. `GET /api/Auth/Me` and `POST /api/Auth/authenticate` expose the effective account type.
 
-No UI is implemented. APIs return a `nextAction` value for the caller to decide what to show; they do not issue browser redirects. Authentication remains stateless HTTP Basic. Login validates credentials and reports the next step; it does not issue a session cookie or token. Use HTTPS when deploying.
+No UI is implemented. APIs return a `nextAction` value for the caller to decide what to show; they do not issue browser redirects. Authentication supports stateless Bearer JWTs and legacy HTTP Basic. Login issues a token and reports the next step; it does not issue a session cookie. Use HTTPS when deploying.
 
 ## Configure email
 
@@ -72,7 +72,7 @@ HTTP 200, abbreviated response:
     "accountType": "USER",
     "mustChangePassword": true,
     "nextAction": "RESET_PASSWORD",
-    "authenticationType": "HTTP_BASIC",
+    "authenticationType": "BEARER",
     "resetPasswordEndpoint": "/api/Auth/FirstLoginPasswordReset"
   }
 }

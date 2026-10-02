@@ -10,6 +10,8 @@ import java.util.*;
 @Service
 @Transactional(readOnly=true)
 public class AuthenticationResponseService {
+    @org.springframework.beans.factory.annotation.Value("${ehs.super-admin.email:kbnalpha@gmail.com}") private String superEmail;
+    private final com.ehspro.security.JwtService jwt;
     private final UserAccountRepository accounts;
     private final EmployeeRepository employees;
     private final OrganizationUnitRepository organizations;
@@ -19,7 +21,8 @@ public class AuthenticationResponseService {
     private final PermissionSourceAliasRepository aliases;
     public AuthenticationResponseService(UserAccountRepository accounts,EmployeeRepository employees,
             OrganizationUnitRepository organizations,RoleRepository roles,ReferenceItemRepository lookups,
-            PermissionDefinitionRepository permissions,PermissionSourceAliasRepository aliases) {
+            PermissionDefinitionRepository permissions,PermissionSourceAliasRepository aliases,com.ehspro.security.JwtService jwt) {
+        this.jwt=jwt;
         this.accounts=accounts;this.employees=employees;this.organizations=organizations;this.roles=roles;
         this.lookups=lookups;this.permissions=permissions;this.aliases=aliases;
     }
@@ -37,11 +40,12 @@ public class AuthenticationResponseService {
         for(var role:activeRoles) roleNames.add(role.builtInAdmin?"Admin":role.name);
         Long landingId=account==null?Long.valueOf(1):activeRoles.stream().filter(r -> r.id.equals(account.basicRoleId)).map(r -> r.landingPageId).filter(Objects::nonNull).findFirst().orElse(null);
         var result=new LinkedHashMap<String,Object>();
-        result.put("id",p.accountId);
+        result.put("id",superAdmin?Long.valueOf(-1):p.accountId);
         result.put("organizationUnitId",employee==null?null:employee.organizationUnitId);
         result.put("userName",employee==null?p.getUsername():java.util.stream.Stream.of(employee.firstName,employee.middleName,employee.lastName).filter(s -> s!=null&&!s.isBlank()).collect(java.util.stream.Collectors.joining(" ")));
-        result.put("email",employee==null?null:employee.emailAddress);
-        result.put("token",null); // HTTP Basic remains the supported authentication mechanism.
+        result.put("email",employee==null?superEmail:employee.emailAddress);
+        result.put("token",jwt.issue(p));
+        result.put("expiresIn",jwt.expiresIn());
         result.put("roles",roleNames);
         result.put("permissions",permissionNames(p));
         result.put("landingPage",lookup("LANDING_PAGE",landingId,false));
@@ -49,13 +53,13 @@ public class AuthenticationResponseService {
         result.put("userType",employee==null?1:employee.userType);
         result.put("contractorCompanyId",employee==null||employee.contractorId==null?0L:employee.contractorId);
         result.put("clientId",p.tenantId);
-        result.put("languageCode",employee==null?null:lookup("LANGUAGE",employee.languageID,true));
-        result.put("buLanguageCode",unit==null?null:lookup("LANGUAGE",unit.languageId,true));
+        result.put("languageCode","en-US");
+        result.put("buLanguageCode","en-US");
         // Preserve existing clients and mandatory first-login instructions.
         result.put("username",p.getUsername());result.put("accountType",p.accountType);
         result.put("mustChangePassword",p.mustChangePassword);
         result.put("nextAction",p.mustChangePassword?"RESET_PASSWORD":"LOGIN_SUCCESS");
-        result.put("authenticationType","HTTP_BASIC");
+        result.put("authenticationType","BEARER");
         if(p.mustChangePassword) result.put("resetPasswordEndpoint","/api/Auth/FirstLoginPasswordReset");
         return result;
     }
