@@ -20,6 +20,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("security-test")
 class SecurityIntegrationTest {
     @Autowired MockMvc mvc;
+    @Test void corsCoversRoutesOutsideApiWithoutMakingThemPublic() throws Exception {
+        for(String path:java.util.List.of("/actuator/health","/v3/api-docs","/swagger-ui/index.html")) {
+            mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options(path)
+                .header("Origin","http://localhost:3000")
+                .header("Access-Control-Request-Method","GET")
+                .header("Access-Control-Request-Headers","authorization"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"));
+        }
+        mvc.perform(get("/actuator/health").header("Origin","http://localhost:3000"))
+            .andExpect(status().isOk()).andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"));
+        mvc.perform(get("/v3/api-docs").header("Origin","http://localhost:3000"))
+            .andExpect(status().isUnauthorized()).andExpect(header().string("Access-Control-Allow-Origin","http://localhost:3000"));
+    }
     @Test void loginPreflightAllowsFrontendLanguageHeader() throws Exception {
         mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options("/api/Auth/authenticate")
             .header("Origin","http://localhost:3000")

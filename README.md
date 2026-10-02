@@ -10,7 +10,7 @@ See [master fields, RBAC, and account setup](database/master-fields-rbac.md) for
 
 ### Browser access (CORS)
 
-API routes under `/api/**` accept cross-origin browser requests from the exact origins in `CORS_ALLOWED_ORIGINS`. Defaults support local frontends on `localhost` and `127.0.0.1`, ports `3000` and `5173`. On Render, set the variable in **Environment** and redeploy, for example:
+All HTTP routes (`/**`), including APIs, Swagger/OpenAPI, and health checks, accept cross-origin browser requests from the exact origins in `CORS_ALLOWED_ORIGINS`. Defaults support local frontends on `localhost` and `127.0.0.1`, ports `3000` and `5173`. On Render, set the variable in **Environment** and redeploy, for example:
 
 ```properties
 CORS_ALLOWED_ORIGINS=https://your-frontend.example.com,http://localhost:3000,http://localhost:5173

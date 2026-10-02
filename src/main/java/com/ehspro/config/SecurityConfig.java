@@ -25,7 +25,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
         var source=new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**",config);
+        source.registerCorsConfiguration("/**",config);
         return source;
     }
     @Bean PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
