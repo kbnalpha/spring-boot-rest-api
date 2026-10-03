@@ -13,7 +13,7 @@ public class ContractorDto extends BaseDto {
     @Size(max=255) public String primaryContactPersonName;
     @Size(max=255) public String primaryContactDesignation;
     @Size(max=50) public String phoneNumber;
-    @Size(max=255) @Email public String email;
+    @Size(max=255) public String email;
     @Size(max=500) public String website;
     @Size(max=500) public String linkedIn;
     @Positive public Long countryId;

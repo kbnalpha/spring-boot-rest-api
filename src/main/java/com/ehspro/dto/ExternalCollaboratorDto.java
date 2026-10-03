@@ -10,7 +10,7 @@ public class ExternalCollaboratorDto extends BaseDto {
     @NotBlank @Size(max=255) public String firstName;
     @Size(max=255) public String middleName;
     @NotBlank @Size(max=255) public String lastName;
-    @Email @Size(max=255) public String emailAddress;
+    public String emailAddress;
     @Size(max=50) public String phoneNumber;
     @NotNull @Min(1) public Integer gender;
     @NotNull @Min(1) @Max(2) public Integer status;

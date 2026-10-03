@@ -16,7 +16,7 @@ public class EmployeeDto extends BaseDto {
     @NotBlank @Size(max = 2000) public String firstName;
     @Size(max = 2000) public String middleName;
     @NotBlank @Size(max = 2000) public String lastName;
-    @Size(max = 2000) @Email public String emailAddress;
+    @Size(max = 2000) public String emailAddress;
     @Size(max = 2000) public String phoneNumber;
     public Long profilePictureId;
     @NotNull @Min(1) public Integer gender;

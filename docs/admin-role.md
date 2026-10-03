@@ -22,7 +22,7 @@ Authenticate as Super Admin using HTTP Basic (default `ehs-api` / `ehs-api-local
 
 1. Call `GET http://localhost:8080/api/Role/GetAllRoles`. Find the entry with `builtInAdmin: true` and record its `id` as `adminRoleId`.
 2. Create an employee in the intended parent organization, or use an existing employee.
-3. Ensure the employee has a valid unique email, then activate the employee. Replace the angle-bracket placeholders below with actual values:
+3. Ensure the employee has a nonblank, unique email value for the login identifier and activation-message recipient, then activate the employee. Email syntax is not validated; a value that is not deliverable may be rejected by the SMTP provider. Replace the angle-bracket placeholders below with actual values:
 
 ```http
 POST http://localhost:8080/api/User/<employeeId>/ActivateSystemUser

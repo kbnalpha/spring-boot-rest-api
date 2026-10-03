@@ -28,7 +28,7 @@ public class OrganizationUnitDto extends BaseDto {
     @NotNull @Positive @JsonAlias("languageID") public Long languageId;
     @NotBlank @Size(max = 2000) public String keyContactName;
     @NotBlank @Pattern(regexp = "[+0-9][0-9 ()-]{5,24}") public String phoneNumber;
-    @NotBlank @Size(max = 254) @Email public String emailAddress;
+    public String emailAddress;
     public Boolean isAnonymous = false;
     public Boolean isObservationProofRequired = false;
     public JsonNode attachments;
@@ -42,4 +42,3 @@ public class OrganizationUnitDto extends BaseDto {
     public JsonNode shiftMaster;
     @Valid public List<@NotNull OrganizationUnitDto> children = new ArrayList<>();
 }
-

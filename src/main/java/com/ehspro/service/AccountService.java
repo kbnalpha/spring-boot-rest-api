@@ -58,10 +58,8 @@ public class AccountService {
     }
     private String emailUsername(Employee employee,Long accountId) {
         String email=employee.emailAddress==null?"":employee.emailAddress.trim().toLowerCase(Locale.ROOT);
-        try {
-            var address=new jakarta.mail.internet.InternetAddress(email,true);address.validate();
-            if(email.isBlank()||email.length()>254||!email.contains("@")||!email.equals(address.getAddress())) throw new IllegalArgumentException();
-        } catch(Exception e) {throw ApiException.badRequest("A valid employee email address is required for account activation");}
+        if(email.isBlank()) throw ApiException.badRequest("An employee email is required for account activation");
+        if(email.length()>254) throw ApiException.badRequest("Employee email exceeds the 254-character system login limit");
         if(identities.reservedUsername(email)) throw ApiException.badRequest("Reserved system username");
         accounts.findByUsernameIgnoreCase(email).ifPresent(existing -> {
             if(!Objects.equals(existing.id,accountId)) throw new ApiException(org.springframework.http.HttpStatus.CONFLICT,"An account already uses this email address");

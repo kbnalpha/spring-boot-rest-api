@@ -97,7 +97,7 @@ class RbacIntegrationTest {
     }
     @Test void workbookFieldsValidateAndOrganizationDerivesCountryMetadata() throws Exception {
         ObjectNode body=organizationBody(null,tenant);body.put("name","X".repeat(51));admin("POST","/api/OrganizationUnit",body,400);
-        body.put("name","Workbook "+UUID.randomUUID().toString().substring(0,8));body.put("currency","WRONG");body.put("countryCode","WRONG");
+        body.put("name","Workbook "+UUID.randomUUID().toString().substring(0,8));body.put("currency","WRONG");body.put("countryCode","WRONG").put("emailAddress","not-an-email");
         body.putArray("shifts").addObject().put("name","Night").put("startTime","22:00").put("endTime","06:00");
         admin("POST","/api/OrganizationUnit",body,200);
         JsonNode tree=admin("GET","/api/OrganizationUnit/GetAllOrganizations",null,200);
@@ -251,7 +251,7 @@ class RbacIntegrationTest {
         request("POST","/api/Equipment/List",Map.of(),email,password,403);
         request("POST","/api/Auth/FirstLoginPasswordReset",Map.of("currentPassword",password,"newPassword","Another-password-123","confirmPassword","Another-password-123"),email,password,400);
     }
-    @Test void activationExpiresCanBeResentAndCannotBypassAdminOrEmailRequirements() throws Exception {
+    @Test void activationExpiresCanBeResentAndRequiresUniqueLoginEmail() throws Exception {
         long unit=organization(null,tenant),role=role(tenant,List.of(3342L)),employee=employee(unit);
         var activation=admin("POST","/api/User/"+employee+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),200);
         String email=activation.path("username").asText(),oldTemporary=TestMail.temporaryPassword(mail,email);
@@ -266,12 +266,15 @@ class RbacIntegrationTest {
         login(email,password,401);completeFirstLogin(email);
         admin("PUT","/api/SystemUser/"+id+"/Enabled",Map.of("enabled",false),200);login(email,password,401);
         admin("POST","/api/SystemUser/"+id+"/ResendActivation",null,400);
-        long missingEmail=employee(unit);var person=employees.findById(missingEmail).orElseThrow();person.emailAddress=null;employees.saveAndFlush(person);
-        admin("POST","/api/User/"+missingEmail+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),400);
-        person.emailAddress=email.toUpperCase(Locale.ROOT);employees.saveAndFlush(person);
-        admin("POST","/api/User/"+missingEmail+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),409);
-        person.emailAddress="unique-"+UUID.randomUUID()+"@example.com";employees.saveAndFlush(person);
-        admin("POST","/api/User/"+missingEmail+"/ActivateSystemUser",Map.of("username","custom","password",password,"basicRoleId",role,"scopes",List.of(scope(unit,false))),400);
+        ObjectNode nonstandardEmployee=employeeBody(unit);nonstandardEmployee.put("emailAddress","not-an-email");
+        long nonstandardEmailEmployee=admin("POST","/api/User/CreateEmployee",nonstandardEmployee,200).asLong();
+        var person=employees.findById(nonstandardEmailEmployee).orElseThrow();
+        var nonstandardAccount=admin("POST","/api/User/"+nonstandardEmailEmployee+"/ActivateSystemUser",
+            Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),200);
+        assertThat(nonstandardAccount.path("username").asText()).isEqualTo("not-an-email");
+        long duplicateEmailEmployee=employee(unit);var duplicate=employees.findById(duplicateEmailEmployee).orElseThrow();
+        duplicate.emailAddress=email.toUpperCase(Locale.ROOT);employees.saveAndFlush(duplicate);
+        admin("POST","/api/User/"+duplicateEmailEmployee+"/ActivateSystemUser",Map.of("basicRoleId",role,"scopes",List.of(scope(unit,false))),409);
     }
     @Test void mailFailureRollsBackActivationAndAdminAlsoMustCompleteFirstLogin() throws Exception {
         long unit=organization(null,tenant),employee=employee(unit),adminRole=0;
@@ -354,6 +357,7 @@ class RbacIntegrationTest {
         assertThat(adminResponse.path("email").asText()).isEqualTo("kbnalpha@gmail.com");
         assertThat(adminResponse.path("languageCode").asText()).isEqualTo("en-US");
         assertThat(adminResponse.path("buLanguageCode").asText()).isEqualTo("en-US");
+        login("not-an-email",password,401);
         mvc.perform(post("/api/Auth/authenticate").contentType("application/json")
             .content("{\"username\":\"employee@example.com\",\"password\":\"not-a-password\"}"))
             .andExpect(status().isBadRequest());

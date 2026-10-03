@@ -26,7 +26,7 @@ If SMTP rejects the message or is unavailable, activation/resend returns HTTP 50
 
 ## 1. Admin enables an employee as a User
 
-The employee must be active and have a valid, unique email for their login. Both regular employees and contract employees are supported. Authenticate as Admin or Super Admin:
+The employee must be active and have a nonblank, unique login email. Email syntax is not validated; the value is used as the login identifier and as the activation-message recipient, so SMTP may reject a value that is not a deliverable address. Both regular employees and contract employees are supported. Authenticate as Admin or Super Admin:
 
 ```http
 POST /api/User/125/ActivateSystemUser
@@ -41,7 +41,7 @@ Content-Type: application/json
 }
 ```
 
-Replace example IDs with actual IDs. The API derives the username from `employee.emailAddress`, trims it, and stores it in lowercase. The server generates a random temporary password, persists only its BCrypt hash, marks `mustChangePassword: true`, enables the account, and emails the credentials to that address. Do not submit `username` or `password` in activation requests; those obsolete fields now return HTTP 400.
+Replace example IDs with actual IDs. The API derives the login identifier from `employee.emailAddress`, trims it, and stores it in lowercase. Email-format validation is not performed. The nonblank value must be unique and no longer than the system account's 254-character login column. The server generates a random temporary password, persists only its BCrypt hash, marks `mustChangePassword: true`, enables the account, and emails the credentials to that address. Do not submit `username` or `password` in activation requests; those obsolete fields now return HTTP 400.
 
 The response contains account details, username, `mustChangePassword`, and `temporaryPasswordExpiresAt` (UTC). It never contains the temporary password or hash. An employee's `hasAccess` flag alone does not create credentials; use this activation endpoint.
 
@@ -113,7 +113,7 @@ Admin/Super Admin authentication is required; no payload is needed. This generat
 
 ## Existing accounts and email changes
 
-Migration 008 preserves existing accounts and passwords. It does not guess unique emails or force a reset for users created before this workflow. To convert a legacy username, set a valid unique employee email and call `ResendActivation`; the username then becomes that email and password reset becomes mandatory. Editing employee email alone does not silently change an existing login.
+Migration 008 preserves existing accounts and passwords. It does not guess unique emails or force a reset for users created before this workflow. To convert a legacy username, set a nonblank unique employee email value and call `ResendActivation`; the login identifier then becomes that value and password reset becomes mandatory. Editing employee email alone does not silently change an existing login.
 
 ## Test without external email delivery
 
