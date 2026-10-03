@@ -69,7 +69,7 @@ public class ListQueryService {
                 predicates.add(cb.equal(root.get("status"), 1));
             }
         }
-        if (r.id != null) predicates.add(cb.equal(root.get("id"), r.id));
+        if (r.id != null && r.id != 0) predicates.add(cb.equal(root.get("id"), r.id));
         if (businessField != null && r.businessUnitIds != null && !r.businessUnitIds.isBlank()) {
             try {
                 List<Long> ids = Arrays.stream(r.businessUnitIds.split(",", -1)).map(String::trim).map(Long::valueOf).toList();

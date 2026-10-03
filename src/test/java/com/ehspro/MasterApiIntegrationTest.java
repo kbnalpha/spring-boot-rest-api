@@ -98,6 +98,12 @@ class MasterApiIntegrationTest {
              "translations":[{"languageId":1,"activityName":"Forklift Operations","description":"Routine"}]}
             """, "businessUnitId", organization).path("id").asLong()).isPositive();
         assertThat(list("/api/OperationActivity/list", organization).at("/items/0/businessUnitName").asText()).isEqualTo("Head Office");
+        JsonNode activities = postJson("/api/OperationActivity/list", """
+            {"id":0,"businessUnitIds":"%d","userId":-1,"sorting":"","sortingType":"","filter":"",
+             "filters":[],"maxResultCount":10,"skipCount":0,"multiSortMeta":[],"isExportToExcel":false}
+            """.formatted(organization));
+        assertThat(activities.path("totalCount").asInt()).isEqualTo(1);
+        assertThat(activities.at("/items/0/activityName").asText()).isEqualTo("Forklift Operations");
         JsonNode observation = create("/api/ObservationType/Create", """
             {"observationCategoryId":4,"typeDescription":"Safe work","enableSvt":false,"status":1,
              "observationSubTypes":[{"subTypeDescription":"PPE","status":1}],
@@ -160,6 +166,20 @@ class MasterApiIntegrationTest {
         assertThat(list("/api/Department/GetList", organization("Empty")).path("totalCount").asInt()).isZero();
         result = postJson("/api/Department/GetList", "{\"businessUnitIds\":\"" + unit + "\",\"filter\":\"amm\"}");
         assertThat(result.path("totalCount").asInt()).isEqualTo(1);
+        result = postJson("/api/Department/GetList", """
+            {"id":0,"businessUnitIds":"%d","userId":-1,"sorting":"","sortingType":"","filter":"",
+             "filters":[],"maxResultCount":10,"skipCount":0,"multiSortMeta":[],"isExportToExcel":false}
+            """.formatted(unit));
+        assertThat(result.path("totalCount").asInt()).isEqualTo(4);
+        long designation = create("/api/Designation/Create", """
+            {"name":"Paging designation","status":1}
+            """, "businessUnitId", unit).path("id").asLong();
+        result = postJson("/api/Designation/GetList", """
+            {"id":0,"businessUnitIds":"%d","userId":-1,"sorting":"","sortingType":"","filter":"",
+             "filters":[],"maxResultCount":10,"skipCount":0,"multiSortMeta":[],"isExportToExcel":false}
+            """.formatted(unit));
+        assertThat(result.path("totalCount").asInt()).isEqualTo(1);
+        assertThat(result.at("/items/0/id").asLong()).isEqualTo(designation);
         result = postJson("/api/Department/GetList", "{\"businessUnitIds\":\"" + unit + "\",\"isExportToExcel\":true,\"maxResultCount\":1}");
         assertThat(result.path("items").size()).isEqualTo(4);
     }
