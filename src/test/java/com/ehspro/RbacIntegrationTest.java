@@ -51,6 +51,10 @@ class RbacIntegrationTest {
 
         var scope=new com.ehspro.dto.AccountRequests.Scope(0L,false);
         assertThat(validator.validate(scope)).isEmpty();
+
+        var listRequest=new com.ehspro.dto.ListRequest();
+        listRequest.userId=-1L;
+        assertThat(validator.validate(listRequest)).isEmpty();
     }
     @Test void sameRoleHasDifferentScopesAndCannotReadOrWriteOtherUnits() throws Exception {
         long parent=organization(null,tenant),child=organization(parent,tenant),other=organization(null,tenant),foreign=organization(null,tenant+1);
@@ -77,7 +81,7 @@ class RbacIntegrationTest {
         String departmentName="Global department "+UUID.randomUUID();
         var created=admin("POST","/api/Department/Create",Map.of("name",departmentName,"businessUnitId",-1,"status",1),200);
         assertThat(created.path("id").asLong()).isPositive();
-        var list=admin("POST","/api/Department/GetList",Map.of("businessUnitIds","-1"),200);
+        var list=admin("POST","/api/Department/GetList",Map.of("businessUnitIds","-1","userId",-1),200);
         assertThat(list.path("items").findValuesAsText("name")).contains(departmentName);
 
         long unit=organization(null,tenant),role=role(tenant,List.of(3342L));

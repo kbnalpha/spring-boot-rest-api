@@ -648,7 +648,7 @@ Content-Type: application/json
   "skipCount": 0,
   "multiSortMeta": [],
   "businessUnitIds": "{{organizationId}}",
-  "userId": 0,
+  "userId": -1,
   "isExportToExcel": false
 }
 

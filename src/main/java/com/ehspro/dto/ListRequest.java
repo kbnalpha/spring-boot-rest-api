@@ -18,7 +18,7 @@ public class ListRequest {
     @Valid public List<@NotNull SortField> multiSortMeta = new ArrayList<>();
     public String businessUnitIds;
     @PositiveOrZero public Long id;
-    @PositiveOrZero public Long userId;
+    public Long userId;
     public boolean isExportToExcel;
 
     public static class ColumnFilter {
