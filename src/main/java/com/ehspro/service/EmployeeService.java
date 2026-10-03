@@ -57,9 +57,9 @@ public class EmployeeService {
         if(dto.userType==null) dto.userType=1;
         access.require(dto.userType==2 ? "ManageContractEmployees" : "ManageEmployees");
         if(dto.userType!=1 && dto.userType!=2) throw ApiException.badRequest("userType must be 1 (employee) or 2 (contract employee)");
-        if(dto.userType==1 && (dto.department==null||dto.department<=0)) throw ApiException.badRequest("Department is required for employees");
+        if(dto.userType==1 && dto.department==null) throw ApiException.badRequest("Department is required for employees");
         if(dto.userType==2) {
-            if(dto.contractorId==null||dto.contractorId<=0) throw ApiException.badRequest("Contractor company is required");
+            if(dto.contractorId==null) throw ApiException.badRequest("Contractor company is required");
             var contractor=contractors.findById(dto.contractorId).orElseThrow(() -> ApiException.badRequest("Contractor not found"));
             if(!contractor.businessUnitId.equals(dto.organizationUnitId)) throw ApiException.badRequest("Contractor belongs to another organization");
         }
@@ -109,16 +109,6 @@ public class EmployeeService {
         }
         return employee;
     }
-    public com.fasterxml.jackson.databind.node.ObjectNode get(Long id) {
-        Employee employee=readableEmployee(id);
-        // GET has the frontend's checked-membership objects; write DTOs retain their numeric ID lists.
-        var json=new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules();
-        json.disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        com.fasterxml.jackson.databind.node.ObjectNode result=json.valueToTree(response(employee));
-        var mapped=result.putArray("organizationUnitIdsMapped");
-        employee.organizationUnitIds.stream().distinct().forEach(unit -> mapped.addObject().put("organizationUnitId",unit).put("isChecked",true));
-        return result;
-    }
     public List<Map<String,Object>> organizations(Long id) {
         if(Long.valueOf(-1).equals(id)) {
             if(!access.isSuperAdmin()) throw new org.springframework.security.access.AccessDeniedException("Only Super Admin can read the reserved user");
@@ -162,6 +152,18 @@ public class EmployeeService {
             result.add(organizationRow(employee.id,unit,null,null,null));
         }
         return result;
+    }
+    public List<Map<String,Object>> organizationMemberships(Long id) {
+        if(Long.valueOf(-1).equals(id)) {
+            if(!access.isSuperAdmin()) throw new org.springframework.security.access.AccessDeniedException("Only Super Admin can read the reserved user");
+            return new TreeSet<>(access.organizationIds()).stream()
+                .map(unitId -> organizationRow(-1L,references.organization(unitId),null,null,null))
+                .toList();
+        }
+        Employee employee=readableEmployee(id);
+        return new LinkedHashSet<>(employee.organizationUnitIds).stream()
+            .map(unitId -> organizationRow(employee.id,references.organization(unitId),null,null,null))
+            .toList();
     }
     private Map<String,Object> organizationRow(Long userId,com.ehspro.entity.OrganizationUnit unit,
             Set<String> roleNames,Set<String> permissionCodes,Set<Long> roleIds) {

@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ExternalCollaboratorDto extends BaseDto {
-    @NotNull @Positive public Long roleId;
-    @NotNull @Positive public Long organizationUnitId;
+    @NotNull public Long roleId;
+    @NotNull public Long organizationUnitId;
     @NotBlank @Size(max=255) public String firstName;
     @Size(max=255) public String middleName;
     @NotBlank @Size(max=255) public String lastName;
@@ -15,14 +15,14 @@ public class ExternalCollaboratorDto extends BaseDto {
     @NotNull @Min(1) public Integer gender;
     @NotNull @Min(1) @Max(2) public Integer status;
     @Size(max=255) public String alias;
-    @Positive public Long country;
+    public Long country;
     @Size(max=500) public String companyName;
     @Size(max=255) public String designation;
     public boolean hasAccess;
     @Min(0) @Max(150) public Integer age;
     @PastOrPresent public LocalDate dateOfBirth;
     public LocalDate dateOfJoining;
-    @Valid public List<@NotNull @Positive Long> organizationUnitListIds=new ArrayList<>();
+    @Valid public List<@NotNull Long> organizationUnitListIds=new ArrayList<>();
     @Valid public ExternalDetails externalDetails;
     public static class ExternalDetails {
         @Size(max=500) public String companyName;

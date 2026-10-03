@@ -10,8 +10,7 @@ public class DepartmentDto extends BaseDto {
     @NotBlank @Size(max = 2000) public String name;
     @Size(max = 2000) public String description;
     public Integer status;
-    @NotNull @Positive public Long businessUnitId;
+    @NotNull public Long businessUnitId;
     @Valid public List<@NotNull NameTranslation> translations = new ArrayList<>();
     @Size(max = 2000) public String statusDisplay;
 }
-

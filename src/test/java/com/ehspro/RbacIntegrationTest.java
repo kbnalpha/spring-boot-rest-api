@@ -23,6 +23,7 @@ class RbacIntegrationTest {
     @org.springframework.boot.test.mock.mockito.MockBean org.springframework.mail.javamail.JavaMailSender mail;
     @Autowired com.ehspro.repository.UserAccountRepository accounts;
     @Autowired com.ehspro.repository.EmployeeRepository employees;
+    @Autowired jakarta.validation.Validator validator;
     @Autowired ReferenceDataService lookups;
     final String superUser="ehs-api",superPassword="ehs-api-local",password="Rbac-test-password-123";
     long tenant;
@@ -34,6 +35,22 @@ class RbacIntegrationTest {
         ReferenceItemDto city=new ReferenceItemDto();city.name="Test City";city.countryId=50001L;city.stateId=50002L;lookups.save("CITY",50003L,city);
         ReferenceItemDto language=new ReferenceItemDto();language.name="Test Language";language.countryId=50001L;lookups.save("LANGUAGE",50004L,language);
         ReferenceItemDto timezone=new ReferenceItemDto();timezone.name="UTC";timezone.countryId=50001L;timezone.zoneId="UTC";lookups.save("TIME_ZONE",50005L,timezone);
+    }
+    @Test void zeroIsAcceptedForIdentifierFieldsByBeanValidation() {
+        var organization=new com.ehspro.dto.OrganizationUnitDto();
+        organization.tenantId=0L;organization.city=0L;organization.state=0L;organization.country=0L;
+        organization.timeZoneId=0L;organization.languageId=0L;
+        assertThat(validator.validate(organization).stream().map(v -> v.getPropertyPath().toString()).collect(java.util.stream.Collectors.toSet()))
+            .doesNotContain("tenantId","city","state","country","timeZoneId","languageId");
+
+        var employee=new com.ehspro.dto.EmployeeDto();
+        employee.designation=0L;employee.languageID=0L;employee.organizationUnitId=0L;
+        employee.userRoleIds=List.of(0L);employee.organizationUnitIds=List.of(0L);
+        assertThat(validator.validate(employee).stream().map(v -> v.getPropertyPath().toString()).collect(java.util.stream.Collectors.toSet()))
+            .doesNotContain("designation","languageID","organizationUnitId","userRoleIds[0]","organizationUnitIds[0]");
+
+        var scope=new com.ehspro.dto.AccountRequests.Scope(0L,false);
+        assertThat(validator.validate(scope)).isEmpty();
     }
     @Test void sameRoleHasDifferentScopesAndCannotReadOrWriteOtherUnits() throws Exception {
         long parent=organization(null,tenant),child=organization(parent,tenant),other=organization(null,tenant),foreign=organization(null,tenant+1);
@@ -55,6 +72,17 @@ class RbacIntegrationTest {
         admin("PUT","/api/SystemUser/"+a.id+"/Scope",Map.of("scopes",List.of(scope(foreign,true))),400);
         admin("PUT","/api/SystemUser/"+a.id+"/Enabled",Map.of("enabled",false),200);
         request("POST","/api/Department/GetList",Map.of(),a.username,password,401);
+    }
+    @Test void departmentSupportsSuperAdminGlobalBusinessUnitSentinel() throws Exception {
+        String departmentName="Global department "+UUID.randomUUID();
+        var created=admin("POST","/api/Department/Create",Map.of("name",departmentName,"businessUnitId",-1,"status",1),200);
+        assertThat(created.path("id").asLong()).isPositive();
+        var list=admin("POST","/api/Department/GetList",Map.of("businessUnitIds","-1"),200);
+        assertThat(list.path("items").findValuesAsText("name")).contains(departmentName);
+
+        long unit=organization(null,tenant),role=role(tenant,List.of(3342L));
+        var user=activate(employee(unit),role,List.of(scope(unit,false)));
+        request("POST","/api/Department/Create",Map.of("name","Denied global department","businessUnitId",-1,"status",1),user.username,password,403);
     }
     @Test void rolesAreInstanceSpecificAndRestrictedActionsCannotBeDelegated() throws Exception {
         long unit=organization(null,tenant),other=organization(null,tenant+1);
@@ -393,27 +421,30 @@ class RbacIntegrationTest {
         long unit=organization(null,tenant),other=organization(null,tenant),person=employee(unit),foreign=employee(other);
         long role=role(tenant,List.of(3334L));var user=activate(person,role,List.of(scope(unit,false)));
         var detail=request("GET","/api/User/"+person,null,user.username,password,200);
-        assertThat(detail.path("id").asLong()).isEqualTo(person);
-        assertThat(detail.path("password").isNull()).isTrue();
-        assertThat(detail.at("/organizationUnitIdsMapped/0/organizationUnitId").asLong()).isEqualTo(unit);
-        assertThat(detail.at("/organizationUnitIdsMapped/0/isChecked").asBoolean()).isTrue();
+        assertThat(detail.get(0).path("userId").asLong()).isEqualTo(person);
+        assertThat(detail.get(0).path("organizationUnitId").asLong()).isEqualTo(unit);
+        assertThat(detail.get(0).path("roles").toString()).contains("User");
+        assertThat(detail.get(0).path("permissions").toString()).contains("ManageEmployees");
         var memberships=request("GET","/api/User/GetUserOrganizationUnit/"+person,null,user.username,password,200);
         assertThat(memberships.get(0).path("userId").asLong()).isEqualTo(person);
         assertThat(memberships.get(0).path("organizationUnitId").asLong()).isEqualTo(unit);
-        assertThat(memberships.get(0).path("roles").toString()).contains("User");
-        assertThat(memberships.get(0).path("permissions").toString()).contains("ManageEmployees");
+        assertThat(fieldNames(memberships.get(0))).containsExactlyInAnyOrder("userId","buImage","organizationUnitId",
+            "organizationUnitName","isAnonymous","isObservationProofRequired","languageId","currency");
         request("GET","/api/User/"+foreign,null,user.username,password,403);
         request("GET","/api/User/GetUserOrganizationUnit/"+foreign,null,user.username,password,403);
-        var superOrganizations=admin("GET","/api/User/GetUserOrganizationUnit/-1",null,200);
+        var superOrganizations=admin("GET","/api/User/-1",null,200);
         assertThat(superOrganizations.findValuesAsText("userId")).contains("-1");
         assertThat(superOrganizations.get(0).path("roles").toString()).contains("SuperAdmin");
-        request("GET","/api/User/GetUserOrganizationUnit/-1",null,user.username,password,403);
+        var superMemberships=admin("GET","/api/User/GetUserOrganizationUnit/-1",null,200);
+        assertThat(fieldNames(superMemberships.get(0))).containsExactlyInAnyOrder("userId","buImage","organizationUnitId",
+            "organizationUnitName","isAnonymous","isObservationProofRequired","languageId","currency");
+        request("GET","/api/User/-1",null,user.username,password,403);
         long child=organization(unit,tenant),adminRole=0;
         for(JsonNode item:admin("GET","/api/Role/GetAllRoles",null,200))
             if(item.path("builtInAdmin").asBoolean()) adminRole=item.path("id").asLong();
         long adminEmployee=employee(unit);
         var adminAccount=activate(adminEmployee,adminRole,List.of(scope(unit,false)));
-        var adminOrganizations=request("GET","/api/User/GetUserOrganizationUnit/"+adminEmployee,null,adminAccount.username,password,200);
+        var adminOrganizations=request("GET","/api/User/"+adminEmployee,null,adminAccount.username,password,200);
         assertThat(adminOrganizations.findValuesAsText("organizationUnitId")).contains(Long.toString(child));
         admin("GET","/api/User/9223372036854775807",null,404);
         mvc.perform(get("/api/User/"+person)).andExpect(status().isUnauthorized());
@@ -422,6 +453,9 @@ class RbacIntegrationTest {
         var response=mvc.perform(post("/api/Auth/authenticate").contentType("application/json").content(mapper.writeValueAsBytes(Map.of("email",email,"password",secret))))
             .andExpect(status().is(expected)).andReturn();
         return mapper.readTree(response.getResponse().getContentAsString()).path("results");
+    }
+    private Set<String> fieldNames(JsonNode node) {
+        Set<String> result=new HashSet<>();node.fieldNames().forEachRemaining(result::add);return result;
     }
     private ObjectNode organizationBody(Long parent,long tenantId) {
         ObjectNode node=mapper.createObjectNode();node.put("name","BU-"+UUID.randomUUID().toString().substring(0,12));node.put("tenantId",tenantId);if(parent!=null)node.put("parentId",parent);

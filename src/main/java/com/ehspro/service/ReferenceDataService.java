@@ -15,7 +15,7 @@ public class ReferenceDataService {
     private final DtoMapper mapper;
     public ReferenceDataService(ReferenceItemRepository repository,DtoMapper mapper) { this.repository=repository;this.mapper=mapper; }
     public ReferenceItem require(String kind,Long id) {
-        if(id==null || id<=0) throw ApiException.badRequest(kind+" ID is required");
+        if(id==null) throw ApiException.badRequest(kind+" ID is required");
         return repository.findById(new ReferenceItemId(kind,id)).orElseThrow(() -> ApiException.badRequest("Unknown "+kind+" ID: "+id));
     }
     public String name(String kind,Long id) { return id==null ? null : repository.findById(new ReferenceItemId(kind,id)).map(r -> r.name).orElse(null); }
@@ -28,7 +28,7 @@ public class ReferenceDataService {
     @Transactional
     public ReferenceItem save(String kind,Long id,ReferenceItemDto dto) {
         validateKind(kind);
-        if(id==null || id<=0) throw ApiException.badRequest("Reference ID must be positive");
+        if(id==null) throw ApiException.badRequest("Reference ID is required");
         if(Set.of("STATE","CITY","TIME_ZONE").contains(kind) || dto.countryId!=null) require("COUNTRY",dto.countryId);
         if(kind.equals("CITY")) {
             if(!Objects.equals(require("STATE",dto.stateId).countryId,dto.countryId)) throw ApiException.badRequest("State does not belong to country");

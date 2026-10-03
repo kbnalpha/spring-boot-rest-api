@@ -1384,4 +1384,4 @@ GET {{baseUrl}}/api/User/GetUserOrganizationUnit/{{employeeId}}
 Authorization: Bearer {{token}}
 ```
 
-Use the employee ID returned by CreateEmployee, not the system-account ID from authentication. `organizationUnitIdsMapped` in the GET response contains checked-membership objects; use numeric ID lists when updating the employee.
+Use the employee ID returned by CreateEmployee, not the system-account ID from authentication. `/api/User/{id}` returns accessible organization details, including roles and permissions for a system user. `GetUserOrganizationUnit/{id}` returns only the organization membership fields: `userId`, `buImage`, `organizationUnitId`, `organizationUnitName`, `isAnonymous`, `isObservationProofRequired`, `languageId`, and `currency`.

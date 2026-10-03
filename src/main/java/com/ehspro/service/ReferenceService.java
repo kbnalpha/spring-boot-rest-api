@@ -18,7 +18,7 @@ public class ReferenceService {
         this.departments = departments; this.designations = designations;
     }
     public OrganizationUnit organization(Long id) {
-        if (id == null || id <= 0) throw ApiException.badRequest("Organization ID is required");
+        if (id == null) throw ApiException.badRequest("Organization ID is required");
         access.organization(id);
         return organizations.findById(id).orElseThrow(() -> ApiException.notFound("Organization not found: " + id));
     }

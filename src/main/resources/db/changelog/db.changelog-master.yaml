@@ -34,3 +34,6 @@ databaseChangeLog:
   - include:
       file: changes/009-required-primary-keys.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changes/010-global-department-sentinel.yaml
+      relativeToChangelogFile: true

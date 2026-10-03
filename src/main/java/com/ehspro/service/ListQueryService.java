@@ -69,16 +69,15 @@ public class ListQueryService {
                 predicates.add(cb.equal(root.get("status"), 1));
             }
         }
-        if (r.id != null && r.id > 0) predicates.add(cb.equal(root.get("id"), r.id));
+        if (r.id != null) predicates.add(cb.equal(root.get("id"), r.id));
         if (businessField != null && r.businessUnitIds != null && !r.businessUnitIds.isBlank()) {
             try {
                 List<Long> ids = Arrays.stream(r.businessUnitIds.split(",", -1)).map(String::trim).map(Long::valueOf).toList();
-                if (ids.stream().anyMatch(id -> id <= 0)) throw new NumberFormatException();
                 if (!access.isSuperAdmin() && !access.organizationIds().containsAll(ids)) throw new org.springframework.security.access.AccessDeniedException("Requested organizations are outside your scope");
                 if (type == com.ehspro.entity.Employee.class) {
                     predicates.add(cb.or(ids.stream().map(id -> cb.isMember(id, root.<Collection<Long>>get("organizationUnitIds"))).toArray(Predicate[]::new)));
                 } else predicates.add(root.get(businessField).in(ids));
-            } catch (NumberFormatException e) { throw ApiException.badRequest("businessUnitIds must contain comma-separated positive IDs"); }
+            } catch (NumberFormatException e) { throw ApiException.badRequest("businessUnitIds must contain comma-separated integer IDs"); }
         }
         if (r.filter != null && !r.filter.isBlank()) predicates.add(cb.like(cb.lower(root.get(searchField)), "%" + escape(r.filter.toLowerCase(Locale.ROOT)) + "%", '\\'));
         if (r.filters != null) for (ListRequest.ColumnFilter filter : r.filters) {

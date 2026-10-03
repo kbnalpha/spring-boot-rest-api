@@ -12,7 +12,6 @@ public class ExternalCollaboratorController {
     public ExternalCollaboratorController(ExternalCollaboratorService service) {this.service=service;}
     @PutMapping("/ExternalCollaborator/{id}")
     public ApiResponse<?> update(@PathVariable Long id,@Valid @RequestBody ExternalCollaboratorDto dto) {
-        if(id<=0) throw com.ehspro.exception.ApiException.badRequest("ID must be positive");
         dto.id=id;return ApiResponse.success(service.save(dto));
     }
     // Preserve the spelling in the supplied contract.

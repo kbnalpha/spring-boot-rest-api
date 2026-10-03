@@ -4,12 +4,12 @@ import jakarta.validation.constraints.*;
 import java.util.*;
 public final class AccountRequests {
     private AccountRequests() {}
-    public record Scope(@NotNull @Positive Long organizationUnitId, boolean includeDescendants) {}
+    public record Scope(@NotNull Long organizationUnitId, boolean includeDescendants) {}
     public record Activate(
-        @NotNull @Positive Long basicRoleId,
-        Set<@NotNull @Positive Long> additionalRoleIds,
+        @NotNull Long basicRoleId,
+        Set<@NotNull Long> additionalRoleIds,
         @NotEmpty List<@NotNull @Valid Scope> scopes) {}
-    public record Roles(@NotNull @Positive Long basicRoleId, Set<@NotNull @Positive Long> additionalRoleIds) {}
+    public record Roles(@NotNull Long basicRoleId, Set<@NotNull Long> additionalRoleIds) {}
     public record Scopes(@NotEmpty List<@NotNull @Valid Scope> scopes) {}
     public record Enabled(boolean enabled) {}
     public record Login(@NotBlank @Size(max=254) String email, @NotBlank @Size(max=200) String password) {}

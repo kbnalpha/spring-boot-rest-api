@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final EmployeeService service;
     @GetMapping("/{id}")
-    public ApiResponse<?> get(@PathVariable Long id) {return ApiResponse.success(service.get(id));}
+    public ApiResponse<?> get(@PathVariable Long id) {return ApiResponse.success(service.organizations(id));}
     @GetMapping("/GetUserOrganizationUnit/{id}")
-    public ApiResponse<?> organizations(@PathVariable Long id) {return ApiResponse.success(service.organizations(id));}
+    public ApiResponse<?> organizations(@PathVariable Long id) {return ApiResponse.success(service.organizationMemberships(id));}
     @PutMapping("/{id}")
     @org.springframework.security.access.prepost.PreAuthorize("hasAnyAuthority('ManageEmployees','ManageContractEmployees') or hasAnyRole('SUPER_ADMIN','ADMIN')")
     public ApiResponse<?> update(@PathVariable Long id, @Valid @RequestBody EmployeeDto request) {

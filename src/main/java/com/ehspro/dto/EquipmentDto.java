@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ehspro.model.*;
 public class EquipmentDto extends BaseDto {
-    @NotNull @Positive public Long equipmentCategoryId;
-    @NotNull @Positive public Long equipmentTypeId;
-    @NotNull @Positive public Long organizationUnitId;
+    @NotNull public Long equipmentCategoryId;
+    @NotNull public Long equipmentTypeId;
+    @NotNull public Long organizationUnitId;
     @NotBlank @Size(max = 100) public String uid;
     @Size(max = 2000) public String manufacturer;
     @Size(max = 2000) public String modelNumber;
