@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-global-department-sentinel
+      author: ehspro
+      preConditions:
+        - onFail: MARK_RAN
+        - foreignKeyConstraintExists:
+            foreignKeyName: fk_department_organization
+            foreignKeyTableName: department
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: department
+            constraintName: fk_department_organization
